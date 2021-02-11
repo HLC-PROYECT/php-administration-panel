@@ -1,24 +1,12 @@
 <?php
-require '../utils/Medoo.php';
 
-use Medoo\Medoo;
+require '../utils/getQuerys.php';
 
-$database = new Medoo([
-    'database_type' => 'mysql',
-    'database_name' => 'task_manager',
-    'server' => 'localhost',
-    'username' => 'root',
-    'password' => ''
-]);
-?>
-<?php
+use QueryHelper\QueryHelper;
 
-$res = $database->select("usuario", "*", ["id" => $_GET["response"]]);
-/*echo 'Correo: ';
-echo '<span class="badge badge-success">' . $res[0]["email"] . '</span>';
-echo '<br/>';
-echo 'Contraseña: ';
-echo '<span class="badge badge-info">' . $res[0]["password"] . '</span>';*/
+$query = new QueryHelper();
+$res = $query->getUserByid($_GET["response"]);
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -64,7 +52,7 @@ echo '<span class="badge badge-info">' . $res[0]["password"] . '</span>';*/
 <aside class="menu-sidebar d-none d-lg-block">
     <div class="logo">
         <a href="#">
-            <img src="../resources/img/logo.png" alt="Cool Admin" />
+            <img src="../resources/img/logo.png" alt="Cool Admin"/>
         </a>
     </div>
     <div class="menu-sidebar__content js-scrollbar1">
@@ -143,18 +131,7 @@ echo '<span class="badge badge-info">' . $res[0]["password"] . '</span>';*/
         </div>
     </div>
 </header>
-<!-- HEADER DESKTOP-->
-<!--<div class="card container-fluid">
-    <div class="card-header">
-        <strong>Usuario</strong>
-        <button type="button" class="btn btn-danger " >
-            <i class="fa fa-sign-out"></i>&nbsp; logout </button>
-    </div>
-    <div class="card-body">
 
-
-    </div>
-</div>-->
 
 </div>
 
