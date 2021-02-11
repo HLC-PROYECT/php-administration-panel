@@ -11,7 +11,15 @@ $database = new Medoo([
     'password' => ''
 ]);
 ?>
+<?php
 
+$res = $database->select("usuario", "*", ["id" => $_GET["response"]]);
+/*echo 'Correo: ';
+echo '<span class="badge badge-success">' . $res[0]["email"] . '</span>';
+echo '<br/>';
+echo 'Contraseña: ';
+echo '<span class="badge badge-info">' . $res[0]["password"] . '</span>';*/
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -51,24 +59,102 @@ $database = new Medoo([
 </head>
 
 <body class="animsition">
+<!-- HEADER DESKTOP-->
+<!-- MENU SIDEBAR-->
+<aside class="menu-sidebar d-none d-lg-block">
+    <div class="logo">
+        <a href="#">
+            <img src="../template/images/icon/logo.png" alt="Cool Admin" />
+        </a>
+    </div>
+    <div class="menu-sidebar__content js-scrollbar1">
+        <nav class="navbar-sidebar">
+            <ul class="list-unstyled navbar__list">
+                <li class="has-sub">
+                    <a class="js-arrow" href="#">
+                        <i class="fas fa-users"></i>Cursos</a>
+                </li>
+                <li class="has-sub">
+                    <a class="js-arrow" href="#">
+                        <i class="fas fa-book"></i>Asignaturas</a>
+                </li>
+                <li class="has-sub">
+                    <a class="js-arrow" href="#">
+                        <i class="fas fa-check-square"></i>Tareas</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</aside>
+<!-- END MENU SIDEBAR-->
 
-<div class="card">
+<header class="header-desktop">
+    <div class="section__content section__content--p30">
+        <div class="container-fluid">
+            <div class="header4-wrap">
+                <div class="form-header">
+                </div>
+                <div class="header-button">
+
+                    <div class="account-wrap">
+                        <div class="account-item clearfix js-item-menu">
+                            <div class="image">
+                                <img src="https://i.pinimg.com/originals/0c/3b/3a/0c3b3adb1a7530892e55ef36d3be6cb8.png"
+                                     alt="John Doe"/>
+                            </div>
+                            <div class="content">
+                                <a class="js-acc-btn" href="#">username</a>
+                            </div>
+                            <div class="account-dropdown js-dropdown">
+                                <div class="info clearfix">
+                                    <div class="image">
+                                        <a href="#">
+                                            <img src="https://i.pinimg.com/originals/0c/3b/3a/0c3b3adb1a7530892e55ef36d3be6cb8.png"
+                                                 alt="user ic"/>
+                                        </a>
+                                    </div>
+                                    <div class="content">
+                                        <h5 class="name">
+                                            <a href="#">username</a>
+                                        </h5>
+                                        <?php
+                                        echo '<span class="email">' . $res[0]["email"] . '</span>' ?>
+                                    </div>
+                                </div>
+                                <div class="account-dropdown__body">
+                                    <div class="account-dropdown__item">
+                                        <a href="#">
+                                            <i class="zmdi zmdi-account"></i>Account</a>
+                                    </div>
+                                    <div class="account-dropdown__item">
+                                        <a href="#">
+                                            <i class="zmdi zmdi-settings"></i>Setting</a>
+                                    </div>
+                                </div>
+                                <div class="account-dropdown__footer">
+                                    <a href="logout.php">
+                                        <i class="zmdi zmdi-power"></i>Logout</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<!-- HEADER DESKTOP-->
+<!--<div class="card container-fluid">
     <div class="card-header">
         <strong>Usuario</strong>
+        <button type="button" class="btn btn-danger " >
+            <i class="fa fa-sign-out"></i>&nbsp; logout </button>
     </div>
     <div class="card-body">
 
-        <?php
 
-        $res = $database -> select("usuario","*",["id"=>$_GET["response"]]);
-        echo 'Correo: ';
-        echo '<span class="badge badge-success">' . $res[0]["email"] . '</span>';
-        echo '<br/>';
-        echo 'Contraseña: ';
-        echo '<span class="badge badge-info">' . $res[0]["password"] . '</span>';
-        ?>
     </div>
-</div>
+</div>-->
 
 </div>
 

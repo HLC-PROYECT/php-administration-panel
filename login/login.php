@@ -14,12 +14,15 @@ if (!empty(trim($_POST["email"])) && !empty(trim($_POST["password"]))) {
     $response = $database->select("usuario", "*", ["email" => $_POST["email"], "password" => $_POST["password"]]);
     if ($response != null) {
         $r = $response[0];
-        header("Location: ../testClasses/logComplete.php?response=".$r["id"]);
+        if ($_POST["remember"] == 'remember') {
+            setcookie("loggedId", $response[0]["id"], time() + 60 * 60 * 24 * 30, "/");
+        }
+        header("Location: ../testClasses/logComplete.php?response=" . $r["id"]);
     } else {
-        $error = true;
+        echo "error";
     }
 
 } else {
-    $error = true;
+    echo "error";
 }
 ?>
