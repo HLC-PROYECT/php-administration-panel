@@ -3,8 +3,8 @@
 namespace QueryHelper;
 
 require 'Medoo.php';
-require '../entities/user.php';
-
+//require '../entities/user.php';
+require_once __DIR__ . '/../entities/user.php';
 use Medoo\Medoo;
 use mysql_xdevapi\Exception;
 use User\user;
@@ -58,7 +58,7 @@ class QueryHelper
      * Te devuelve una instancia ya creada de usuario
      * @return user
      */
-    public function getUserByid(int $id): user
+    public function getUserByid(int $id): ?user
     {
         return $this->instanciteUser($this->database->select("usuario", "*", ["id" => $id])[0]);
     }
