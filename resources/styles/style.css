@@ -12,3 +12,11 @@
 @import url("../template/vendor/slick/slick.css");
 @import url("../template/vendor/select2/select2.min.css");
 @import url("../template/vendor/perfect-scrollbar/perfect-scrollbar.css");
+
+/*Arregla cuando se achica la pagina en tamaño movil el dropdown del usuario */
+@media (max-width: 991px){
+
+    .header-button {
+        justify-content: flex-end;
+    }
+}
