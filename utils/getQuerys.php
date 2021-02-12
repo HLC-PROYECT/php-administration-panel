@@ -17,10 +17,11 @@ class QueryHelper
     {
         $this->database = new Medoo([
             'database_type' => 'mysql',
-            'database_name' => 'task_manager',
-            'server' => 'localhost',
-            'username' => 'root',
-            'password' => ''
+            'database_name' => 'heroku_1e6e284b61da958',
+            'server' => 'eu-cdbr-west-03.cleardb.net',
+            'username' => 'bca69c49b83a98',
+            'password' => '52f0c250',
+            'charset' => 'utf8'
         ]);
     }
 
@@ -39,11 +40,17 @@ class QueryHelper
      * @param string $email
      * @param string $password
      * Creado pensado en el login, donde nos devolvera el usuario instanciado si existe
-     * @return user
+     * @return user|null
      */
-    private function getUser(string $email, string $password): user
+    private function getUser(string $email, string $password): ?user
     {
-        return $this->instanciteUser($this->database->select("usuario", "*", ["email" => $email, "password" => $password])[0]);
+        $u = $this->database->select("usuario", "*", ["email" => $email, "password" => $password])[0];
+        echo $u["id"];
+        if ($u != null) {
+            return $this->instanciteUser($u);
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -89,13 +96,13 @@ class QueryHelper
         return $this->database->has("usuario", ["email" => $email]);
     }
 
-    public function getUserWithController(string $email, string $password): user
+    public function getUserWithController(string $email, string $password): ?user
     {
         $user = $this->getUser($email, $password);
         if ($user != null) {
             return $user;
         } else {
-            return throw new \Exception("error, usuario no encontrado");
+            return null;
         }
     }
 

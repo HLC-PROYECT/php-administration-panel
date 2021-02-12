@@ -5,7 +5,7 @@ require '../utils/getQuerys.php';
 use QueryHelper\QueryHelper;
 
 $query = new QueryHelper();
-$user = $query->getUserByid($_GET["response"]);
+$user = $query->getUserByid(intval($_COOKIE["uid"]));
 
 ?>
 <!DOCTYPE html>
