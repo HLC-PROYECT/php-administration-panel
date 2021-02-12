@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["submit"])) {
             session_start();
             $_SESSION['uid'] = $usuario->getId();
             session_write_close();
-            header("Location: ../../testClasses/logComplete.php");
+            header("Location: ../../views/home/home.php");
         } else {
             session_start();
             $_SESSION['error'] = $errorsMessages->getError("login:invalid");

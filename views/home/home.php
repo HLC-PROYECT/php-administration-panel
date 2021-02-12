@@ -1,6 +1,6 @@
 <?php
 
-require '../utils/getQuerys.php';
+require '../../utils/getQuerys.php';
 
 use QueryHelper\QueryHelper;
 
@@ -22,7 +22,7 @@ session_write_close();
 
     <!-- Title Page-->
     <title>Badge</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../../resources/styles/style.css">
 </head>
 
 <body class="animsition">
@@ -31,7 +31,7 @@ session_write_close();
 <aside class="menu-sidebar d-none d-lg-block">
     <div class="logo">
         <a href="#">
-            <img src="../resources/img/logo.png" alt="Cool Admin"/>
+            <img src="../../resources/img/logo.png" alt="Cool Admin"/>
         </a>
     </div>
     <div class="menu-sidebar__content js-scrollbar1">
@@ -103,7 +103,7 @@ session_write_close();
                                     </div>
                                 </div>
                                 <div class="account-dropdown__footer">
-                                    <a href="logout.php">
+                                    <a href="../../controller/logoutController/logout.php">
                                         <i class="zmdi zmdi-power"></i>Logout</a>
                                 </div>
                             </div>
@@ -119,28 +119,28 @@ session_write_close();
 </div>
 
 <!-- Jquery JS-->
-<script src="../resources/template/vendor/jquery-3.2.1.min.js"></script>
+<script src="../../resources/template/vendor/jquery-3.2.1.min.js"></script>
 <!-- Bootstrap JS-->
-<script src="../resources/template/vendor/bootstrap-4.1/popper.min.js"></script>
-<script src="../resources/template/vendor/bootstrap-4.1/bootstrap.min.js"></script>
+<script src="../../resources/template/vendor/bootstrap-4.1/popper.min.js"></script>
+<script src="../../resources/template/vendor/bootstrap-4.1/bootstrap.min.js"></script>
 <!-- Vendor JS       -->
-<script src="../resources/template/vendor/slick/slick.min.js">
+<script src="../../resources/template/vendor/slick/slick.min.js">
 </script>
-<script src="../resources/template/vendor/wow/wow.min.js"></script>
-<script src="../resources/template/vendor/animsition/animsition.min.js"></script>
-<script src="../resources/template/vendor/bootstrap-progressbar/bootstrap-progressbar.min.js">
+<script src="../../resources/template/vendor/wow/wow.min.js"></script>
+<script src="../../resources/template/vendor/animsition/animsition.min.js"></script>
+<script src="../../resources/template/vendor/bootstrap-progressbar/bootstrap-progressbar.min.js">
 </script>
-<script src="../resources/template/vendor/counter-up/jquery.waypoints.min.js"></script>
-<script src="../resources/template/vendor/counter-up/jquery.counterup.min.js">
+<script src="../../resources/template/vendor/counter-up/jquery.waypoints.min.js"></script>
+<script src="../../resources/template/vendor/counter-up/jquery.counterup.min.js">
 </script>
-<script src="../resources/template/vendor/circle-progress/circle-progress.min.js"></script>
-<script src="../resources/template/vendor/perfect-scrollbar/perfect-scrollbar.js"></script>
-<script src="../resources/template/vendor/chartjs/Chart.bundle.min.js"></script>
-<script src="../resources/template/vendor/select2/select2.min.js">
+<script src="../../resources/template/vendor/circle-progress/circle-progress.min.js"></script>
+<script src="../../resources/template/vendor/perfect-scrollbar/perfect-scrollbar.js"></script>
+<script src="../../resources/template/vendor/chartjs/Chart.bundle.min.js"></script>
+<script src="../../resources/template/vendor/select2/select2.min.js">
 </script>
 
 <!-- Main JS-->
-<script src="../resources/template/js/main.js"></script>
+<script src="../../resources/template/js/main.js"></script>
 
 </body>
 

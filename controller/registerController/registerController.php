@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["submit"])) {
                 setcookie("loggedId", $usuario->getId(), time() + 60 * 60 * 24 * 30, "/");
             }
             setcookie("uid", $usuario->getId(), time() + 60, "/");
-            header("Location: ../testClasses/logComplete.php");
+            header("Location: ../../views/home/home.php");
         }
 
     } else {
