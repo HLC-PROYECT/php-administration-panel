@@ -14,7 +14,7 @@ $email = '';
 $password = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["submit"])) {
-    require('validateLogin.php');
+    require('validateRegister.php');
     validateEmail();
     validatePassword();
 
@@ -23,7 +23,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["submit"])) {
         filterAllInputs();
         $result = array();
 
-
+        if ($query->checkExistUser($_POST["email"])) {
+            session_start();
+            $_SESSION['error'] = $errorsMessages ->getError("email:repeat") ;
+            session_write_close();
+            header("Location: ../../views/auth/login.php");
+        } else {
+            $usuario = $query->createUserWithController($_POST["email"], $_POST["password"]);
+            if ($_POST["remember"] == 'remember') {
+                setcookie("loggedId", $usuario->getId(), time() + 60 * 60 * 24 * 30, "/");
+            }
+            setcookie("uid", $usuario->getId(), time() + 60, "/");
+            header("Location: ../testClasses/logComplete.php");
+        }
 
     } else {
         session_start();
@@ -44,29 +56,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["submit"])) {
 
 }
 ?>
-
-//antigup
-<?php
-
-require '../utils/getQuerys.php';
-
-//TODO(): Implementar controlador de jose
-$query = new QueryHelper();
-
-if (!empty(trim($_POST["email"])) && !empty(trim($_POST["password"]))) {
-
-
-    if ($query->checkExistUser($_POST["email"])) {
-        session_start();
-        $_SESSION['error'] = "";
-        session_write_close();
-        header("Location: ../../views/auth/login.php");
-    } else {
-        $usuario = $query->createUserWithController($_POST["email"], $_POST["password"]);
-        if ($_POST["remember"] == 'remember') {
-            setcookie("loggedId", $usuario->getId(), time() + 60 * 60 * 24 * 30, "/");
-        }
-        setcookie("uid", $usuario->getId(), time() + 60, "/");
-        header("Location: ../testClasses/logComplete.php");
-    }
-}
