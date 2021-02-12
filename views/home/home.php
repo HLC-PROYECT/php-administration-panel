@@ -16,13 +16,13 @@ session_write_close();
     <!-- Required meta tags-->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="au theme template">
-    <meta name="author" content="Hau Nguyen">
-    <meta name="keywords" content="au theme template">
+    <meta name="description" content="home">
+    <meta name="author" content="HLC TEAM">
+    <meta name="keywords" content="home">
+    <link rel="stylesheet" href="../../resources/styles/style.css">
 
     <!-- Title Page-->
-    <title>Badge</title>
-    <link rel="stylesheet" href="../../resources/styles/style.css">
+    <title>Home</title>
 </head>
 
 <body class="animsition">
