@@ -33,7 +33,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["submit"])) {
             if ($_POST["remember"] == 'remember') {
                 setcookie("loggedId", $usuario->getId(), time() + 60 * 60 * 24 * 30, "/");
             }
-            setcookie("uid", $usuario->getId(), time() + 60, "/");
+            session_start();
+            $_SESSION['uid'] = $usuario->getId();
+            session_write_close();
             header("Location: ../../views/home/home.php");
         }
 
