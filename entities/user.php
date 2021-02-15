@@ -5,20 +5,20 @@ namespace User;
 final class user
 {
 
-    private int $id;
+    private string $dni;
     private string $email;
     private string $password;
 
-    public function __construct($id, $email, $password)
+    public function __construct($dni, $email, $password)
     {
-        $this->id = $id;
+        $this->dni= $dni;
         $this->email = $email;
         $this->password = $password;
     }
 
-    public function getId():int
+    public function getDni():string
     {
-        return $this->id;
+        return $this->dni;
     }
 
     public function getEmail():string

@@ -15,34 +15,8 @@ session_start();
 
         <!-- Title Page-->
         <title>Login</title>
-
-        <!-- Fontfaces CSS-->
-        <link href="../../resources/template/css/font-face.css" rel="stylesheet" media="all">
-        <link href="../../resources/template/vendor/font-awesome-4.7/css/font-awesome.min.css" rel="stylesheet"
-              media="all">
-        <link href="../../resources/template/vendor/font-awesome-5/css/fontawesome-all.min.css" rel="stylesheet"
-              media="all">
-        <link href="../../resources/template/vendor/mdi-font/css/material-design-iconic-font.min.css" rel="stylesheet"
-              media="all">
-
-        <!-- Bootstrap CSS-->
-        <link href="../../resources/template/vendor/bootstrap-4.1/bootstrap.min.css" rel="stylesheet" media="all">
-
-        <!-- Vendor CSS-->
-        <link href="../../resources/template/vendor/animsition/animsition.min.css" rel="stylesheet" media="all">
-        <link href="../../resources/template/vendor/bootstrap-progressbar/bootstrap-progressbar-3.3.4.min.css"
-              rel="stylesheet"
-              media="all">
-        <link href="../../resources/template/vendor/wow/animate.css" rel="stylesheet" media="all">
-        <link href="../../resources/template/vendor/css-hamburgers/hamburgers.min.css" rel="stylesheet" media="all">
-        <link href="../../resources/template/vendor/slick/slick.css" rel="stylesheet" media="all">
-        <link href="../../resources/template/vendor/select2/select2.min.css" rel="stylesheet" media="all">
-        <link href="../../resources/template/vendor/perfect-scrollbar/perfect-scrollbar.css" rel="stylesheet"
-              media="all">
-
-        <!-- Main CSS-->
-        <link href="../../resources/template/css/theme.css" rel="stylesheet" media="all">
         <link rel="stylesheet" href="../../resources/toastr/toastr.min.css">
+        <link rel="stylesheet" href="../../resources/styles/style.css">
 
     </head>
     <body class="animsition">
@@ -54,7 +28,7 @@ session_start();
     </script>
     <form action="../../controller/loginController/LoginController.php" method="post">
 
-        <div class="page-wrapper">
+        <div class="page-wrapper" style="padding-bottom: 0">
             <div class="page-content--bge5">
                 <div class="container">
                     <div class="login-wrap">
