@@ -1,6 +1,3 @@
-
-
-
 /*Control de espacios del tema para que quede visualemnte bien*/
 .login-wrap, login-content{
     padding-top: 0;
@@ -47,7 +44,6 @@ input[type="radio"] {
     -webkit-font-feature-settings: 'liga';
     -webkit-font-smoothing: antialiased;
 }
-
 
 /*accionado*/
 input[type="radio"] + span {

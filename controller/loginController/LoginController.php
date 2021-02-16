@@ -1,14 +1,16 @@
 <?php
 
-require '../../utils/getQuerys.php';
+require '../../domain/user/userRepositoryInterface.php';
+require '../../domain/user/user.php';
+require '../../respository/PdoUserRepository.php';
 require '../../utils/errorsMessages.php';
+require '../../utils/Medoo.php';
 
 use errorsMessages\errorsMessages;
-use QueryHelper\QueryHelper;
+use User\PdoUserRepository;
 
 $errorsMessages = new errorsMessages();
-
-$query = new QueryHelper();
+$userQ = new PdoUserRepository();
 $errors = array();
 $email = '';
 $password = '';
@@ -23,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["submit"])) {
         filterAllInputs();
         $result = array();
 
-        $usuario = $query->getUserWithController($_POST["email"], $_POST["password"]);
+        $usuario = $userQ->get($_POST["email"], $_POST["password"]);
         if ($usuario != null) {
             if ($_POST["remember"] == 'remember') {
                 setcookie("loggedId", $usuario->getDni(), time() + 60 * 60 * 24 * 30, "/");
@@ -31,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["submit"])) {
             session_start();
             $_SESSION['uid'] = $usuario->getDni();
             session_write_close();
-            header("Location: ../../views/home/home.php");
+            header("Location: ../../views/task/tarea.php");
         } else {
             session_start();
             $_SESSION['error'] = $errorsMessages->getError("login:invalid");

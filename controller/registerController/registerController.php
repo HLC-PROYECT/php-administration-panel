@@ -1,17 +1,14 @@
 <?php
 
-require '../../utils/getQuerys.php';
 require '../../utils/errorsMessages.php';
 
 use errorsMessages\errorsMessages;
-use QueryHelper\QueryHelper;
+use User\PdoUserRepository;
 
 $errorsMessages = new errorsMessages();
 
-$query = new QueryHelper();
+$userQ = new PdoUserRepository();
 $errors = array();
-$email = '';
-$password = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["submit"])) {
     require('validateRegister.php');
@@ -23,20 +20,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["submit"])) {
         filterAllInputs();
         $result = array();
 
-        if ($query->checkExistUser($_POST["email"])) {
+        if ($userQ->checkEmail($_POST["email"])) {
             session_start();
-            $_SESSION['error'] = $errorsMessages ->getError("email:repeat") ;
+            $_SESSION['error'] = $errorsMessages->getError("email:repeat");
             session_write_close();
             header("Location: ../../views/auth/login.php");
         } else {
-            $usuario = $query->createUserWithController($_POST["dni"],$_POST["email"], $_POST["password"]);
-            if ($_POST["remember"] == 'remember') {
-                setcookie("loggedId", $usuario->getDni(), time() + 60 * 60 * 24 * 30, "/");
+            if ($userQ->checkDni($_POST["dni"])) {
+                session_start();
+                $_SESSION['error'] = $errorsMessages->getError("dni:repeat");
+                session_write_close();
+                header("Location: ../../views/auth/login.php");
+            }else{
+                $usuario = $userQ->save($_POST["dni"], $_POST["email"],$_POST["nombre_usuario"], $_POST["password"],$_POST["nombre"],$_POST["f_alta"],$_POST["tipo"]);
+                if ($_POST["remember"] == 'remember') {
+                    setcookie("loggedId", $usuario->getDni(), time() + 60 * 60 * 24 * 30, "/");
+                }
+                session_start();
+                $_SESSION['uid'] = $usuario->getDni();
+                session_write_close();
+                header("Location: ../../views/home/home.php");
             }
-            session_start();
-            $_SESSION['uid'] = $usuario->getDni();
-            session_write_close();
-            header("Location: ../../views/home/home.php");
         }
 
     } else {
