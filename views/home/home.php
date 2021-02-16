@@ -6,7 +6,7 @@ use QueryHelper\QueryHelper;
 
 session_start();
 $query = new QueryHelper();
-$user = $query->getUserByid(intval($_SESSION['uid']));
+$user = $query->getUserBydni($_SESSION['uid']);
 session_write_close();
 ?>
 <!DOCTYPE html>

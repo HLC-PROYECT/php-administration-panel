@@ -13,6 +13,7 @@
 @import url("../template/vendor/perfect-scrollbar/perfect-scrollbar.css");
 /*Theme css*/
 @import url("../template/css/theme.css");
+
 /*Arregla cuando se achica la pagina en tamaño movil el dropdown del usuario */
 @media (max-width: 991px){
 
@@ -20,3 +21,7 @@
         justify-content: flex-end;
     }
 }
+.page-wrapper{
+    padding-bottom: 0;
+}
+/*Register*/
