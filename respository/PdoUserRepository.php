@@ -62,7 +62,7 @@ class PdoUserRepository implements UserRepositoryInterface
 
     public function save(string $dni, string $email, string $nombre_usuario, string $password, string $nombre, string $f_alta, string $tipo): bool
     {
-        return $this->database->insert("usario", ["dni" => $dni, "email" => $email, "nombre_usuario" => $nombre_usuario,
+        return $this->database->insert("usario", ["dni" => $dni, "email" => $email, "nomb_usuario" => $nombre_usuario,
             "password" => $password, "nombre" => $nombre, "f_alta" => $f_alta, "tipo" => $tipo]);
     }
 }
