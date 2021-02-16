@@ -51,18 +51,27 @@ class PdoUserRepository implements UserRepositoryInterface
         return $this->database->has("usuario", ["email" => $email]);
     }
 
-    public function get(string $email, string $password): User
+    public function get(string $email, string $password): ?User
     {
         $user = $this->database->select("usuario", "*", ["email" => $email, "password" => $password]);
 
         if ($user != null) {
             return $this->instantiate($user[0]);
+        }else{
+            //TODO(): ERROR: añadir error de usuario no encontrado
+            return null;
         }
     }
 
     public function save(string $dni, string $email, string $nombre_usuario, string $password, string $nombre, string $f_alta, string $tipo): bool
     {
-        return $this->database->insert("usario", ["dni" => $dni, "email" => $email, "nomb_usuario" => $nombre_usuario,
+        $r=  $this->database->insert("usuario", ["dni" => $dni, "email" => $email, "nomb_usuario" => $nombre_usuario,
             "password" => $password, "nombre" => $nombre, "f_alta" => $f_alta, "tipo" => $tipo]);
+        if ($r->errorCode() =='00000'){
+            return true;
+        }else{
+            //TODO(): ERROR: Añadir error al session
+            return false;
+        }
     }
 }

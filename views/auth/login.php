@@ -16,15 +16,15 @@ session_start();
     <!-- Title Page-->
     <title>Login</title>
     <link rel="stylesheet" href="../../resources/styles/style.css">
-
+    <link href="../../resources/toastr/toastr.css" rel="stylesheet"/>
 </head>
 <body class="animsition">
 <script src="../../resources/toastr/jquery-3.5.1.min.js"></script>
 <script src="../../resources/toastr/toastr.min.js"></script>
-<script src="../../resources/js/authErrorController.js">
 
 
-</script>
+
+
 <form action="../../controller/loginController/LoginController.php" method="post">
 
     <div class="page-wrapper" style="padding-bottom: 0">
@@ -91,13 +91,10 @@ session_start();
 <script src="../../resources/template/vendor/circle-progress/circle-progress.min.js"></script>
 <script src="../../resources/template/vendor/perfect-scrollbar/perfect-scrollbar.js"></script>
 <script src="../../resources/template/vendor/chartjs/Chart.bundle.min.js"></script>
-<script src="../../resources/template/vendor/select2/select2.min.js">
-</script>
-
+<script src="../../resources/template/vendor/select2/select2.min.js"></script>
 <!-- Main JS-->
 <script src="../../resources/template/js/main.js"></script>
-<script src="../../resources/js/authErrorController.js">
-</script>
+<script src="../../resources/js/authErrorController.js"></script>
 <?php
 if (isset($_SESSION['error'])) {
     $error = $_SESSION['error'];

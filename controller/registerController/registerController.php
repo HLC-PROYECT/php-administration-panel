@@ -1,6 +1,11 @@
 <?php
 
+
+require '../../domain/user/userRepositoryInterface.php';
+require '../../domain/user/user.php';
+require '../../respository/PdoUserRepository.php';
 require '../../utils/errorsMessages.php';
+require '../../utils/Medoo.php';
 
 use errorsMessages\errorsMessages;
 use User\PdoUserRepository;
@@ -31,15 +36,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["submit"])) {
                 $_SESSION['error'] = $errorsMessages->getError("dni:repeat");
                 session_write_close();
                 header("Location: ../../views/auth/login.php");
-            }else{
-                $usuario = $userQ->save($_POST["dni"], $_POST["email"],$_POST["nombre_usuario"], $_POST["password"],$_POST["nombre"],$_POST["f_alta"],$_POST["tipo"]);
-                if ($_POST["remember"] == 'remember') {
-                    setcookie("loggedId", $usuario->getDni(), time() + 60 * 60 * 24 * 30, "/");
+            } else {
+                $fecha = new DateTime();
+                $r = $userQ->save($_POST["dni"], $_POST["email"], $_POST["alias"], $_POST["password"], $_POST["name"], date("Y-m-d", $fecha->getTimestamp()), $_POST["tipo"]);
+                if ($r) {
+                    $usuario = $userQ->getByDni($_POST["dni"]);
+                    if ($_POST["remember"] == 'remember') {
+                        setcookie("loggedId", $usuario->getDni(), time() + 60 * 60 * 24 * 30, "/");
+                    }
+                    session_start();
+                    $_SESSION['uid'] = $usuario->getDni();
+                    session_write_close();
+                    header("Location: ../../views/task/tarea.php");
                 }
-                session_start();
-                $_SESSION['uid'] = $usuario->getDni();
-                session_write_close();
-                header("Location: ../../views/home/home.php");
             }
         }
 

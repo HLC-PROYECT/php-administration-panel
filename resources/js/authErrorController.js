@@ -1,5 +1,4 @@
 function showError(message){
-    console.log('message')
     toastr.options = {
         "closeButton": false,
         "debug": false,
@@ -18,4 +17,5 @@ function showError(message){
         "hideMethod": "fadeOut"
     }
     toastr["error"]("", message)
+
 }
