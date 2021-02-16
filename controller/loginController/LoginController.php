@@ -15,6 +15,7 @@ $errors = array();
 $email = '';
 $password = '';
 
+session_start();
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["submit"])) {
     require('validateLogin.php');
     validateEmail();
@@ -27,31 +28,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["submit"])) {
 
         $usuario = $userQ->get($_POST["email"], $_POST["password"]);
         if ($usuario != null) {
-            if ($_POST["remember"] == 'remember') {
+            if (isset($_POST["remember"]) && $_POST["remember"]  == 'remember') {
                 setcookie("loggedId", $usuario->getDni(), time() + 60 * 60 * 24 * 30, "/");
             }
-            session_start();
             $_SESSION['uid'] = $usuario->getDni();
             session_write_close();
             header("Location: ../../views/task/tarea.php");
         } else {
-            session_start();
             $_SESSION['error'] = $errorsMessages->getError("login:invalid");
             session_write_close();
             header('location: ../../views/auth/login.php');
         }
 
     } else {
-        session_start();
         $_SESSION['error'] = $errors;
-
         session_write_close();
-        /*
-            Inicio una sesión para poder enviar mediante el método POST el array
-            que contiene los errores cometidos por el usuario en el formulario.
-            Y así poder navegar hacia la página de errores sin exponer los datos por la url.
-        */
-
         header('location: ../../views/auth/login.php');
     }
 
