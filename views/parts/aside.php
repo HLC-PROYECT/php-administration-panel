@@ -9,7 +9,7 @@
         <nav class="navbar-sidebar">
             <ul class="list-unstyled navbar__list">
                 <li class="has-sub">
-                    <a class="js-arrow" href="#">
+                    <a class="js-arrow" href="../lessons/lesson.php">
                         <i class="fas fa-archive"></i>Cursos</a>
                 </li>
                 <li class="has-sub">
