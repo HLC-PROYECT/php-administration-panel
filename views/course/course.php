@@ -1,20 +1,16 @@
 <?php
-
-require '../../utils/getQuerys.php';
+require '../../respository/PdoCourseRepository.php';
 require '../../domain/course/course.php';
-require '../../respository/PdoUserRepository.php';
 
-use User\PdoUserRepository;
-use QueryHelper\QueryHelper;
-use Course\Course;
+use Course\PdoCourseRepository;
 
-session_start();
-$query = new QueryHelper();
-$userQ = new PdoUserRepository();
-$user = $userQ->getByDni($_SESSION['uid']);
-$a = $query->getTaskSubjectUsingDni("12345678A");
-$asignatura = $query->getAllSubject();
-session_write_close();
+//<s$query = new QueryHelper();
+$courseRepository = new PdoCourseRepository();
+
+//$course = $courseRepository->getByDni($_SESSION['uid']);
+
+$courseList = $courseRepository->getAllSubject();
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -91,8 +87,8 @@ session_write_close();
                                         </thead>
 
                                         <?php
-                                    foreach ($a as $k => $value) {
-                                        if ($value instanceof Course) {
+                                    foreach ($courseList as $value) {
+
                                             echo '<tr class="tr-shadow">';
                                             echo '<td>' . $value->getTask()->getNombre() . '</td>';
                                             echo '<td>' . $value->getTask()->getDescripcion() . '</td>';
@@ -116,7 +112,6 @@ session_write_close();
                                         </tr>
                                         <tr class="spacer"></tr>
                                         <?php
-                                        }
                                     }
                                     ?>
 

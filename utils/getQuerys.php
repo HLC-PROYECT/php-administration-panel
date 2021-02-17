@@ -10,6 +10,7 @@ use mysql_xdevapi\Exception;
 use Subject\subject;
 use Task\task;
 use TaskSubject\taskSubject;
+use Course\Course;
 
 class QueryHelper
 {
@@ -19,10 +20,10 @@ class QueryHelper
     {
         $this->database = new Medoo([
             'database_type' => 'mysql',
-            'database_name' => 'heroku_1e6e284b61da958',
-            'server' => 'eu-cdbr-west-03.cleardb.net',
-            'username' => 'bca69c49b83a98',
-            'password' => '52f0c250',
+            'database_name' => 'instituto',
+            'server' => 'db',
+            'username' => 'root',
+            'password' => 'root',
             'charset' => 'utf8'
         ]);
     }
@@ -30,6 +31,7 @@ class QueryHelper
     {
         return new task(intval($task["codtarea"]), $task["nombretarea"], $task["descrip"], $task["f_inicio"], $task["f_fin"], $task["estado"]);
     }
+    
     private function instanciateCourse(array $course): task
     {
         //TODO():Instaciar curso
