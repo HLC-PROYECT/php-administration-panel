@@ -19,10 +19,10 @@ class QueryHelper
     {
         $this->database = new Medoo([
             'database_type' => 'mysql',
-            'database_name' => 'heroku_1e6e284b61da958',
-            'server' => 'eu-cdbr-west-03.cleardb.net',
-            'username' => 'bca69c49b83a98',
-            'password' => '52f0c250',
+            'database_name' => 'instituto',
+            'server' => 'db',
+            'username' => 'root',
+            'password' => 'root',
             'charset' => 'utf8'
         ]);
     }
