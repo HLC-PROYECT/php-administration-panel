@@ -1,9 +1,9 @@
 <?php
 
 require '../../utils/getQuerys.php';
-require '../../domain/taskSubject.php';
-require '../../domain/task.php';
-require '../../domain/subject.php';
+require '../../domain/composed/task-subject/taskSubject.php';
+require '../../domain/task/task.php';
+require '../../domain/subject/subject.php';
 require '../../domain/user/userRepositoryInterface.php';
 require '../../domain/user/user.php';
 require '../../respository/PdoUserRepository.php';
