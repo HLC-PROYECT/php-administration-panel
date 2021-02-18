@@ -17,7 +17,7 @@
                     </div>
                     <div class="form-group">
                         <label>Descipcion</label>
-                        <input class="au-input au-input--full" type="text" name="descripcion"
+                        <input required class="au-input au-input--full" type="text" name="desc"
                                placeholder="descripcion">
                     </div>
                     <div class="form-group">
@@ -34,14 +34,15 @@
                     </div>
                     <div class="form-group">
                         <div>
-                            <label for="select" class=" form-control-label">Asignatura</label>
+                            <label for="asigs" class=" form-control-label">Asignatura</label>
                         </div>
                         <div>
-                            <select name="select" id="select" class="form-control">
+                            <select name="asigs" id="asigs" class="form-control">
                                 <?php
-
                                 foreach ($subjectNames as $key => $value) {
-                                    echo '<option value="' . $key . '">' . $subjectNames[$key]["nombreasignatura"] . '</option>';
+                                    $cod = $value["codasig"];
+                                    $nombre = $value["nombreasignatura"];
+                                    echo "<option value='$cod'> $nombre </option>";
                                 }
                                 ?>
                             </select>
@@ -49,7 +50,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="au-btn au-btn--green">Añadir</button>
+                    <button type="submit" name="submit" class="au-btn au-btn--green">Añadir</button>
                 </div>
             </form>
         </div>

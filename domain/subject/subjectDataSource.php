@@ -17,4 +17,5 @@ interface subjectDataSource
     public function instantiate(array $subject): subject;
 
     public function getAllSubject(): array;
+
 }

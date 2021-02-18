@@ -21,9 +21,9 @@ class PdoTaskRepository implements taskDataSource
         ]);
     }
 
-    public function save(int $codTask, string $taskName, string $initialDate, string $endDate, string $state, string $des, int $codSubject): bool
+    public function save( string $taskName, string $initialDate, string $endDate, string $state, string $des, int $codSubject): bool
     {
-        $r = $this->database->insert("tarea", ["codtarea" => $codTask, "nombretarea" => $taskName, "f_inicio" => $initialDate,
+        $r = $this->database->insert("tarea", [ "nombretarea" => $taskName, "f_inicio" => $initialDate,
             "f_fin" => $endDate, "estado" => $state, "descrip" => $des, "codasig" => $codSubject]);
         if ($r->errorCode() == '00000') {
             return true;

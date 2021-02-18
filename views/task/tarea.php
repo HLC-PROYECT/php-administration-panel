@@ -1,31 +1,29 @@
 <?php
 
-require '../../utils/getQuerys.php';
-require '../../domain/composed/task-subject/taskSubjectDataSource.php';
-require '../../domain/subject/subjectDataSource.php';
-require '../../domain/task/taskDataSource.php';
-require '../../domain/composed/task-subject/taskSubject.php';
-require '../../domain/task/task.php';
-require '../../domain/subject/subject.php';
-require '../../domain/user/userRepositoryInterface.php';
-require '../../domain/user/user.php';
-require '../../respository/PdoUserRepository.php';
-require '../../respository/composed/PdoTaskSubjectRepository.php';
-require '../../respository/PdoSubjectRepository.php';
-require '../../respository/PdoTaskRepository.php';
+require '../parts/querysRequires.php';
 
+use Medoo\Medoo;
 use Subject\PdoSubjectRepository;
+use Task\PdoTaskRepository;
 use TaskSubject\PdoTaskSubjectRepository;
 use User\PdoUserRepository;
 use  TaskSubject\taskSubject;
+
 session_start();
+
 $taskSubjectRepo = new PdoTaskSubjectRepository();
 $subjectRepo = new PdoSubjectRepository();
 $userQ = new PdoUserRepository();
+$task = new PdoTaskRepository();
+if (isset($_POST['po'])) {
+    $task->deleteById(intval($_POST['po']));
+    unset($_POST['po']);
+}
 $user = $userQ->getByDni($_SESSION['uid']);
-$subjects= $taskSubjectRepo->getTaskSubjectUsingDni("12345678A");
+$subjects = $taskSubjectRepo->getTaskSubjectUsingDni("12345678A");
 $subjectNames = $subjectRepo->getAllSubject();
-session_write_close();
+
+//TODO(): OPTIMIZAR BORRADO
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -38,19 +36,22 @@ session_write_close();
     <meta name="author" content="HLC TEAM">
     <meta name="keywords" content="home">
     <link rel="stylesheet" href="../../resources/styles/style.css">
-
+    <link href="../../resources/toastr/toastr.css" rel="stylesheet"/>
     <!-- Title Page-->
     <title>Home</title>
 </head>
 
 <body class="animsition">
+<script src="../../resources/toastr/jquery-3.5.1.min.js"></script>
+<script src="../../resources/toastr/toastr.min.js"></script>
+<script src="deleteItems.js"></script>
 <div class="page-wrapper">
     <?php require '../parts/header-mobile.php' ?>
     <?php require '../parts/aside.php' ?>
+
     <div class="page-container">
 
         <?php require '../parts/header-desktop.php' ?>
-
         <div class="main-content" style="background-color: rgba(133,133,133,0.09)">
             <div class="section__content section__content--p30">
                 <div class="container-fluid">
@@ -59,6 +60,10 @@ session_write_close();
                             <!-- DATA TABLE -->
                             <h3 class="title-5 m-b-35">Tareas</h3>
                             <div class="table-data__tool">
+                            <?php
+
+                            if ($subjects != null) {
+                                ?>
                                 <div class="table-data__tool-left">
                                     <div class="rs-select2--light rs-select2--md">
                                         <select class="js-select2" name="property">
@@ -80,6 +85,12 @@ session_write_close();
                                         <i class="zmdi zmdi-filter-list"></i>filters
                                     </button>
                                 </div>
+
+                                <?php
+                            }
+                            ?>
+
+
                                 <div class="table-data__tool-right">
                                     <button class="au-btn au-btn-icon au-btn--green au-btn--small" data-toggle="modal"
                                             data-target="#addTask">
@@ -88,52 +99,68 @@ session_write_close();
                                 </div>
                             </div>
                             <!-- tabla -->
-                            <div class="table-responsive table-responsive-data2">
-                                <table class="table table-data2">
-                                    <thead>
-                                    <tr>
-                                        <th>Nombre</th>
-                                        <th>description</th>
-                                        <th>Inicio</th>
-                                        <th>Fin</th>
-                                        <th>Estado</th>
-                                        <th>Asignatura</th>
-                                        <th></th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <?php
-                                    foreach ($subjects as $k => $value) {
-                                        if ($value instanceof taskSubject) {
-                                            echo '<tr class="tr-shadow">';
-                                            echo '<td>' . $value->getTask()->getNombre() . '</td>';
-                                            echo '<td>' . $value->getTask()->getDescripcion() . '</td>';
-                                            echo '<td>' . $value->getTask()->getFInicio() . '</td>';
-                                            echo '<td>' . $value->getTask()->getFFin() . '</td>';
-                                            $es = $value->getTask()->getEstado();
-                                            if ($es == "completada") {
-                                                echo '<td> <span class="status--process">' . $es . '</span></td>';
-                                            } else {
-                                                echo '<td> <span class="status--denied">' . $es . '</span></td>';
+
+                            <?php
+                            if ($subjects != null)  {
+                                ?>
+                                <div class="table-responsive table-responsive-data2">
+                                    <table class="table table-data2">
+                                        <thead>
+                                        <tr>
+                                            <th>Nombre</th>
+                                            <th>description</th>
+                                            <th>Inicio</th>
+                                            <th>Fin</th>
+                                            <th>Estado</th>
+                                            <th>Asignatura</th>
+                                            <th></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <?php
+
+                                        foreach ($subjects as $k => $value) {
+                                            if ($value instanceof taskSubject) {
+                                                echo '<tr class="tr-shadow">';
+                                                echo '<td>' . $value->getTask()->getNombre() . '</td>';
+                                                echo '<td>' . $value->getTask()->getDescripcion() . '</td>';
+                                                echo '<td>' . $value->getTask()->getFInicio() . '</td>';
+                                                echo '<td>' . $value->getTask()->getFFin() . '</td>';
+                                                $es = $value->getTask()->getEstado();
+                                                if ($es == "completada") {
+                                                    echo '<td> <span class="status--process">' . $es . '</span></td>';
+                                                } else {
+                                                    echo '<td> <span class="status--denied">' . $es . '</span></td>';
+                                                }
+                                                echo '<td>' . $value->getSubject()->getNombre() . '</td>';
+                                                $id = $value->getTask()->getCodtarea();
+                                                ?>
+                                                <td>
+                                                    <div class="table-data-feature">
+                                                        <form action="tarea.php" method="post">
+                                                            <button class="item" data-toggle="tooltip"
+                                                                    data-placement="top"
+                                                                    title="Delete"
+                                                                    name="po" type="submit" value="<?php echo $id ?>"
+                                                            ">
+                                                            <i class="zmdi zmdi-delete"></i>
+                                                        </form>
+
+                                                    </div>
+                                                </td>
+                                                </tr>
+                                                <tr class="spacer"></tr>
+                                                <?php
                                             }
-                                            echo '<td>' . $value->getSubject()->getNombre() . '</td>';
-                                            ?>
-                                            <td>
-                                                <div class="table-data-feature">
-                                                    <button class="item" data-toggle="tooltip" data-placement="top"
-                                                            title="Delete">
-                                                        <i class="zmdi zmdi-delete"></i>
-                                                </div>
-                                            </td>
-                                            </tr>
-                                            <tr class="spacer"></tr>
-                                            <?php
-                                        }
-                                    }
-                                    ?>
-                                    </tbody>
-                                </table>
-                            </div>
+                                        } ?>
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <?php
+                            }
+                            ?>
+
                             <!-- END DATA TABLE -->
                         </div>
                     </div>
@@ -145,10 +172,14 @@ session_write_close();
     </div>
 </div>
 <?php include '../parts/js.php' ?>
+
 <script>
     const activeTab = '<?= $activeTab ?? "tarea" ?>';
 </script>
+<script src="../../resources/js/authErrorController.js"></script>
+
 <script src="../../resources/js/app.js"></script>
+<?php require '../parts/errorToast.php' ?>
 </body>
 </html>
 

@@ -76,6 +76,6 @@ class PdoSubjectRepository implements subjectDataSource
 
     public function getAllSubject(): array
     {
-        return $this->database->select('asignatura', ["nombreasignatura"]);
+        return $this->database->select('asignatura', '*');
     }
 }

@@ -6,7 +6,7 @@ namespace Task;
 
 interface taskDataSource
 {
-    public function save(int $codTask, string $taskName, string $initialDate, string $endDate, string $state, string $des, int $codSubject): bool;
+    public function save(string $taskName, string $initialDate, string $endDate, string $state, string $des, int $codSubject): bool;
 
     public function get(): task|array|null;
 
