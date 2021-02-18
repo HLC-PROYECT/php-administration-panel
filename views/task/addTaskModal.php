@@ -40,8 +40,8 @@
                             <select name="select" id="select" class="form-control">
                                 <?php
 
-                                foreach ($asignatura as $key => $value) {
-                                    echo '<option value="' . $key . '">' . $asignatura[$key]["nombreasignatura"] . '</option>';
+                                foreach ($subjectNames as $key => $value) {
+                                    echo '<option value="' . $key . '">' . $subjectNames[$key]["nombreasignatura"] . '</option>';
                                 }
                                 ?>
                             </select>

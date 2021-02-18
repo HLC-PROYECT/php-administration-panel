@@ -1,23 +1,30 @@
 <?php
 
 require '../../utils/getQuerys.php';
+require '../../domain/composed/task-subject/taskSubjectDataSource.php';
+require '../../domain/subject/subjectDataSource.php';
+require '../../domain/task/taskDataSource.php';
 require '../../domain/composed/task-subject/taskSubject.php';
 require '../../domain/task/task.php';
 require '../../domain/subject/subject.php';
 require '../../domain/user/userRepositoryInterface.php';
 require '../../domain/user/user.php';
 require '../../respository/PdoUserRepository.php';
+require '../../respository/composed/PdoTaskSubjectRepository.php';
+require '../../respository/PdoSubjectRepository.php';
+require '../../respository/PdoTaskRepository.php';
 
+use Subject\PdoSubjectRepository;
+use TaskSubject\PdoTaskSubjectRepository;
 use User\PdoUserRepository;
-use QueryHelper\QueryHelper;
 use  TaskSubject\taskSubject;
-
 session_start();
-$query = new QueryHelper();
+$taskSubjectRepo = new PdoTaskSubjectRepository();
+$subjectRepo = new PdoSubjectRepository();
 $userQ = new PdoUserRepository();
 $user = $userQ->getByDni($_SESSION['uid']);
-$a = $query->getTaskSubjectUsingDni("12345678A");
-$asignatura = $query->getAllSubject();
+$subjects= $taskSubjectRepo->getTaskSubjectUsingDni("12345678A");
+$subjectNames = $subjectRepo->getAllSubject();
 session_write_close();
 ?>
 <!DOCTYPE html>
@@ -56,15 +63,15 @@ session_write_close();
                                     <div class="rs-select2--light rs-select2--md">
                                         <select class="js-select2" name="property">
                                             <option selected="selected">All Properties</option>
-                                            <option value="">Option 1</option>
-                                            <option value="">Option 2</option>
+                                            <option value="">Completed</option>
+                                            <option value="">Pending</option>
                                         </select>
                                         <div class="dropDownSelect2"></div>
                                     </div>
                                     <div class="rs-select2--light rs-select2--sm">
                                         <select class="js-select2" name="time">
-                                            <option selected="selected">Today</option>
-                                            <option value="">3 Days</option>
+                                            <option selected="selected">All Time</option>
+                                            <option value="">Today</option>
                                             <option value="">1 Week</option>
                                         </select>
                                         <div class="dropDownSelect2"></div>
@@ -96,7 +103,7 @@ session_write_close();
                                     </thead>
                                     <tbody>
                                     <?php
-                                    foreach ($a as $k => $value) {
+                                    foreach ($subjects as $k => $value) {
                                         if ($value instanceof taskSubject) {
                                             echo '<tr class="tr-shadow">';
                                             echo '<td>' . $value->getTask()->getNombre() . '</td>';

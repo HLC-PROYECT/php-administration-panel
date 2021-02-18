@@ -716,34 +716,259 @@
       <ObjectGrants>ALL PRIVILEGES|heroku_1e6e284b61da958
 </ObjectGrants>
     </user>
-    <table id="224" parent="2" name="usuario"/>
-    <column id="225" parent="224" name="id">
+    <table id="224" parent="2" name="alumno"/>
+    <table id="225" parent="2" name="asignatura"/>
+    <table id="226" parent="2" name="curso"/>
+    <table id="227" parent="2" name="profesor"/>
+    <table id="228" parent="2" name="tarea"/>
+    <table id="229" parent="2" name="tarea_alumno"/>
+    <table id="230" parent="2" name="usuario"/>
+    <column id="231" parent="224" name="dni">
+      <Position>1</Position>
+      <DataType>varchar(9)|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="232" parent="224" name="fnac">
+      <Position>2</Position>
+      <DataType>date|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="233" parent="224" name="codcurso">
+      <Position>3</Position>
+      <DataType>int(11)|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <index id="234" parent="224" name="alumno_curso_codcurso_fk">
+      <ColNames>codcurso</ColNames>
+      <Type>btree</Type>
+    </index>
+    <key id="235" parent="224" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>dni</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="236" parent="224" name="alumno_usuario_dni_fk">
+      <ColNames>dni</ColNames>
+      <RefTableName>usuario</RefTableName>
+      <RefColNames>dni</RefColNames>
+    </foreign-key>
+    <foreign-key id="237" parent="224" name="alumno_curso_codcurso_fk">
+      <ColNames>codcurso</ColNames>
+      <RefTableName>curso</RefTableName>
+      <RefColNames>codcurso</RefColNames>
+    </foreign-key>
+    <column id="238" parent="225" name="codasig">
       <Position>1</Position>
       <DataType>int(11)|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>null</SequenceIdentity>
     </column>
-    <column id="226" parent="224" name="email">
+    <column id="239" parent="225" name="nombreasignatura">
       <Position>2</Position>
-      <DataType>varchar(30)|0s</DataType>
-      <NotNull>1</NotNull>
+      <DataType>varchar(25)|0s</DataType>
     </column>
-    <column id="227" parent="224" name="password">
+    <column id="240" parent="225" name="n_horas">
       <Position>3</Position>
-      <DataType>varchar(30)|0s</DataType>
+      <DataType>int(11)|0s</DataType>
+    </column>
+    <column id="241" parent="225" name="anyo_fin">
+      <Position>4</Position>
+      <DataType>year(4)|0s</DataType>
+    </column>
+    <column id="242" parent="225" name="codcurso">
+      <Position>5</Position>
+      <DataType>int(11)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <index id="228" parent="224" name="usuario_email_uindex">
+    <column id="243" parent="225" name="dniprofesor">
+      <Position>6</Position>
+      <DataType>varchar(9)|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <index id="244" parent="225" name="asignatura_curso_codcurso_fk">
+      <ColNames>codcurso</ColNames>
+      <Type>btree</Type>
+    </index>
+    <index id="245" parent="225" name="asignatura_profesor_dni_fk">
+      <ColNames>dniprofesor</ColNames>
+      <Type>btree</Type>
+    </index>
+    <key id="246" parent="225" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>codasig</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="247" parent="225" name="asignatura_curso_codcurso_fk">
+      <ColNames>codcurso</ColNames>
+      <RefTableName>curso</RefTableName>
+      <RefColNames>codcurso</RefColNames>
+    </foreign-key>
+    <foreign-key id="248" parent="225" name="asignatura_profesor_dni_fk">
+      <ColNames>dniprofesor</ColNames>
+      <RefTableName>profesor</RefTableName>
+      <RefColNames>dni</RefColNames>
+    </foreign-key>
+    <column id="249" parent="226" name="codcurso">
+      <Position>1</Position>
+      <DataType>int(11)|0s</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>null</SequenceIdentity>
+    </column>
+    <column id="250" parent="226" name="centroed">
+      <Position>2</Position>
+      <DataType>varchar(100)|0s</DataType>
+    </column>
+    <column id="251" parent="226" name="año_ini">
+      <Position>3</Position>
+      <DataType>year(4)|0s</DataType>
+    </column>
+    <column id="252" parent="226" name="año_fin">
+      <Position>4</Position>
+      <DataType>year(4)|0s</DataType>
+    </column>
+    <column id="253" parent="226" name="descrip">
+      <Position>5</Position>
+      <DataType>varchar(100)|0s</DataType>
+    </column>
+    <key id="254" parent="226" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>codcurso</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <column id="255" parent="227" name="dni">
+      <Position>1</Position>
+      <DataType>varchar(9)|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <key id="256" parent="227" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>dni</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="257" parent="227" name="profesor_usuario_dni_fk">
+      <ColNames>dni</ColNames>
+      <RefTableName>usuario</RefTableName>
+      <RefColNames>dni</RefColNames>
+    </foreign-key>
+    <column id="258" parent="228" name="codtarea">
+      <Position>1</Position>
+      <DataType>int(11)|0s</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>null</SequenceIdentity>
+    </column>
+    <column id="259" parent="228" name="nombretarea">
+      <Position>2</Position>
+      <DataType>varchar(25)|0s</DataType>
+    </column>
+    <column id="260" parent="228" name="f_inicio">
+      <Position>3</Position>
+      <DataType>date|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="261" parent="228" name="f_fin">
+      <Position>4</Position>
+      <DataType>date|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="262" parent="228" name="estado">
+      <Position>5</Position>
+      <DataType>varchar(50)|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="263" parent="228" name="descrip">
+      <Position>6</Position>
+      <DataType>varchar(250)|0s</DataType>
+    </column>
+    <column id="264" parent="228" name="codasig">
+      <Position>7</Position>
+      <DataType>int(11)|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <index id="265" parent="228" name="tarea_asignatura_codasig_fk">
+      <ColNames>codasig</ColNames>
+      <Type>btree</Type>
+    </index>
+    <key id="266" parent="228" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>codtarea</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="267" parent="228" name="tarea_asignatura_codasig_fk">
+      <ColNames>codasig</ColNames>
+      <RefTableName>asignatura</RefTableName>
+      <RefColNames>codasig</RefColNames>
+    </foreign-key>
+    <column id="268" parent="229" name="dni">
+      <Position>1</Position>
+      <DataType>varchar(9)|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="269" parent="229" name="codtarea">
+      <Position>2</Position>
+      <DataType>int(11)|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="270" parent="229" name="completada">
+      <Position>3</Position>
+      <DataType>tinyint(1)|0s</DataType>
+      <NotNull>1</NotNull>
+      <DefaultExpression>0</DefaultExpression>
+    </column>
+    <column id="271" parent="229" name="clasificacion">
+      <Position>4</Position>
+      <DataType>int(11)|0s</DataType>
+    </column>
+    <key id="272" parent="229" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>codtarea
+dni</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <column id="273" parent="230" name="dni">
+      <Position>1</Position>
+      <DataType>varchar(9)|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="274" parent="230" name="email">
+      <Position>2</Position>
+      <DataType>varchar(50)|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="275" parent="230" name="nomb_usuario">
+      <Position>3</Position>
+      <DataType>varchar(25)|0s</DataType>
+    </column>
+    <column id="276" parent="230" name="password">
+      <Position>4</Position>
+      <DataType>varchar(25)|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="277" parent="230" name="nombre">
+      <Position>5</Position>
+      <DataType>varchar(25)|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="278" parent="230" name="f_alta">
+      <Position>6</Position>
+      <DataType>date|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="279" parent="230" name="tipo">
+      <Position>7</Position>
+      <DataType>enum(&apos;P&apos;, &apos;A&apos;)|0e</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <index id="280" parent="230" name="usuario_email_uindex">
       <ColNames>email</ColNames>
       <Unique>1</Unique>
       <Type>btree</Type>
     </index>
-    <key id="229" parent="224" name="PRIMARY">
+    <key id="281" parent="230" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
-      <ColNames>id</ColNames>
+      <ColNames>dni</ColNames>
       <Primary>1</Primary>
     </key>
-    <key id="230" parent="224" name="usuario_email_uindex">
+    <key id="282" parent="230" name="usuario_email_uindex">
       <ColNames>email</ColNames>
       <UnderlyingIndexName>usuario_email_uindex</UnderlyingIndexName>
     </key>

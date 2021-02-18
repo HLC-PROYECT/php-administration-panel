@@ -4,7 +4,7 @@
 namespace Task;
 
 
-final class Task
+final class task
 {
 
     private int $codtarea;

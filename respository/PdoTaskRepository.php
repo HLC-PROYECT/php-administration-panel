@@ -5,7 +5,7 @@ namespace Task;
 
 use Medoo\Medoo;
 
-class PdoTaskRepository implements TaskDataSource
+class PdoTaskRepository implements taskDataSource
 {
     private Medoo $database;
 
@@ -33,10 +33,23 @@ class PdoTaskRepository implements TaskDataSource
         }
     }
 
-    public function get(): Task|array
+    public function get(): task|array|null
     {
-        $task = $this->database->select("tarea","*");
-        if (is_array($task)){
+        $r = $this->database->select("tarea", "*");
+        if (is_array($r)) {
+            $task = array();
+            foreach ($r as $key => $value) {
+                $t = array("codtarea" => $value["codtarea"], "nombretarea" => $value["nombretarea"], "f_inicio" => $value["f_inicio"], "f_fin" => $value["f_fin"], "estado" => $value["estado"], "descrip" => $value["descrip"]);
+                array_push($tasks, $this->instantiate($t));
+            }
+            return $task;
+
+        } elseif ($r == null) {
+            return null;
+        } else {
+            echo "<script>console.log('Debug Objects: " . print_r($r) . "' );</script>";
+            $t = array("codtarea" => $r["codtarea"], "nombretarea" => $r["nombretarea"], "f_inicio" => $r["f_inicio"], "f_fin" => $r["f_fin"], "estado" => $r["estado"], "descrip" => $r["descrip"]);
+            return $this->instantiate($t);
         }
     }
 
@@ -47,12 +60,12 @@ class PdoTaskRepository implements TaskDataSource
         else return false;
     }
 
-    public function getById(int $taskId): Task
+    public function getById(int $taskId): ?task
     {
         return $this->instantiate($this->database->select("tarea", "*", ["codtarea" => $taskId]));
     }
 
-    public function instantiate(array $task): Task
+    public function instantiate(array $task): task
     {
         return new Task(intval($task["codtarea"]), $task["nombretarea"], $task["descrip"], $task["f_inicio"], $task["f_fin"], $task["estado"]);
     }
