@@ -44,7 +44,6 @@ $subjectNames = $subjectRepo->getAllSubject();
 <body class="animsition">
 <script src="../../resources/toastr/jquery-3.5.1.min.js"></script>
 <script src="../../resources/toastr/toastr.min.js"></script>
-<script src="deleteItems.js"></script>
 <div class="page-wrapper">
     <?php require '../parts/header-mobile.php' ?>
     <?php require '../parts/aside.php' ?>
