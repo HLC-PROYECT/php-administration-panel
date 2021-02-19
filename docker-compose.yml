@@ -1,0 +1,66 @@
+version: "2.1"
+
+services:
+  hlc:
+    container_name: hlc
+    image: kaikoo/hlc:development
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+    environment:
+      NGINX_HOST: "local.hlc.dev"
+      PHP_IDE_CONFIG: "serverName=local.hlc.dev"
+      XDEBUG_CONFIG: "client_host=$XDEBUG_HOST"
+    volumes:
+      - ./app:/app
+    ports:
+      - "80:80"
+    networks:
+      net_fp:
+        ipv4_address: 172.100.0.5
+
+  db:
+    platform: linux/x86_64
+    image: mysql
+    container_name: mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: myDb
+      MYSQL_USER: User
+      MYSQL_PASSWORD: User
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - ./dump:/docker-entrypoint-initdb.d
+      - persistent:/var/lib/mysql
+    networks:
+      net_fp:
+        ipv4_address: 172.100.0.6
+
+  phpmyadmin:
+    container_name: phpmyadmin
+    image: phpmyadmin/phpmyadmin:latest
+    ports:
+      - "8080:80"
+    environment:
+      - MYSQL_USER=User
+      - MYSQL_PASSWORD=User
+      - MYSQL_ROOT_PASSWORD=root
+    links:
+      - db:db
+    networks:
+      net_fp:
+        ipv4_address: 172.100.0.7
+
+volumes:
+  persistent:
+
+networks:
+  net_fp:
+    name: kaikoo-hlc-net
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.100.0.0/24
+          gateway: 172.100.0.1
