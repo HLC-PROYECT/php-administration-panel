@@ -1,8 +1,10 @@
 .PHONY: all
+UID=$(shell id -u)
+GID=$(shell id -g)
 
 XDEBUG_HOST=$(shell docker network inspect bridge --format='{{(index .IPAM.Config 0).Gateway}}')
 
-DOCKER_COMPOSE=XDEBUG_HOST=$(XDEBUG_HOST) docker-compose
+DOCKER_COMPOSE=XDEBUG_HOST=$(XDEBUG_HOST) UID=${UID} GID=${GID} docker-compose
 PHP_STAN_COMMAND=php -d memory_limit=512M vendor/bin/phpstan -n --level=8 analyze -c phpstan.neon
 PHP_CODE_SNIFFER=php -d memory_limit=512M vendor/bin/phpcs -s --standard=PSR12 -n
 DOCKER_PHP_CLI=docker run --rm -i -u ${UID}:${GID} -v ${PWD}:/app -w /app php:8-cli

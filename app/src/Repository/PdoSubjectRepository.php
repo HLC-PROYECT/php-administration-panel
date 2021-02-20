@@ -4,22 +4,16 @@ namespace HLC\AP\Repository;
 
 use HLC\AP\Domain\Subject\Subject;
 use HLC\AP\Domain\Subject\subjectRepositoryInterface;
+use HLC\AP\Utils\DatabaseConnection;
 use Medoo\Medoo;
 
 class PdoSubjectRepository implements subjectRepositoryInterface
 {
     private Medoo $database;
 
-    public function __construct()
+    public function __construct(private DatabaseConnection $databaseConnection)
     {
-        $this->database = new Medoo([
-            'database_type' => 'mysql',
-            'database_name' => 'heroku_1e6e284b61da958',
-            'server' => 'eu-cdbr-west-03.cleardb.net',
-            'username' => 'bca69c49b83a98',
-            'password' => '52f0c250',
-            'charset' => 'utf8'
-        ]);
+        $this->database = $databaseConnection->getMedooDatabase();
     }
 
     public function save(int $subjectId, string $name, int $numHours, int $yearEnd, int $courseId, string $identificationDocumentTeacher): bool

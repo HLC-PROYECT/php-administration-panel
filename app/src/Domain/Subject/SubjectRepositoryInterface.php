@@ -2,7 +2,7 @@
 
 namespace HLC\AP\Domain\Subject;
 
-interface subjectRepositoryInterface
+interface SubjectRepositoryInterface
 {
     public function save(int $subjectId, string $name, int $numHours, int $yearEnd, int $courseId, string $identificationDocumentTeacher): bool;
 

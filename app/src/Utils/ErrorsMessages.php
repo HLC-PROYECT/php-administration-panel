@@ -7,11 +7,14 @@ final class ErrorsMessages
     public static function getError(string $errorCode): string
     {
         return match ($errorCode) {
-            "login:invalid" => "The user or the password were not correct",
-            "email:invalid" => "The email was not correct. Please enter a valid one",
-            "email:repeat" => "The mail you entered is already in use. If its yours, sign in.",
-            "dni:repeat" => "The DNI you entered is already in use. If its yours, sign in.",
-            "password:invalid" => "The password you antered was not correct",
+            "login:invalid" => "The user or the password were not valid",
+            "email:invalid" => "Person email is not valid. Please enter a valid email",
+            "email:repeat" => "The mail you tried to use is already in use. Please, use another one.",
+            "dni:repeat" => "This DNI is already in use, just sign in!",
+            "password:invalid" => "Password is not valid. Must have almost 8 characters",
+            "date:lessActual" => "The end date cannot be smaller than the current one",
+            "date:EndLessStart" => "The end date cannot be less than the start date",
+            "generic:emptyFields" => "All fields have to be filled",
             default => "Error not controlled",
         };
     }

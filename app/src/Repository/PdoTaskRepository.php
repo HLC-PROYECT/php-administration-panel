@@ -11,9 +11,9 @@ final class PdoTaskRepository implements TaskRepositoryInterface
 {
     private Medoo $database;
 
-    public function __construct()
+    public function __construct(private DatabaseConnection $databaseConnection)
     {
-        $this->database = DatabaseConnection::getDatabaseInstance()->getMedooDatabase();
+        $this->database = $databaseConnection->getMedooDatabase();
     }
 
     public function save(

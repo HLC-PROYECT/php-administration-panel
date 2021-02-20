@@ -5,22 +5,22 @@ namespace HLC\AP\Repository;
 use HLC\AP\Domain\Subject\Subject;
 use HLC\AP\Domain\Task\Task;
 use HLC\AP\Domain\TaskSubject\TaskSubject;
+use HLC\AP\Domain\TaskSubject\TaskSubjectRepositoryInterface;
 use HLC\AP\Utils\DatabaseConnection;
 use Medoo\Medoo;
-use TaskSubject\TaskSubjectRepositoryInterface;
 
 class PdoTaskSubjectRepository implements TaskSubjectRepositoryInterface
 {
     private Medoo $database;
 
-    public function __construct()
+    public function __construct(DatabaseConnection $databaseConnection)
     {
-        $this->database = DatabaseConnection::getDatabaseInstance()->getMedooDatabase();
+        $this->database = $databaseConnection->getMedooDatabase();
     }
 
     private function instantiate(Task $task, Subject $subject): TaskSubject
     {
-        return new TaskSubject::build($task, $subject);
+        return new TaskSubject($task, $subject);
     }
     /** @return TaskSubject[] */
     public function getTaskSubjectUsingDni(string $identificationDocument): taskSubject|array|null

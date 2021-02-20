@@ -2,18 +2,18 @@
 
 namespace HLC\AP\Repository;
 
-use HLC\AP\Domain\User\User;
-
-use HLC\AP\Domain\User\UserRepositoryInterface;
 use HLC\AP\Utils\DatabaseConnection;
 use Medoo\Medoo;
+use HLC\AP\Domain\User\User;
+use HLC\AP\Domain\User\UserRepositoryInterface;
 
 class PdoUserRepository implements UserRepositoryInterface
 {
     private Medoo $database;
 
-    public function __construct(){
-        $this->database = DatabaseConnection::getDatabaseInstance()->getMedooDatabase();
+    public function __construct(DatabaseConnection $databaseConnection)
+    {
+        $this->database = $databaseConnection->getMedooDatabase();
     }
 
     public function delete(string $userDni): bool
@@ -24,7 +24,7 @@ class PdoUserRepository implements UserRepositoryInterface
 
     public function getByDni(string $userDni): User
     {
-        return $this->transformToUser($this->database->select("usuario", "*", ["dni" => $userDni])[0]) ;
+        return $this->transformToUser($this->database->select("usuario", "*", ["dni" => $userDni])[0]);
     }
 
     private function transformToUser(array $user): User
@@ -36,6 +36,8 @@ class PdoUserRepository implements UserRepositoryInterface
             $user["nomb_usuario"],
             $user["nombre"],
             $user["f_alta"],
+            "", // $user["f_baja"],
+            "", // $user["f_modificacion"],
             $user["tipo"]
         );
     }
@@ -71,8 +73,9 @@ class PdoUserRepository implements UserRepositoryInterface
         string $dateStart,
         string $dateEnd,
         string $type
-    ): bool {
-        $r =  $this->database->insert(
+    ): bool
+    {
+        $r = $this->database->insert(
             "usuario",
             [
                 "dni" => $dni,
@@ -85,7 +88,7 @@ class PdoUserRepository implements UserRepositoryInterface
             ]
         );
 
-        if ($r->errorCode() != '00000')  {
+        if ($r->errorCode() != '00000') {
             //TODO(): ERROR: Añadir error al session
             return false;
         }

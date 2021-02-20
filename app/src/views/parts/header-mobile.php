@@ -3,8 +3,8 @@
     <div class="header-mobile__bar">
         <div class="container-fluid">
             <div class="header-mobile-inner">
-                <a class="logo" href="../../../../../../Downloads/php-administration-panel/views/home/home.php">
-                    <img src="../../../../../../Downloads/php-administration-panel/resources/img/logo.png" width="490" alt="Logo"/>
+                <a class="logo" href="../home/home.php">
+                    <img src="resources/img/logo.png" width="490" alt="Logo"/>
                 </a>
                 <button class="hamburger hamburger--slider" type="button">
                             <span class="hamburger-box">

@@ -17,7 +17,8 @@ RUN docker-php-ext-enable xdebug mysqli
 RUN ln -s /usr/share/zoneinfo/$TZ /etc/localtime
 
 # Services
-COPY docker/service /etc/service
+
+ADD docker/service /etc/service
 RUN chmod +x /etc/service/nginx/run && chmod +x /etc/service/php-fpm/run
 
 # Config files

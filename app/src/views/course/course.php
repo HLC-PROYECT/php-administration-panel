@@ -31,7 +31,7 @@ session_write_close();
     <meta name="description" content="home">
     <meta name="author" content="HLC TEAM">
     <meta name="keywords" content="home">
-    <link rel="stylesheet" href="../../resources/styles/style.css">
+    <link rel="stylesheet" href="../../../public/resources/styles/style.css">
 
     <!-- Title Page-->
     <title>Cursos</title>
@@ -139,7 +139,7 @@ session_write_close();
 <script>
     const activeTab = '<?= $activeTab ?? "tarea" ?>';
 </script>
-<script src="../../resources/js/app.js"></script>
+<script src="../../../public/resources/js/app.js"></script>
 </body>
 
 </html>

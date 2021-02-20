@@ -1,8 +1,6 @@
 <?php
 
-namespace TaskSubject;
-
-use HLC\AP\Domain\TaskSubject\TaskSubject;
+namespace HLC\AP\Domain\TaskSubject;
 
 interface TaskSubjectRepositoryInterface
 {

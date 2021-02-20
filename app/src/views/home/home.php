@@ -19,7 +19,7 @@ session_write_close();
     <meta name="description" content="home">
     <meta name="author" content="HLC TEAM">
     <meta name="keywords" content="home">
-    <link rel="stylesheet" href="../../resources/styles/style.css">
+    <link rel="stylesheet" href="../../../public/resources/styles/style.css">
 
     <!-- Title Page-->
     <title>Home</title>
@@ -32,7 +32,7 @@ session_write_close();
             <div class="container-fluid">
                 <div class="header-mobile-inner">
                     <a class="logo" href="home.php">
-                        <img src="../../resources/img/logo.png" width="40%" alt="Logo"/>
+                        <img src="../../../public/resources/img/logo.png" width="40%" alt="Logo"/>
                     </a>
                     <button class="hamburger hamburger--slider" type="button">
                             <span class="hamburger-box">
@@ -71,7 +71,7 @@ session_write_close();
     <aside class="menu-sidebar d-none d-lg-block">
         <div class="logo">
             <a href="#">
-                <img src="../../resources/img/logo.png" alt="Cool Admin"/>
+                <img src="../../../public/resources/img/logo.png" alt="Cool Admin"/>
             </a>
         </div>
         <div class="menu-sidebar__content js-scrollbar1">
@@ -821,28 +821,28 @@ session_write_close();
     </div>
 </div>
 <!-- Jquery JS-->
-<script src="../../resources/template/vendor/jquery-3.2.1.min.js"></script>
+<script src="../../../public/resources/template/vendor/jquery-3.2.1.min.js"></script>
 <!-- Bootstrap JS-->
-<script src="../../resources/template/vendor/bootstrap-4.1/popper.min.js"></script>
-<script src="../../resources/template/vendor/bootstrap-4.1/bootstrap.min.js"></script>
+<script src="../../../public/resources/template/vendor/bootstrap-4.1/popper.min.js"></script>
+<script src="../../../public/resources/template/vendor/bootstrap-4.1/bootstrap.min.js"></script>
 <!-- Vendor JS       -->
-<script src="../../resources/template/vendor/slick/slick.min.js">
+<script src="../../../public/resources/template/vendor/slick/slick.min.js">
 </script>
-<script src="../../resources/template/vendor/wow/wow.min.js"></script>
-<script src="../../resources/template/vendor/animsition/animsition.min.js"></script>
-<script src="../../resources/template/vendor/bootstrap-progressbar/bootstrap-progressbar.min.js">
+<script src="../../../public/resources/template/vendor/wow/wow.min.js"></script>
+<script src="../../../public/resources/template/vendor/animsition/animsition.min.js"></script>
+<script src="../../../public/resources/template/vendor/bootstrap-progressbar/bootstrap-progressbar.min.js">
 </script>
-<script src="../../resources/template/vendor/counter-up/jquery.waypoints.min.js"></script>
-<script src="../../resources/template/vendor/counter-up/jquery.counterup.min.js">
+<script src="../../../public/resources/template/vendor/counter-up/jquery.waypoints.min.js"></script>
+<script src="../../../public/resources/template/vendor/counter-up/jquery.counterup.min.js">
 </script>
-<script src="../../resources/template/vendor/circle-progress/circle-progress.min.js"></script>
-<script src="../../resources/template/vendor/perfect-scrollbar/perfect-scrollbar.js"></script>
-<script src="../../resources/template/vendor/chartjs/Chart.bundle.min.js"></script>
-<script src="../../resources/template/vendor/select2/select2.min.js">
+<script src="../../../public/resources/template/vendor/circle-progress/circle-progress.min.js"></script>
+<script src="../../../public/resources/template/vendor/perfect-scrollbar/perfect-scrollbar.js"></script>
+<script src="../../../public/resources/template/vendor/chartjs/Chart.bundle.min.js"></script>
+<script src="../../../public/resources/template/vendor/select2/select2.min.js">
 </script>
 
 <!-- Main JS-->
-<script src="../../resources/template/js/main.js"></script>
+<script src="../../../public/resources/template/js/main.js"></script>
 
 </body>
 
