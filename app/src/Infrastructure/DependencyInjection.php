@@ -28,7 +28,7 @@ final class DependencyInjection
             DatabaseConnection::class =>
                 fn(ContainerInterface $container) => self::initDatabase(),
             ErrorsMessages::class =>
-            fn(ContainerInterface $container) => self::initErrors(),
+                fn(ContainerInterface $container) => self::initErrors(),
             UserRepositoryInterface::class =>
                 fn(ContainerInterface $container) => self::initUserRepository($container),
 
@@ -48,12 +48,14 @@ final class DependencyInjection
                 fn(ContainerInterface $container) => self::initTaskController($container),
 
             TaskInsertController::class =>
-            fn(ContainerInterface $container) => self::initTaskInsertController($container),
+                fn(ContainerInterface $container) => self::initTaskInsertController($container),
+            CourseInsertController::class =>
+                fn(ContainerInterface $container) => self::initCourseInsertController($container),
 
             LoginController::class =>
                 fn(ContainerInterface $container) => self::initLoginController($container),
             CourseController::class =>
-            fn(ContainerInterface $container) => self::initCourseController($container)
+                fn(ContainerInterface $container) => self::initCourseController($container)
         ];
     }
 
@@ -107,16 +109,23 @@ final class DependencyInjection
 
     private static function initCourseController(ContainerInterface $container): CourseController
     {
-        return new CourseController($container->get(UserRepositoryInterface::class),$container->get(CourseRepositoryInterface::class));
+        return new CourseController($container->get(UserRepositoryInterface::class), $container->get(CourseRepositoryInterface::class));
     }
 
     private static function initTaskInsertController(ContainerInterface $container): TaskInsertController
     {
-        return new TaskInsertController($container->get(ErrorsMessages::class),$container->get(PdoTaskRepository::class));
+        return new TaskInsertController($container->get(ErrorsMessages::class), $container->get(PdoTaskRepository::class));
+    }
+
+    private static function initCourseInsertController(ContainerInterface $container)
+    {
+        return new CourseInsertController($container->get(ErrorsMessages::class), $container->get(PdoCourseRepository::class));
     }
 
     private static function initErrors(): ErrorsMessages
     {
         return new ErrorsMessages();
     }
+
+
 }

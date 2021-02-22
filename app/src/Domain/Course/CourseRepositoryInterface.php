@@ -10,7 +10,7 @@ interface CourseRepositoryInterface
 
     public function getById(int $courseId): ?Course;
 
-    public function getAllCourses(): array;
+    public function getAllCourses($teacherID): array;
 
     public function getTeacherCourses(): array;
 }

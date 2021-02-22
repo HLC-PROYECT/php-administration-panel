@@ -1,9 +1,3 @@
-<?php
-
-$user = $this->userRepository->getByDni($_SESSION['uid']);
-$courseList = $this->courseRepository->getAllCourses();
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -20,7 +14,9 @@ $courseList = $this->courseRepository->getAllCourses();
 
 <body class="animsition">
 <div class="page-wrapper">
-    <?php require '../src/views/parts/header-mobile.php' ?>
+    <?php
+    use HLC\AP\Domain\Course\Course;
+    require '../src/views/parts/header-mobile.php' ?>
     <?php require '../src/views/parts/aside.php' ?>
     <div class="page-container">
 
@@ -36,11 +32,11 @@ $courseList = $this->courseRepository->getAllCourses();
                             <div class="table-data__tool">
                                 <div class="table-data__tool-left">
                                     <div class="rs-select2--light rs-select2--md">
-                                        <span class="dropdown-header">Order by</span>
-                                        <select class="js-select2" name="property">
-                                            <option selected="selected" value="">Código de curso</option>
-                                            <option value="">Año inicio</option>
-                                            <option value="">Año fin</option>
+                                        <label for="order" class="dropdown-header">Order by</label>
+                                        <select class="js-select2" id="order"  name="property">
+                                            <option selected="selected" value="">Course ID</option>
+                                            <option value="">Start Date</option>
+                                            <option value="">End Date</option>
                                         </select>
                                         <div class="dropDownSelect2"></div>
                                     </div>
@@ -56,7 +52,7 @@ $courseList = $this->courseRepository->getAllCourses();
                                 <div class="table-data__tool-right">
                                     <button class="au-btn au-btn-icon au-btn--green au-btn--small"
                                             data-toggle="modal" data-target="#addTask">
-                                        <i class="zmdi zmdi-plus"></i>añadir curso
+                                        <i class="zmdi zmdi-plus"></i>Add Course
                                     </button>
                                 </div>
                             </div>
@@ -65,30 +61,24 @@ $courseList = $this->courseRepository->getAllCourses();
                                 <table class="table table-data2">
                                     <thead>
                                     <tr>
-                                        <th>Código de curso</th>
-                                        <th>Centro academico</th>
-                                        <th>Año inicio</th>
-                                        <th>Año fin</th>
-                                        <th>Descripción</th>
+                                        <th>Course ID</th>
+                                        <th>Education center</th>
+                                        <th>Start year</th>
+                                        <th>End year</th>
+                                        <th>Description</th>
                                         <th></th>
                                     </tr>
                                     </thead>
-
                                     <?php
                                     foreach ($courseList as $key => $value) {
+                                        //Smart cast
                                         if ($value instanceof Course) {
                                             echo '<tr class="tr-shadow">';
-                                            echo '<td>' . $value->getCodCurso() . '</td>';
-                                            echo '<td>' . $value->getCentro() . '</td>';
-                                            echo '<td>' . $value->getAñoIni() . '</td>';
-                                            echo '<td>' . $value->getAñoFin() . '</td>';
-                                            echo '<td>' . $value->getDescripcion() . '</td>';
-                                            /*
-                                            if ($es == "completada") {
-                                                echo '<td> <span class="status--process">' . $es . '</span></td>';
-                                            } else {
-                                                echo '<td> <span class="status--denied">' . $es . '</span></td>';
-                                            }*/
+                                            echo '<td>' . $value->getCourseId() . '</td>';
+                                            echo '<td>' . $value->getEducationCenter() . '</td>';
+                                            echo '<td>' . $value->getYearStart() . '</td>';
+                                            echo '<td>' . $value->getYearEnd() . '</td>';
+                                            echo '<td>' . $value->getDescription() . '</td>';
                                         }
                                         ?>
                                         <td>
@@ -98,7 +88,6 @@ $courseList = $this->courseRepository->getAllCourses();
                                                     <i class="zmdi zmdi-delete"></i>
                                             </div>
                                         </td>
-                                        </tr>
                                         <tr class="spacer"></tr>
                                         <?php
                                     }

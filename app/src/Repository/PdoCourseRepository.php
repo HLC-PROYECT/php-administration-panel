@@ -42,10 +42,11 @@ class PdoCourseRepository implements CourseRepositoryInterface
         return $this->instantiateCourse($this->database->select("curso", "*", ["codCurso" => $courseId])[0]);
     }
 
-    public function getAllCourses(): array
+    public function getAllCourses($teacherID): array
     {
-        $result = $this->database->select("curso", "*");
-        $tasksubject = array();
+        $QUERY = "SELECT distinct c.* from curso c join asignatura a on c.codcurso = a.codcurso join profesor p on p.dni = a.dniprofesor where dni = '$teacherID'";
+        $result = $this->database->query($QUERY);
+        $courses = array();
 
         foreach ($result as $value) {
             $course = array(
@@ -55,9 +56,9 @@ class PdoCourseRepository implements CourseRepositoryInterface
                 "año_fin" => $value["año_fin"],
                 "descrip" => $value["descrip"]
             );
-            $tasksubject[] = $this->instantiateCourse($course);
+            array_push($courses, $this->instantiateCourse($course));
         }
-        return $tasksubject;
+        return $courses;
     }
 
     private function instantiateCourse(array $course): Course

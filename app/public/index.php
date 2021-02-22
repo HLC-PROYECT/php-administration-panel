@@ -21,12 +21,11 @@ if (null !== $URI) {
 
     if (isValidUri($explode)) {
         if (isComplexUri($explode)) {
-            if ($container->has("HLC\AP\Controller\\$explode[1]\\$explode[2]\\$explode[2]Controller")) navigateComplex($container, $explode[1], $explode[2]);
+            $subRoute = $explode[2];
+            if ($container->has("HLC\AP\Controller\\$explode[1]\\$explode[2]\\$explode[2]Controller")) navigateComplex($container, $folder, $subRoute);
             else navigateTo404();
         } else {
-
             if ($container->has("HLC\AP\Controller\\$folder\\" . $class)) navigate($container, $folder, $class);
-
             elseif (empty(trim($explode[1]))) {
                 if (isset($_COOKIE['loggedId'])) navigate($container, "Course", "CourseController");
                 else  navigate($container, "Login", "LoginController");

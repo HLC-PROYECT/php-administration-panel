@@ -2,54 +2,38 @@
      aria-hidden="true">
     <div class="modal-dialog modal-sm" role="document">
         <div class="modal-content">
-            <form action="addTask.php" method="post">
+            <form action="Course/CourseInsert" method="post">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="addTaskLabel">Nueva tarea</h5>
+                    <h5 class="modal-title" id="addTaskLabel">New course/h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label>Nombre</label>
-                        <input required class="au-input au-input--full" type="text" name="name"
-                               placeholder="nombre">
+                        <label>Education center</label>
+                        <input required class="au-input au-input--full" type="text" name="educationCenter"
+                               placeholder="Education Center">
                     </div>
                     <div class="form-group">
-                        <label>Descipcion</label>
-                        <input class="au-input au-input--full" type="text" name="descripcion"
-                               placeholder="descripcion">
+                        <label>Start year</label>
+                        <input class="au-input au-input--full"  type="number" name="startYear"
+                               placeholder="Start Year">
                     </div>
                     <div class="form-group">
-                        <label>Fecha inicio</label>
-                        <input class="au-input au-input--full" id="finicio" type="date"
-                               name="finicio"
-                               placeholder="dd/mm/yyyy">
+                        <label>End year</label>
+                        <input class="au-input au-input--full" id="finicio" type="number"
+                               name="endYear"
+                               placeholder="End Year">
                     </div>
                     <div class="form-group">
-                        <label>Fecha fin</label>
-                        <input class="au-input au-input--full" id="ffin" type="date"
-                               name="ffin"
-                               placeholder="dd/mm/yyyy">
+                        <label>Description</label>
+                        <input class="au-input au-input--full" id="description" type="number"
+                               name="description"
+                               placeholder="Description">
                     </div>
-                    <div class="form-group">
-                        <div>
-                            <label for="select" class=" form-control-label">Asignatura</label>
-                        </div>
-                        <div>
-                            <select name="select" id="select" class="form-control">
-                                <?php
-
-                                foreach ($asignatura as $key => $value) {
-                                    echo '<option value="' . $key . '">' . $asignatura[$key]["nombreasignatura"] . '</option>';
-                                }
-                                ?>
-                            </select>
-                        </div>
-                    </div>
-                </div>
                 <div class="modal-footer">
-                    <button type="submit" class="au-btn au-btn--green">Añadir</button>
+                    <button type="submit" class="au-btn au-btn--green">Save</button>
                 </div>
             </form>
         </div>
