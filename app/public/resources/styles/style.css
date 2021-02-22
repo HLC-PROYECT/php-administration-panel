@@ -1,11 +1,14 @@
+/* @import url("../template/vendor/animsition/animsition.min.css");*/
+@import url("../template/vendor/animsition/animsition.min.css");
 @import url("../template/css/font-face.css");
 @import url("../template/vendor/font-awesome-4.7/css/font-awesome.min.css");
 @import url("../template/vendor/font-awesome-5/css/fontawesome-all.min.css");
 @import url("../template/vendor/mdi-font/css/material-design-iconic-font.min.css");
-/*Bootstrap*/
+
 @import url("../template/vendor/bootstrap-4.1/bootstrap.min.css");
 @import url("../template/vendor/bootstrap-progressbar/bootstrap-progressbar-3.3.4.min.css");
-@import url("../template/vendor/animsition/animsition.min.css");
+
+
 @import url("../template/vendor/wow/animate.css");
 @import url("../template/vendor/css-hamburgers/hamburgers.min.css");
 @import url("../template/vendor/slick/slick.css");

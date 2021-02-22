@@ -11,11 +11,11 @@ class PdoCourseRepository implements CourseRepositoryInterface
 {
     private Medoo $database;
 
-    public function __construct()
+    public function __construct(private DatabaseConnection $databaseConnection)
     {
-        $this->database = DatabaseConnection::getDatabaseInstance()
-            ->getMedooDatabase();
+        $this->database = $databaseConnection->getMedooDatabase();
     }
+
 
     public function save(int $courseId, string $educationCenter, int $yearStart, int $yearEnd, string $description): bool
     {

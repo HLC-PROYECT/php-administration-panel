@@ -1,26 +1,9 @@
 <?php
-require '../../Utils/DatabaseConnection.php';
-require '../../Utils/Medoo.php';
-require '../../Domain/Course/CourseRepositoryInterface.php';
-require '../../Domain/Course/Course.php';
-require '../../Repository/PdoCourseRepository.php';
 
-require '../../Domain/User/UserDataSourceInterface.php';
-require '../../Domain/User/User.php';
-require '../../Repository/PdoUserRepository.php';
-
-use Course\Course;
-use User\PdoUserRepository;
-use Course\PdoCourseRepository;
-
-session_start();
-$userQ = new PdoUserRepository();
-//Get current User to show information in header
-$user = $userQ->getByDni($_SESSION['uid']);
-$courseRepository = new PdoCourseRepository();
-$courseList = $courseRepository->getAllCourses();
-session_write_close();
+$user = $this->userRepository->getByDni($_SESSION['uid']);
+$courseList = $this->courseRepository->getAllCourses();
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -31,19 +14,17 @@ session_write_close();
     <meta name="description" content="home">
     <meta name="author" content="HLC TEAM">
     <meta name="keywords" content="home">
-    <link rel="stylesheet" href="../../../public/resources/styles/style.css">
-
-    <!-- Title Page-->
-    <title>Cursos</title>
+    <link rel="stylesheet" href="resources/styles/style.css">
+    <title>Courses</title>
 </head>
 
 <body class="animsition">
 <div class="page-wrapper">
-    <?php require '../parts/header-mobile.php' ?>
-    <?php require '../parts/aside.php' ?>
+    <?php require '../src/views/parts/header-mobile.php' ?>
+    <?php require '../src/views/parts/aside.php' ?>
     <div class="page-container">
 
-        <?php require '../parts/header-desktop.php' ?>
+        <?php require '../src/views/parts/header-desktop.php' ?>
 
         <div class="main-content" style="background-color: rgba(133,133,133,0.09)">
             <div class="section__content section__content--p30">
@@ -51,11 +32,11 @@ session_write_close();
                     <div class="row">
                         <div class="col-md-12">
                             <!-- DATA TABLE -->
-                            <h3 class="title-5 m-b-35">Cursos</h3>
+                            <h3 class="title-5 m-b-35">Courses</h3>
                             <div class="table-data__tool">
                                 <div class="table-data__tool-left">
                                     <div class="rs-select2--light rs-select2--md">
-                                        <span class="dropdown-header">Ordenar por</span>
+                                        <span class="dropdown-header">Order by</span>
                                         <select class="js-select2" name="property">
                                             <option selected="selected" value="">Código de curso</option>
                                             <option value="">Año inicio</option>
@@ -132,14 +113,13 @@ session_write_close();
             </div>
         </div>
         <!--Modal-->
-        <?php require 'addCourseModal.php' ?>
+        <?php require '../src/views/course/addCourseModal.php' ?>
     </div>
 </div>
-<?php include '../parts/js.php' ?>
+<?php include '../src/views/parts/js.php' ?>
 <script>
     const activeTab = '<?= $activeTab ?? "tarea" ?>';
 </script>
-<script src="../../../public/resources/js/app.js"></script>
 </body>
 
 </html>

@@ -27,6 +27,7 @@ final class LoginController
         if ($_SERVER['REQUEST_METHOD'] != 'POST' || !isset($_POST["submit"])) {
             return $this->errorsView();
         }
+
         $this->validateEmail();
         $this->validatePassword();
 
@@ -48,7 +49,7 @@ final class LoginController
 
         $_SESSION['uid'] = $user->getIdentificationDocument();
         session_write_close();
-
+        set_url( '/task');
         return $this->taskController->execute();
     }
 

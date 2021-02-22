@@ -2,17 +2,22 @@
 
 namespace HLC\AP\Infrastructure;
 
+use HLC\AP\Controller\Course\CourseController;
 use HLC\AP\Controller\Login\LoginController;
 use HLC\AP\Controller\Task\TaskController;
+use HLC\AP\Controller\Task\TaskInsert\TaskInsertController;
+use HLC\AP\Domain\Course\CourseRepositoryInterface;
 use HLC\AP\Domain\Subject\subjectRepositoryInterface;
 use HLC\AP\Domain\Task\TaskRepositoryInterface;
 use HLC\AP\Domain\TaskSubject\TaskSubjectRepositoryInterface;
 use HLC\AP\Domain\User\UserRepositoryInterface;
+use HLC\AP\Repository\PdoCourseRepository;
 use HLC\AP\Repository\PdoSubjectRepository;
 use HLC\AP\Repository\PdoTaskRepository;
 use HLC\AP\Repository\PdoTaskSubjectRepository;
 use HLC\AP\Repository\PdoUserRepository;
 use HLC\AP\Utils\DatabaseConnection;
+use HLC\AP\Utils\ErrorsMessages;
 use Psr\Container\ContainerInterface;
 
 final class DependencyInjection
@@ -22,9 +27,13 @@ final class DependencyInjection
         return [
             DatabaseConnection::class =>
                 fn(ContainerInterface $container) => self::initDatabase(),
-
+            ErrorsMessages::class =>
+            fn(ContainerInterface $container) => self::initErrors(),
             UserRepositoryInterface::class =>
                 fn(ContainerInterface $container) => self::initUserRepository($container),
+
+            CourseRepositoryInterface::class =>
+                fn(ContainerInterface $container) => self::initCourseRepository($container),
 
             TaskRepositoryInterface::class =>
                 fn(ContainerInterface $container) => self::initTaskResponse($container),
@@ -38,8 +47,13 @@ final class DependencyInjection
             TaskController::class =>
                 fn(ContainerInterface $container) => self::initTaskController($container),
 
+            TaskInsertController::class =>
+            fn(ContainerInterface $container) => self::initTaskInsertController($container),
+
             LoginController::class =>
-                fn(ContainerInterface $container) => self::initLoginController($container)
+                fn(ContainerInterface $container) => self::initLoginController($container),
+            CourseController::class =>
+            fn(ContainerInterface $container) => self::initCourseController($container)
         ];
     }
 
@@ -84,5 +98,25 @@ final class DependencyInjection
     private static function initTaskResponse(ContainerInterface $container): TaskRepositoryInterface
     {
         return new PdoTaskRepository($container->get(DatabaseConnection::class));
+    }
+
+    private static function initCourseRepository(ContainerInterface $container): CourseRepositoryInterface
+    {
+        return new PdoCourseRepository($container->get(DatabaseConnection::class));
+    }
+
+    private static function initCourseController(ContainerInterface $container): CourseController
+    {
+        return new CourseController($container->get(UserRepositoryInterface::class),$container->get(CourseRepositoryInterface::class));
+    }
+
+    private static function initTaskInsertController(ContainerInterface $container): TaskInsertController
+    {
+        return new TaskInsertController($container->get(ErrorsMessages::class),$container->get(PdoTaskRepository::class));
+    }
+
+    private static function initErrors(): ErrorsMessages
+    {
+        return new ErrorsMessages();
     }
 }

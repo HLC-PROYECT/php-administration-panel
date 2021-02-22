@@ -7,7 +7,7 @@ use Medoo\Medoo;
 use HLC\AP\Domain\User\User;
 use HLC\AP\Domain\User\UserRepositoryInterface;
 
-class PdoUserRepository implements UserRepositoryInterface
+final class PdoUserRepository implements UserRepositoryInterface
 {
     private Medoo $database;
 
