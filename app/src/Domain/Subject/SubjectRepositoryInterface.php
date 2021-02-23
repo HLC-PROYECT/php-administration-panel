@@ -4,7 +4,14 @@ namespace HLC\AP\Domain\Subject;
 
 interface SubjectRepositoryInterface
 {
-    public function save(int $subjectId, string $name, int $numHours, int $yearEnd, int $courseId, string $identificationDocumentTeacher): bool;
+    public function save(
+        int $subjectId,
+        string $name,
+        int $numHours,
+        int $yearEnd,
+        int $courseId,
+        string $identificationDocumentTeacher
+    ): bool;
 
     public function get(): subject|array|null;
 

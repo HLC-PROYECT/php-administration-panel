@@ -2,6 +2,9 @@
 
 namespace HLC\AP\Domain\Subject;
 
+use Cassandra\Date;
+use DateTime;
+
 class Subject
 {
     private int $subjectId;
@@ -10,15 +13,41 @@ class Subject
     private int $yearEnd;
     private int $courseId;
     private string $identificationDocumentTeacher;
+    private DateTime $dateStart;
+    private DateTime $dateEnd;
+    private DateTime $dateUpdate;
 
-    public function __construct(int $subjectId, string $name, int $numHours, int $yearEnd, int $courseId, string $identificationDocumentTeacher)
-    {
+    public function __construct(
+        int $subjectId,
+        string $name,
+        int $numHours,
+        int $yearEnd,
+        int $courseId,
+        string $identificationDocumentTeacher,
+        DateTime $dateStart,
+        DateTime $dateEnd,
+        DateTime $dateUpdate
+    ) {
         $this->subjectId = $subjectId;
         $this->name = $name;
         $this->numHours = $numHours;
         $this->yearEnd = $yearEnd;
         $this->courseId = $courseId;
         $this->identificationDocumentTeacher = $identificationDocumentTeacher;
+        $this->dateStart = $dateStart;
+        $this->dateEnd = $dateEnd;
+        $this->dateUpdate = $dateUpdate;
+    }
+
+    public static function build(
+        int $subjectId,
+        string $name,
+        int $numHours,
+        int $yearEnd,
+        int $courseId,
+        string $identificationDocumentTeacher
+    ): self {
+        return new self($subjectId, $name, $numHours, $yearEnd, $courseId, $identificationDocumentTeacher);
     }
 
     public function getSubjectId(): int
@@ -49,9 +78,5 @@ class Subject
     public function getIdentificationDocumentTeacher(): string
     {
         return $this->identificationDocumentTeacher;
-    }
-
-    public static function build(int $subjectId, string $name, int $numHours, int $yearEnd, int $courseId, string $identificationDocumentTeacher): self {
-        return new self($subjectId,$name,$numHours,$yearEnd,$courseId,$identificationDocumentTeacher);
     }
 }
