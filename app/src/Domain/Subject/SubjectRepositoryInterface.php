@@ -13,4 +13,12 @@ interface SubjectRepositoryInterface
     public function getById(int $subjectId): ?Subject;
 
     public function getAllSubject(): array;
+
+    public function getName(int $subjectId): String;
+
+    public function getCourse(int $subjectId): ?Course;
+
+    public function getTotalHours(int $subjectId): int;
+
+    public function getTeacherId(int $subjectId): int;
 }

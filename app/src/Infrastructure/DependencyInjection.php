@@ -5,6 +5,7 @@ namespace HLC\AP\Infrastructure;
 use HLC\AP\Controller\Course\CourseController;
 use HLC\AP\Controller\Login\LoginController;
 use HLC\AP\Controller\Task\TaskController;
+use HLC\AP\Controller\Subject\SubjectController;
 use HLC\AP\Controller\Task\TaskInsert\TaskInsertController;
 use HLC\AP\Domain\Course\CourseRepositoryInterface;
 use HLC\AP\Domain\Subject\subjectRepositoryInterface;
