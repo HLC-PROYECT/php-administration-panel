@@ -4,7 +4,7 @@ namespace HLC\AP\Domain\Course;
 
 interface CourseRepositoryInterface
 {
-    public function save(int $courseId, string $educationCenter, int $yearStart, int $yearEnd, string $description): bool;
+    public function insert(int $courseId, string $educationCenter, int $yearStart, int $yearEnd, string $description): bool;
 
     public function delete(int $courseId): bool;
 

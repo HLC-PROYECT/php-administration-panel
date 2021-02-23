@@ -17,14 +17,15 @@ class PdoCourseRepository implements CourseRepositoryInterface
     }
 
 
-    public function save(int $courseId, string $educationCenter, int $yearStart, int $yearEnd, string $description): bool
+    public function insert(int $courseId, string $educationCenter, int $yearStart, int $yearEnd, string $description): bool
     {
         $response = $this->database->insert("curso",
             [
                 "codCurso" => $courseId,
                 "centroed" => $educationCenter,
                 "año_ini" => $yearStart,
-                "año_fin" => $yearEnd
+                "año_fin" => $yearEnd,
+                "description" => $description,
             ]);
 
         return $response->errorCode() == '00000';
