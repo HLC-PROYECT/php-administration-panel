@@ -24,8 +24,7 @@ final class User
         string $dateEnd,
         string $dateUpdate,
         string $type
-    )
-    {
+    ) {
         $this->identificationDocument = $identificationDocument;
         $this->email = $email;
         $this->password = $password;
@@ -35,6 +34,30 @@ final class User
         $this->dateEnd = $dateEnd;
         $this->dateUpdate = $dateUpdate;
         $this->type = $type;
+    }
+
+    public static function build(
+        string $identificationDocument,
+        string $email,
+        string $password,
+        string $nick,
+        string $name,
+        string $dateStart,
+        string $dateEnd,
+        string $dateUpdate,
+        string $type
+    ): self {
+        return new self(
+            $identificationDocument,
+            $email,
+            $password,
+            $nick,
+            $name,
+            $dateStart,
+            $dateUpdate,
+            $dateEnd,
+            $type
+        );
     }
 
     public function getIdentificationDocument(): string
@@ -80,29 +103,5 @@ final class User
     public function getDateEnd(): string
     {
         return $this->dateEnd;
-    }
-
-    public static function build(
-        string $identificationDocument,
-        string $email,
-        string $password,
-        string $nick,
-        string $name,
-        string $dateStart,
-        string $dateEnd,
-        string $dateUpdate,
-        string $type
-    ): self {
-        return new self(
-            $identificationDocument,
-            $email,
-            $password,
-            $nick,
-            $name,
-            $dateStart,
-            $dateUpdate,
-            $dateEnd,
-            $type
-        );
     }
 }

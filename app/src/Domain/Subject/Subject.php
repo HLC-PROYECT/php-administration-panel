@@ -2,7 +2,6 @@
 
 namespace HLC\AP\Domain\Subject;
 
-use Cassandra\Date;
 use DateTime;
 
 class Subject
@@ -13,9 +12,9 @@ class Subject
     private int $yearEnd;
     private int $courseId;
     private string $identificationDocumentTeacher;
-    private DateTime $dateStart;
-    private DateTime $dateEnd;
-    private DateTime $dateUpdate;
+    private ?DateTime $dateStart;
+    private ?DateTime $dateEnd;
+    private ?DateTime $dateUpdate;
 
     public function __construct(
         int $subjectId,
@@ -24,9 +23,9 @@ class Subject
         int $yearEnd,
         int $courseId,
         string $identificationDocumentTeacher,
-        DateTime $dateStart,
-        DateTime $dateEnd,
-        DateTime $dateUpdate
+        DateTime $dateStart = null,
+        DateTime $dateEnd = null,
+        DateTime $dateUpdate = null
     ) {
         $this->subjectId = $subjectId;
         $this->name = $name;
@@ -45,12 +44,25 @@ class Subject
         int $numHours,
         int $yearEnd,
         int $courseId,
-        string $identificationDocumentTeacher
+        string $identificationDocumentTeacher,
+        DateTime $dateStart = null,
+        DateTime $dateEnd = null,
+        DateTime $dateUpdate = null
     ): self {
-        return new self($subjectId, $name, $numHours, $yearEnd, $courseId, $identificationDocumentTeacher);
+        return new self(
+            $subjectId,
+            $name,
+            $numHours,
+            $yearEnd,
+            $courseId,
+            $identificationDocumentTeacher,
+            $dateStart,
+            $dateEnd,
+            $dateUpdate
+        );
     }
 
-    public function getSubjectId(): int
+    public function getId(): int
     {
         return $this->subjectId;
     }

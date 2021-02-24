@@ -3783,7 +3783,7 @@ var DateProfileGenerator_1 = __webpack_require__(55);
 var InteractiveDateComponent_1 = __webpack_require__(42);
 var GlobalEmitter_1 = __webpack_require__(23);
 var UnzonedRange_1 = __webpack_require__(5);
-/* An abstract class from which other views inherit from
+/* An abstract class from which other Views inherit from
 ----------------------------------------------------------------------------------------------------------------------*/
 var View = /** @class */ (function (_super) {
     tslib_1.__extends(View, _super);
@@ -3863,7 +3863,7 @@ var View = /** @class */ (function (_super) {
     // Computes what the title at the top of the calendar should be for this view
     View.prototype.computeTitle = function (dateProfile) {
         var unzonedRange;
-        // for views that span a large unit of time, show the proper interval, ignoring stray days before and after
+        // for Views that span a large unit of time, show the proper interval, ignoring stray days before and after
         if (/^(year|month)$/.test(dateProfile.currentRangeUnit)) {
             unzonedRange = dateProfile.currentUnzonedRange;
         }
@@ -7926,7 +7926,7 @@ var Scroller_1 = __webpack_require__(41);
 var View_1 = __webpack_require__(43);
 var BasicViewDateProfileGenerator_1 = __webpack_require__(68);
 var DayGrid_1 = __webpack_require__(66);
-/* An abstract class for the "basic" views, as well as month view. Renders one or more rows of day cells.
+/* An abstract class for the "basic" Views, as well as month view. Renders one or more rows of day cells.
 ----------------------------------------------------------------------------------------------------------------------*/
 // It is a manager for a DayGrid subcomponent, which does most of the heavy lifting.
 // It is responsible for managing width/height.
@@ -8175,7 +8175,7 @@ var BasicViewDateProfileGenerator = /** @class */ (function (_super) {
         var renderUnzonedRange = _super.prototype.buildRenderRange.call(this, currentUnzonedRange, currentRangeUnit, isRangeAllDay); // an UnzonedRange
         var start = this.msToUtcMoment(renderUnzonedRange.startMs, isRangeAllDay);
         var end = this.msToUtcMoment(renderUnzonedRange.endMs, isRangeAllDay);
-        // year and month views should be aligned with weeks. this is already done for week
+        // year and month Views should be aligned with weeks. this is already done for week
         if (/^(year|month)$/.test(currentRangeUnit)) {
             start.startOf('week');
             // make end-of-week if not already
@@ -12446,7 +12446,7 @@ var DayGrid_1 = __webpack_require__(66);
 var AGENDA_ALL_DAY_EVENT_LIMIT = 5;
 var agendaTimeGridMethods;
 var agendaDayGridMethods;
-/* An abstract class for all agenda-related views. Displays one more columns with time slots running vertically.
+/* An abstract class for all agenda-related Views. Displays one more columns with time slots running vertically.
 ----------------------------------------------------------------------------------------------------------------------*/
 // Is a manager for the TimeGrid subcomponent and possibly the DayGrid subcomponent (if allDaySlot is on).
 // Responsible for managing width/height.
@@ -14705,7 +14705,7 @@ var OptionsManager = /** @class */ (function (_super) {
         // catch-all. rerender the header and footer and rebuild/rerender the current view
         this._calendar.renderHeader();
         this._calendar.renderFooter();
-        // even non-current views will be affected by this option change. do before rerender
+        // even non-current Views will be affected by this option change. do before rerender
         // TODO: detangle
         this._calendar.viewsByType = {};
         this._calendar.reinitView();
@@ -14780,13 +14780,13 @@ var ViewSpecManager = /** @class */ (function () {
         return cache[viewType] || (cache[viewType] = this.buildViewSpec(viewType));
     };
     // Given a duration singular unit, like "week" or "day", finds a matching view spec.
-    // Preference is given to views that have corresponding buttons.
+    // Preference is given to Views that have corresponding buttons.
     ViewSpecManager.prototype.getUnitViewSpec = function (unit) {
         var viewTypes;
         var i;
         var spec;
         if ($.inArray(unit, util_1.unitsDesc) !== -1) {
-            // put views that have buttons first. there will be duplicates, but oh well
+            // put Views that have buttons first. there will be duplicates, but oh well
             viewTypes = this._calendar.header.getViewsWithButtons(); // TODO: include footer as well?
             $.each(ViewRegistry_1.viewHash, function (viewType) {
                 viewTypes.push(viewType);

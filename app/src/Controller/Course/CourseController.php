@@ -17,7 +17,7 @@ class CourseController
 
     public function execute(): string
     {
-        return require __DIR__ . '/../../views/course/course.php';
+        return require __DIR__ . '/../../Views/course/course.php';
     }
 
 

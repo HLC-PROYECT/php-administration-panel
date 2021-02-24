@@ -13,13 +13,12 @@ interface SubjectRepositoryInterface
         string $identificationDocumentTeacher
     ): bool;
 
-    public function get(): subject|array|null;
+    /** @return Subject[] */
+    public function get(): array;
 
     public function deleteById(int $subjectId): bool;
 
     public function getById(int $subjectId): ?Subject;
-
-    public function getAllSubject(): array;
 
     public function getName(int $subjectId): String;
 

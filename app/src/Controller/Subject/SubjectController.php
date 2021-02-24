@@ -1,30 +1,36 @@
 <?php
 
-
 namespace HLC\AP\Controller\Subject;
 
-//TODO: Tener claras las dependencias que necesita
+use HLC\AP\Domain\Course\Course;
+use HLC\AP\Domain\Course\CourseRepositoryInterface;
+use HLC\AP\Domain\Subject\Subject;
+use HLC\AP\Domain\Subject\SubjectRepositoryInterface;
 use HLC\AP\Domain\User\User;
-use HLC\AP\Repository\PdoSubjectRepository;
-use HLC\AP\Repository\PdoTaskRepository;
-use HLC\AP\Repository\PdoTaskSubjectRepository;
-use HLC\AP\Repository\PdoUserRepository;
+use HLC\AP\Domain\User\UserRepositoryInterface;
 
-class TaskController
+class SubjectController
 {
+    /** @var Subject[] $subjects */
+    protected array $subjects;
+    /** @var Course[] $courses */
+    protected array $courses;
+    /** @var User[] $teachers */
+    protected array $teachers;
+
     public function __construct(
-        private PdoUserRepository $userRepository,
-        private PdoTaskSubjectRepository $TaskSubjectRepository,
-        private PdoSubjectRepository $subjectRepository,
-        private PdoTaskRepository $taskRepository
+        private UserRepositoryInterface $userRepository,
+        private SubjectRepositoryInterface $subjectRepository,
+        private CourseRepositoryInterface $courseRepository,
     ) {
     }
 
     public function execute(): string
     {
         $user = $this->userRepository->getByDni($_SESSION['uid']);
-        $subjectRepository = $this->subjectRepository->getAllSubject($user->getIdentificationDocument());
-        $subjectNames = $this->subjectRepository->getAllSubject();
-        return require __DIR__ . '/../../views/subject/subject.php';
+        $this->subjects = $this->subjectRepository->get();
+        $this->courses = $this->courseRepository->getAllCourses();
+        $this->teachers = $this->userRepository->getTeachers();
+        return require __DIR__ . '/../../Views/subject/subject.php';
     }
 }
