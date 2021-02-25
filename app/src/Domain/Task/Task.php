@@ -2,6 +2,8 @@
 
 namespace HLC\AP\Domain\Task;
 
+use DateTime;
+
 final class Task
 {
     private int $taskId;
@@ -70,9 +72,20 @@ final class Task
         return $this->dateEnd;
     }
 
-    public function getStatus(): string
+    public function getStatus(bool $isTeacher): string
     {
-        return $this->status;
+        if($isTeacher){
+            $date = new DateTime();
+            $actualDate = $date->getTimestamp();
+            $end = strtotime($this->dateEnd);
+            if ($end<$actualDate){
+                return "finalizada";
+            }else{
+                return "pendiente";
+            }
+        }else{
+            return $this->status;
+        }
     }
 
     public function setStatus(string $status): void

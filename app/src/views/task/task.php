@@ -16,8 +16,7 @@
 </head>
 
 <body class="animsition">
-<script src="resources/toastr/jquery-3.5.1.min.js"></script>
-<script src="resources/toastr/toastr.min.js"></script>
+
 <div class="page-wrapper">
     <?php use HLC\AP\Domain\TaskSubject\TaskSubject;
 
@@ -99,10 +98,14 @@
                                                 echo '<tr class="tr-shadow">';
                                                 echo '<td>' . $value->getTask()->getName() . '</td>';
                                                 echo '<td>' . $value->getTask()->getDescription() . '</td>';
-                                                echo '<td>' . $value->getTask()->getDateStart(). '</td>';
+                                                echo '<td>' . $value->getTask()->getDateStart() . '</td>';
                                                 echo '<td>' . $value->getTask()->getDateEnd() . '</td>';
-                                                $es = $value->getTask()->getStatus();
-                                                if ($es == "completada") {
+                                                if ($user->getType() == 'P') {
+                                                    $es = $value->getTask()->getStatus(true);
+                                                } else {
+                                                    $es = $value->getTask()->getStatus(false);
+                                                }
+                                                if ($es == "finalizada") {
                                                     echo '<td> <span class="status--process">' . $es . '</span></td>';
                                                 } else {
                                                     echo '<td> <span class="status--denied">' . $es . '</span></td>';
@@ -112,28 +115,31 @@
                                                 ?>
                                                 <td>
                                                     <div class="table-data-feature">
+                                                        <?php
+                                                        if ($user->getType() == 'A') {
+                                                        //TODO: BOTONES
+                                                        ?>
                                                         <button class="item" data-toggle="tooltip"
                                                                 data-placement="top"
-                                                                title="Delete"
-                                                                name="po" onclick="loadDoc()"
+                                                                title="Send"
+                                                                name="po" onclick="send()"
                                                                 value="<?php echo $id ?>">
-                                                        <i class="zmdi zmdi-delete"></i>
-                                                        <p id="demo"></p>
+                                                            <i class="zmdi zmdi-mail-send"></i>
+                                                            <p id="demo"></p>
+                                                            <?php
+                                                            }else {
 
-                                                        <!--<script>
-                                                            function loadDoc() {
-                                                                document.getElementById("demo").innerHTML = <?php /*delete($id) */?>;
-                                                                var xhttp = new XMLHttpRequest();
-                                                                xhttp.onreadystatechange = function () {
-                                                                    if (this.readyState == 4 && this.status == 200) {
-                                                                    }
-                                                                };
-                                                                xhttp.open("POST", "tarea.php", true);
-                                                                xhttp.send();
-
-                                                            }
-                                                        </script>-->
-
+                                                            ?>
+                                                            <button class="item" data-toggle="tooltip"
+                                                                    data-placement="top"
+                                                                    title="Delete"
+                                                                    name="po" onclick="loadDoc()"
+                                                                    value="<?php echo $id ?>">
+                                                                <i class="zmdi zmdi-delete"></i>
+                                                                <p id="demo"></p>
+                                                                <?php
+                                                                }
+                                                                ?>
                                                     </div>
                                                 </td>
                                                 </tr>
@@ -159,15 +165,21 @@
         <?php require '../src/views/task/addTaskModal.php' ?>
     </div>
 </div>
+<script src="resources/toastr/jquery-3.5.1.min.js"></script>
+<script src="resources/toastr/toastr.min.js"></script>
+<script src="resources/js/authErrorController.js"></script>
 <?php include '../src/views/parts/js.php' ?>
 
-<script>
-    const activeTab = '<?= $activeTab ?? "tarea" ?>';
-</script>
-<script src="resources/js/authErrorController.js"></script>
+<?php
+foreach ($this->errors as $value) {
+    echo $value;
+    echo '<script type="text/javascript">',
+        'showError("' . $value . '");',
+    '</script>';
+}
+?>
 
 <script src="resources/js/app.js"></script>
-<?php require '../src/views/parts/errorToast.php' ?>
 </body>
 </html>
 

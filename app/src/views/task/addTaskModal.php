@@ -2,7 +2,7 @@
      aria-hidden="true">
     <div class="modal-dialog modal-sm" role="document">
         <div class="modal-content">
-            <form action="Task/TaskInsert" method="post">
+            <form action="/Task" method="post">
                 <div class="modal-header">
                     <h5 class="modal-title" id="addTaskLabel">Nueva tarea</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -50,7 +50,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" name="submit" class="au-btn au-btn--green">Añadir</button>
+                    <button type="submit" name="saveTask" class="au-btn au-btn--green">Añadir</button>
                 </div>
             </form>
         </div>
