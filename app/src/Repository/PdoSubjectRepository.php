@@ -2,12 +2,13 @@
 
 namespace HLC\AP\Repository;
 
+use HLC\AP\Domain\Subject\Course;
 use HLC\AP\Domain\Subject\Subject;
-use HLC\AP\Domain\Subject\subjectRepositoryInterface;
+use HLC\AP\Domain\Subject\SubjectRepositoryInterface;
 use HLC\AP\Utils\DatabaseConnection;
 use Medoo\Medoo;
 
-class PdoSubjectRepository implements subjectRepositoryInterface
+class PdoSubjectRepository implements SubjectRepositoryInterface
 {
     private Medoo $database;
 
@@ -29,22 +30,14 @@ class PdoSubjectRepository implements subjectRepositoryInterface
         }
     }
 
-    public function get(): Subject|array|null
+    public function get(): array
     {
-        $r = $this->database->select("asignatura", "*");
-        if (is_array($r)) {
-            $sub = array();
-            foreach ($r as $key => $value) {
-                $subject = array("codasig" => $value["codasig"], "nombreasignatura" => $value["nombreasignatura"], "n_horas" => $value["n_horas"], "anyo_fin" => $value["anyo_fin"], "codcurso" => $value["codcurso"], "dniprofesor" => $value["dniprofesor"]);
-                array_push($tasks, $this->instantiate($subject));
-            }
-            return $sub;
-
-        } elseif ($r == null) {
-            return null;
+        $responseQuery = $this->database->select("asignatura", "*");
+        $subjects = [];
+        foreach ($responseQuery as $row) {
+            array_push($subjects, $this->build($row));
         }
-        $subject = array("codasig" => $r["codasig"], "nombreasignatura" => $r["nombreasignatura"], "n_horas" => $r["n_horas"], "anyo_fin" => $r["anyo_fin"], "codcurso" => $r["codcurso"], "dniprofesor" => $r["dniprofesor"]);
-        return $this->instantiate($subject);
+        return $subjects;
     }
 
     public function deleteById(int $subjectId): bool
@@ -56,10 +49,10 @@ class PdoSubjectRepository implements subjectRepositoryInterface
 
     public function getById(int $subjectId): ?subject
     {
-        return $this->instantiate($this->database->select("asignatura", "*", ["codasig" => $subjectId]));
+        return $this->build($this->database->select("asignatura", "*", ["codasig" => $subjectId]));
     }
 
-    private function instantiate(array $subject): subject
+    private function build(array $subject): subject
     {
         return Subject::build(
             intval($subject['codasig']),
@@ -70,8 +63,23 @@ class PdoSubjectRepository implements subjectRepositoryInterface
             $subject['dniprofesor']);
     }
 
-    public function getAllSubject(): array
+    public function getName(int $subjectId): string
     {
-        return $this->database->select('asignatura', '*');
+        // TODO: Implement getName() method.
+    }
+
+    public function getCourse(int $subjectId): ?Course
+    {
+        // TODO: Implement getCourse() method.
+    }
+
+    public function getTotalHours(int $subjectId): int
+    {
+        // TODO: Implement getTotalHours() method.
+    }
+
+    public function getTeacherId(int $subjectId): int
+    {
+        // TODO: Implement getTeacherId() method.
     }
 }

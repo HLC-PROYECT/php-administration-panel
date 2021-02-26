@@ -24,22 +24,7 @@ final class PdoUserRepository implements UserRepositoryInterface
 
     public function getByDni(string $userDni): User
     {
-        return $this->transformToUser($this->database->select("usuario", "*", ["dni" => $userDni])[0]);
-    }
-
-    private function transformToUser(array $user): User
-    {
-        return User::build(
-            $user["dni"],
-            $user["email"],
-            $user["password"],
-            $user["nomb_usuario"],
-            $user["nombre"],
-            $user["f_alta"],
-            "", // $user["f_baja"],
-            "", // $user["f_modificacion"],
-            $user["tipo"]
-        );
+        return $this->build($this->database->select("usuario", "*", ["dni" => $userDni])[0]);
     }
 
     public function checkDni(string $dni): bool
@@ -61,7 +46,7 @@ final class PdoUserRepository implements UserRepositoryInterface
             return null;
         }
 
-        return $this->transformToUser($user[0]);
+        return $this->build($user[0]);
     }
 
     public function save(
@@ -94,5 +79,32 @@ final class PdoUserRepository implements UserRepositoryInterface
         }
 
         return true;
+    }
+
+    public function getTeachers(): array
+    {
+        $responseTeacher = $this->database->select("usuario", "*", ["tipo" => "P"]);
+        $teachers = [];
+
+        foreach ($responseTeacher as $row) {
+            array_push($teachers, $this->build($row));
+        }
+
+        return $teachers;
+    }
+
+    private function build(array $user): User
+    {
+        return User::build(
+            $user["dni"],
+            $user["email"],
+            $user["password"],
+            $user["nomb_usuario"] ?? $user["nombre"],
+            $user["nombre"],
+            $user["f_alta"],
+            "", // $user["f_baja"],
+            "", // $user["f_modificacion"],
+            $user["tipo"]
+        );
     }
 }
