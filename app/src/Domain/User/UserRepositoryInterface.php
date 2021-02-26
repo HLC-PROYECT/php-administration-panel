@@ -24,4 +24,7 @@ interface UserRepositoryInterface
     public function checkDni(string $dni): bool;
 
     public function checkEmail(string $email): bool;
+
+    /** @return User[] */
+    public function getTeachers(): array;
 }
