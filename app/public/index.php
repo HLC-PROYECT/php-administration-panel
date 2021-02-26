@@ -8,58 +8,37 @@ use HLC\AP\Infrastructure\DependencyInjection;
 ini_set('opcache.enabled', false);
 session_start();
 
-$builder = new ContainerBuilder();
-$builder->addDefinitions(DependencyInjection::build());
-$container = $builder->build();
-$URI = $_SERVER['REQUEST_URI'] ?? null;
+try {
 
+    $builder = new ContainerBuilder();
+    $builder->addDefinitions(DependencyInjection::build());
+    $container = $builder->build();
+    $URI = $_SERVER['REQUEST_URI'] ?? null;
 
-if (null !== $URI) {
-    $explode = explode("/", $URI);
-    $folder = ucfirst($explode[1]);
-    $classStr = $folder . 'Controller';
-    $class = ucfirst($classStr);
+    if (null !== $URI) {
+        $explode = explode("/", $URI);
+        $nameSpace = $explode[1];
+        $class = ucfirst($nameSpace) . 'Controller';
+        $class = "HLC\AP\Controller\\$nameSpace\\$class";
+        $method = $explode[2] ?? 'execute';
 
-    if (isValidUri($explode)) {
-        if (isComplexUri($explode)) {
-            $subRoute = $explode[2];
-            if ($container->has("HLC\AP\Controller\\$explode[1]\\$explode[2]\\$explode[2]Controller")) navigateComplex($container, $folder, $subRoute);
-            else navigateTo404();
-        } else {
-            if ($container->has("HLC\AP\Controller\\$folder\\" . $class)) navigate($container, $folder, $class);
-            elseif (empty(trim($explode[1]))) {
-                if (isset($_COOKIE['loggedId'])) navigate($container, "Course", "CourseController");
-                else  navigate($container, "Login", "LoginController");
-            }
-            else navigateTo404();
+        if (false !== $container->has($class)) {
+            $controller = $container->get($class);
+            $controller->$method();
+            set_url("$nameSpace");
+            return;
         }
-    } else navigateTo404();
-
+        navigateTo404();
+    }
+} catch (Exception $e) {
+    var_dump($e);
 }
 
-function isComplexUri($endPoint): bool
+function navigate($container, string $class): void
 {
-    return sizeof($endPoint) === 3;
-}
-
-function isValidUri($endPoint): bool
-{
-    return isComplexUri($endPoint) || sizeof($endPoint) === 2;
-}
-
-function navigate($container, string $folder, string $class): void
-{
-    $_SERVER['REQUEST_URI'] = "/$folder";
-    set_url("$folder");
-    $controller = $container->get("HLC\AP\Controller\\$folder\\$class");
-    $controller->execute();
-}
-
-function navigateComplex($container, string $folder, string $class): void
-{
-    set_url("$class");
     $_SERVER['REQUEST_URI'] = "/$class";
-    $controller = $container->get("HLC\AP\Controller\\$folder\\$class\\$class" . "Controller");
+    set_url("$class");
+    $controller = $container->get("HLC\AP\Controller\\$class");
     $controller->execute();
 }
 

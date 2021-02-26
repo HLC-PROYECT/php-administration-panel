@@ -75,7 +75,7 @@ final class LoginController
     }
 
     private function errorsView(): string {
-        return require __DIR__ . '/../../Views/auth/login.php';
+        return require __DIR__ . '/../../Views/Auth/login.php';
     }
 
     private static function sanitize(string $data): string

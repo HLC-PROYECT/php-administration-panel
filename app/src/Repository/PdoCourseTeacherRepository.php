@@ -3,9 +3,7 @@
 namespace HLC\AP\Repository;
 
 use Medoo\Medoo;
-use HLC\AP\Domain\Course\Course;
 use HLC\AP\Domain\CourseTeacher\CourseTeacherRepositoryInterface;
-
 use HLC\AP\Utils\DatabaseConnection;
 
 final class PdoCourseTeacherRepository implements CourseTeacherRepositoryInterface
@@ -20,13 +18,10 @@ final class PdoCourseTeacherRepository implements CourseTeacherRepositoryInterfa
 
     public function insertCourseTeacher(int $courseID, string $identificationDocument)
     {
-        $this->database->insert("curso_profesor",[$courseID,$identificationDocument]);
+        $this->database->insert('curso_profesor',
+            [
+                "codcurso" => $courseID,
+                "dniprofesor" => $identificationDocument
+            ]);
     }
-
-
-    public function getCourseTeacherByID(string $identificationDocument): taskSubject|array|null
-    {
-        //TODO
-    }
-
 }

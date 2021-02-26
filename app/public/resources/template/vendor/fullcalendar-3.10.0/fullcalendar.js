@@ -93,7 +93,7 @@ module.exports = __WEBPACK_EXTERNAL_MODULE_0__;
 derived from:
 https://github.com/Microsoft/tslib/blob/v1.6.0/tslib.js
 
-only include the helpers we need, to keep down filesize
+only include the Helpers we need, to keep down filesize
 */
 var extendStatics = Object.setPrototypeOf ||
     ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -629,7 +629,7 @@ function multiplyDuration(dur, n) {
     return moment.duration({ days: dur.asDays() * n });
 }
 exports.multiplyDuration = multiplyDuration;
-// Returns a boolean about whether the given duration has any time parts (hours/minutes/seconds/ms)
+// Returns a boolean about whether the given duration has any time Parts (hours/minutes/seconds/ms)
 function durationHasTime(dur) {
     return Boolean(dur.hours() || dur.minutes() || dur.seconds() || dur.milliseconds());
 }
@@ -5031,7 +5031,7 @@ function chunkFormatString(formatStr) {
     return chunks;
 }
 /*
-Potentially splits a literal-text string into multiple parts. For special cases.
+Potentially splits a literal-text string into multiple Parts. For special cases.
 */
 function splitStringLiteral(s) {
     if (s === '. ') {
@@ -5107,7 +5107,7 @@ function renderFakeFormatString(fakeFormatString, date) {
     return processMaybeMarkers(renderFakeFormatStringParts(fakeFormatString, date).join(''));
 }
 /*
-Formats a date into parts that will have been post-processed, EXCEPT for the "maybe" markers.
+Formats a date into Parts that will have been post-processed, EXCEPT for the "maybe" markers.
 */
 function renderFakeFormatStringParts(fakeFormatString, date) {
     var parts = [];
@@ -7562,10 +7562,10 @@ var DayGrid = /** @class */ (function (_super) {
         for (i = 0; i < eventFootprints.length; i++) {
             this.renderHighlight(eventFootprints[i].componentFootprint);
         }
-        // render drags from OTHER components as helpers
+        // render drags from OTHER components as Helpers
         if (eventFootprints.length && seg && seg.component !== this) {
             this.helperRenderer.renderEventDraggingFootprints(eventFootprints, seg, isTouch);
-            return true; // signal helpers rendered
+            return true; // signal Helpers rendered
         }
     };
     // Unrenders any visual indication of a hovering event

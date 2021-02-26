@@ -21,12 +21,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["submit"])) {
         if ($userQ->checkEmail($_POST["email"])) {
             $_SESSION['error'] = ErrorsMessages::getError("email:repeat");
             session_write_close();
-            header("Location: ../../Views/auth/login.php");
+            header("Location: ../../Views/Auth/login.php");
         } else {
             if ($userQ->checkDni($_POST["dni"])) {
                 $_SESSION['error'] = ErrorsMessages::getError("dni:repeat");
                 session_write_close();
-                header("Location: ../../Views/auth/login.php");
+                header("Location: ../../Views/Auth/login.php");
             } else {
                 $date = new DateTime();
                 $r = $userQ->save($_POST["dni"], $_POST["email"], $_POST["alias"], $_POST["password"], $_POST["name"], date("Y-m-d", $date->getTimestamp()), $_POST["tipo"]);
@@ -44,8 +44,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST["submit"])) {
     } else {
         $_SESSION['error'] = $errors;
         session_write_close();
-        header('location: ../../Views/auth/login.php');
+        header('location: ../../Views/Auth/login.php');
     }
 } else {
-    header('location: ../../Views/auth/login.php');
+    header('location: ../../Views/Auth/login.php');
 }

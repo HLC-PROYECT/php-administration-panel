@@ -15,6 +15,10 @@ final class ErrorsMessages
             "date:lessActual" => "The end date cannot be smaller than the current one",
             "date:EndLessStart" => "The end date cannot be less than the start date",
             "generic:emptyFields" => "All fields have to be filled",
+            "educationCenter:invalid" => "Education center not valid",
+            "yearEmpty:invalid" => "Year fields is empty",
+            "year:invalid" => "Year is invalid, must be between 2000 and 2050",
+            "yearStart:invalid" => "Year start cant not be greater than the end",
             default => "Error not controlled",
         };
     }

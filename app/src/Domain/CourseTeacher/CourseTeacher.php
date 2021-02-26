@@ -5,7 +5,7 @@ namespace HLC\AP\Domain\CourseTeacher;
 use HLC\AP\Domain\Course\Course;
 use HLC\AP\Domain\Teacher\Teacher;
 
-class TaskSubject
+class CourseTeacher
 {
     private Course $course;
     private Teacher $teacher;
@@ -15,8 +15,8 @@ class TaskSubject
         $this->course = $course;
         $this->teacher = $teacher;
     }
-    public static function build(Course $teacher, Teacher $teacher): self {
-        return new self($task, $subject);
+    public static function build(Course $course, Teacher $teacher): self {
+        return new self($course, $teacher);
     }
     public function getCourse(): Course
     {

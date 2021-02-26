@@ -2,7 +2,7 @@
 
 namespace HLC\AP\Views\Helpers;
 
-class ComponentsHelper
+class componentsHelper
 {
     /**
      * @param string $name - Nombre del selector
@@ -21,6 +21,7 @@ class ComponentsHelper
         ?string $selected = null,
         bool $readOnly = false
     ): string {
+
         $selector = "<select name=\"{$name}\" id=\"{$id}\" class=\"form-control\"";
         if ($readOnly) {
             $selector .= " readonly";
@@ -42,5 +43,47 @@ class ComponentsHelper
 
         $selector .= "</select>";
         return $selector;
+    }
+
+    /**
+     * @param array $headers - Cabeceras de la tabla
+     * @param array $list - Lista de aquello que queremos generar el selector
+     * @return string - HTML del selector generado
+     */
+    public static function tableBuilder(
+        array $headers,
+        array $list,
+    ): string
+    {
+        $table = "<table class='table table-data2'>";
+        $table .= "<thead>";
+        $table .= "<tr>";
+
+        //Print headers
+        foreach ($headers as $value) {
+            $table .= "<th>" . $value . "</th>";
+        }
+        $table .= "</tr>";
+        $table .= "</thead>";
+
+        //Print rows
+        foreach ($list as $value) {
+            $table .= '<tr class="tr-shadow">';
+            $courseId = $value[0];
+            foreach ($value as $element) {
+                $table .= '<td>' . $element . '</td>';
+            }
+            //Print delete button.
+            $table .= '<td>';
+            $table .= '<div class="table-data-feature">';
+            $table .= "<div class='item   data-toggle='tooltip' onclick='save($courseId)' ></div>";
+            $table .= '<i class="zmdi zmdi-delete" ></i >';
+            $table .= '</div>';
+            $table .= '</td >';
+            $table .= '<tr class="spacer" >   </tr >';
+        }
+
+        $table .= '</table>';
+        return $table;
     }
 }

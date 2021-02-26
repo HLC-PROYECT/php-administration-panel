@@ -16,20 +16,11 @@ class PdoCourseRepository implements CourseRepositoryInterface
         $this->database = $databaseConnection->getMedooDatabase();
     }
 
-
     public function insert(int $courseId, string $educationCenter, int $yearStart, int $yearEnd, string $description): bool
     {
-        $response = $this->database->insert("curso",
-            [
-                "codCurso" => $courseId,
-                "centroed" => $educationCenter,
-                "año_ini" => $yearStart,
-                "año_fin" => $yearEnd,
-                "description" => $description,
-            ]);
+        $response = $this->database->query("INSERT INTO curso value ($courseId,'$educationCenter',$yearStart,$yearEnd,'$description');");
 
         return $response->errorCode() == '00000';
-
     }
 
     public function delete(int $courseId): bool
@@ -45,7 +36,7 @@ class PdoCourseRepository implements CourseRepositoryInterface
 
     public function getAllCourses($teacherID): array
     {
-        $QUERY = "SELECT distinct c.* from curso c join asignatura a on c.codcurso = a.codcurso join profesor p on p.dni = a.dniprofesor where dni = '$teacherID'";
+        $QUERY = "SELECT  * from curso where codcurso in (select codcurso from curso_profesor where dniProfesor = '$teacherID')";
         $result = $this->database->query($QUERY);
         $courses = array();
 
@@ -67,21 +58,13 @@ class PdoCourseRepository implements CourseRepositoryInterface
         return Course::build($course["codcurso"], $course["centroed"], $course["año_ini"], $course["año_fin"], $course["descrip"]);
     }
 
-    public function getTeacherCourses(): array
+    public function getLastCourseInserted(): int
     {
-        $result = $this->database->select("curso", "*");
-
-        $tasksubject = array();
+        $result = $this->database->query("SELECT codcurso from curso order by codcurso desc limit 1");
+        $codcurso = 0;
         foreach ($result as $value) {
-            $course = array(
-                "codcurso" => $value["codcurso"],
-                "centroed" => $value["centroed"],
-                "año_ini" => $value["año_ini"],
-                "año_fin" => $value["año_fin"],
-                "descrip" => $value["descrip"]
-            );
-            $tasksubject[] = $this->instantiateCourse($course);
+            $codcurso = $value["codcurso"];
         }
-        return $tasksubject;
+        return $codcurso;
     }
 }

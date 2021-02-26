@@ -1,6 +1,6 @@
 <?php
 
-use HLC\AP\Views\Helpers\ComponentsHelper;
+use HLC\AP\Views\Helpers\componentsHelper;
 
 ?>
 <div class="modal fade" id="addTask" tabindex="-1" role="dialog" aria-labelledby="addTaskLabel"
@@ -37,9 +37,9 @@ use HLC\AP\Views\Helpers\ComponentsHelper;
                         </div>
                         <div>
                             <?=
-                                ComponentsHelper::selectorBuilder(
-                                        "course",
-                                    "course",
+                                componentsHelper::selectorBuilder(
+                                        "Course",
+                                    "Course",
                                     $this->courses,
                                     ["getCourseId", "getDescription"]
                                 )
@@ -52,7 +52,7 @@ use HLC\AP\Views\Helpers\ComponentsHelper;
                         </div>
                         <div>
                             <?=
-                            ComponentsHelper::selectorBuilder(
+                            componentsHelper::selectorBuilder(
                                 "teacher",
                                 "teacher",
                                 $this->teachers,

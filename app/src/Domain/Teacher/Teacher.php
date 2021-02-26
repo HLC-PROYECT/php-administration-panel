@@ -2,7 +2,7 @@
 
 namespace HLC\AP\Domain\Teacher;
 
-final class User
+final class Teacher
 {
     private string $identificationDocument;
    

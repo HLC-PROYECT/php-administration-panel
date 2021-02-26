@@ -99,7 +99,11 @@ final class DependencyInjection
 
     private static function initCourseController(ContainerInterface $container): CourseController
     {
-        return new CourseController($container->get(UserRepositoryInterface::class), $container->get(CourseRepositoryInterface::class));
+        return new CourseController(
+            $container->get(UserRepositoryInterface::class),
+            $container->get(CourseRepositoryInterface::class),
+            $container->get(CourseTeacherRepositoryInterface::class)
+        );
     }
 
     private static function initTaskInsertController(ContainerInterface $container): TaskInsertController
