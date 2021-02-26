@@ -12,5 +12,5 @@ interface CourseRepositoryInterface
 
     public function getById(int $courseId): ?Course;
 
-    public function getAllCourses($teacherID): array;
+    public function getCoursesById($identificationDocument): array;
 }

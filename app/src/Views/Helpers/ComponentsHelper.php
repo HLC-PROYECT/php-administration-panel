@@ -48,13 +48,14 @@ class componentsHelper
     /**
      * @param array $headers - Cabeceras de la tabla
      * @param array $list - Lista de aquello que queremos generar el selector
+     * @param array $keys - Array con las columnas de la tabla
      * @return string - HTML del selector generado
      */
     public static function tableBuilder(
         array $headers,
         array $list,
-    ): string
-    {
+        array $keys
+    ): string {
         $table = "<table class='table table-data2'>";
         $table .= "<thead>";
         $table .= "<tr>";
@@ -67,16 +68,17 @@ class componentsHelper
         $table .= "</thead>";
 
         //Print rows
-        foreach ($list as $value) {
+        foreach ($list as $domain) {
             $table .= '<tr class="tr-shadow">';
-            $courseId = $value[0];
-            foreach ($value as $element) {
-                $table .= '<td>' . $element . '</td>';
+            $id =  $keys[0];
+            $id = (string) $domain->$id();
+            foreach ($keys as $propertyMethod) {
+                $table .= '<td>' . $domain->$propertyMethod() . '</td>';
             }
             //Print delete button.
             $table .= '<td>';
             $table .= '<div class="table-data-feature">';
-            $table .= "<div class='item   data-toggle='tooltip' onclick='save($courseId)' ></div>";
+            $table .= "<div class='item data-toggle='tooltip' onclick='remove($id)' ></div>";
             $table .= '<i class="zmdi zmdi-delete" ></i >';
             $table .= '</div>';
             $table .= '</td >';

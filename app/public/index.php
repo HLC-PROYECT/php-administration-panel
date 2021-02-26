@@ -17,7 +17,7 @@ try {
 
     if (null !== $URI) {
         $explode = explode("/", $URI);
-        $nameSpace = $explode[1];
+        $nameSpace = ucfirst($explode[1]);
         $class = ucfirst($nameSpace) . 'Controller';
         $class = "HLC\AP\Controller\\$nameSpace\\$class";
         $method = $explode[2] ?? 'execute';

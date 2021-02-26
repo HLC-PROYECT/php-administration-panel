@@ -14,11 +14,11 @@
 
 <body class="animsition">
 <div class="page-wrapper">
-    <?php require '../src/Views/parts/header-mobile.php' ?>
-    <?php require '../src/Views/parts/aside.php' ?>
+    <?php require '../src/Views/Parts/HeaderMobile.php' ?>
+    <?php require '../src/Views/Parts/Aside.php' ?>
     <div class="page-container">
 
-        <?php require '../src/Views/parts/header-desktop.php' ?>
+        <?php require '../src/Views/Parts/HeaderDesktop.php' ?>
 
         <div class="main-content" style="background-color: rgba(133,133,133,0.09)">
             <div class="section__content section__content--p30">
@@ -116,12 +116,12 @@
                 </div>
             </div>
         </div>
-        <?php require __DIR__ . '/addSubjectModal.php' ?>
+        <?php require __DIR__ . '/AddSubjectModal.php' ?>
     </div>
 </div>
-<?php include '../src/Views/parts/js.php' ?>
+<?php include '../src/Views/Parts/Js.php' ?>
 <script>
-    const activeTab = '<?= $activeTab ?? "subject" ?>';
+    const activeTab = '<?= $activeTab ?? "Subject" ?>';
 </script>
 </body>
 

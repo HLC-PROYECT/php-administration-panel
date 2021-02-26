@@ -1847,9 +1847,9 @@ var HitDragListener = /** @class */ (function (_super) {
                 point = util_1.constrainPoint(point, subjectRect);
             }
             this.origHit = this.queryHit(point.left, point.top);
-            // treat the center of the subject as the collision point?
+            // treat the center of the Subject as the collision point?
             if (subjectEl && this.options.subjectCenter) {
-                // only consider the area the subject overlaps the hit. best for large subjects.
+                // only consider the area the Subject overlaps the hit. best for large subjects.
                 // TODO: skip this if hit didn't supply left/right/top/bottom
                 if (this.origHit) {
                     subjectRect = util_1.intersectRects(this.origHit, subjectRect) ||
@@ -9832,7 +9832,7 @@ var TaskQueue = /** @class */ (function () {
         this.tryStart();
     };
     TaskQueue.prototype.runTask = function (task) {
-        return task(); // task *is* the function, but subclasses can change the format of a task
+        return task(); // Task *is* the function, but subclasses can change the format of a Task
     };
     return TaskQueue;
 }());
@@ -9911,7 +9911,7 @@ var RenderQueue = /** @class */ (function (_super) {
         // waiting for a certain namespace to stop receiving tasks?
         if (this.waitNamespace) {
             var q = this.q;
-            // if there was a different namespace task in the meantime,
+            // if there was a different namespace Task in the meantime,
             // that forces all previously-waiting tasks to suddenly execute.
             // TODO: find a way to do this in constant time.
             for (var i = 0; i < q.length; i++) {
@@ -9944,7 +9944,7 @@ var RenderQueue = /** @class */ (function (_super) {
                         case 'add':
                         /* falls through */
                         case 'remove':
-                            q.splice(i, 1); // remove task
+                            q.splice(i, 1); // remove Task
                     }
                 }
             }

@@ -2,6 +2,8 @@
 
 namespace HLC\AP\Domain\Subject;
 
+use HLC\AP\Domain\Course\Course;
+
 interface SubjectRepositoryInterface
 {
     public function save(

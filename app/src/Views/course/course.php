@@ -1,3 +1,9 @@
+<?php
+
+use HLC\AP\Controller\Course\CourseController;
+use HLC\AP\Views\Helpers\ComponentsHelper;
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -8,8 +14,7 @@
     <meta name="description" content="home">
     <meta name="author" content="HLC TEAM">
     <meta name="keywords" content="home">
-    <link rel="stylesheet" href="resources/styles/style.css">
-    <link href="resources/toastr/toastr.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="/resources/styles/style.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <title>Courses</title>
 </head>
@@ -17,19 +22,12 @@
 <body class="animsition">
 <div class="page-wrapper">
 
-    <?php
-
-    use HLC\AP\Domain\Course\Course;
-    use HLC\AP\Views\Helpers\ComponentsHelper;
-
-    ?>
-
-    <?php require '../src/Views/parts/header-mobile.php' ?>
-    <?php require '../src/Views/parts/aside.php' ?>
+    <?php require __DIR__ . '/../Parts/HeaderMobile.php' ?>
+    <?php require __DIR__ . '/../Parts/Aside.php' ?>
 
     <div class="page-container">
 
-        <?php require '../src/Views/parts/header-desktop.php' ?>
+        <?php require __DIR__ . '/../Parts/HeaderDesktop.php' ?>
 
         <div class="main-content" style="background-color: rgba(133,133,133,0.09)">
             <div class="section__content section__content--p30">
@@ -68,7 +66,17 @@
                             <!-- tabla -->
                             <div class="table-responsive table-responsive-data2">
                                 <?=
-                                ComponentsHelper::tableBuilder($tableHeaders, $courses);
+                                ComponentsHelper::tableBuilder(
+                                    CourseController::COURSE_HEADERS,
+                                    $this->courses,
+                                    [
+                                        'getCourseId',
+                                        'getEducationCenter',
+                                        'getYearStart',
+                                        'getYearEnd',
+                                        'getDescription',
+                                    ]
+                                );
                                 ?>
                             </div>
                             <!-- END DATA TABLE -->
@@ -78,30 +86,27 @@
             </div>
         </div>
         <!--Modal-->
-        <?php require '../src/Views/Course/AddCourseModal.php' ?>
+        <?php require  __DIR__ . '/AddCourseModal.php' ?>
     </div>
 </div>
 
-<script src="resources/js/authErrorController.js"></script>
-<script src="resources/toastr/jquery-3.5.1.min.js"></script>
-<script src="resources/toastr/toastr.min.js"></script>
-
 <?php
-include '../src/Views/parts/js.php';
-foreach ($this->errors as $value) {
-    echo $value;
-    echo '<script type="text/javascript">',
-        'showError("' . $value . '");',
-    '</script>';
-}
+require __DIR__ . '/../Parts/Js.php';
 ?>
 
-<script type="text/javascript">
+<script>
+    document.addEventListener('DOMContentLoaded', function(){
+        <?php
+        foreach ($this->errors as $value) {
+            echo 'showError("' . $value . '");';
+        }
+        ?>
+    })
 
-    function save(courseId) {
+    function remove(courseId) {
         console.log(courseId);
         $.ajax({
-            url: "http://localhost:80/Course",  //the page containing php script
+            url: "/course/delete",  //the page containing php script
             type: "post",    //request type,
             data: {
                 deleteCourse: true,

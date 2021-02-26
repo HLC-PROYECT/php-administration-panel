@@ -1,7 +1,7 @@
 <div class="modal fade" id="addTask" tabindex="-1" role="dialog" aria-labelledby="addTaskLabel" aria-hidden="true">
     <div class="modal-dialog modal-sm" role="document">
         <div class="modal-content">
-            <form action="Course" method="post">
+            <form action="course/save" method="post">
                 <div class="modal-header">
                     <h5 class="modal-title" id="addTaskLabel">New course</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">

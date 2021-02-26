@@ -4,5 +4,5 @@ namespace HLC\AP\Domain\CourseTeacher;
 
 interface CourseTeacherRepositoryInterface
 {
-    public function insertCourseTeacher(int $courseID, string $identificationDocument);
+    public function insert(int $courseID, string $identificationDocument);
 }

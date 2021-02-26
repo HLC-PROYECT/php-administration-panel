@@ -31,31 +31,39 @@ class PdoCourseRepository implements CourseRepositoryInterface
 
     public function getById(int $courseId): Course
     {
-        return $this->instantiateCourse($this->database->select("curso", "*", ["codCurso" => $courseId])[0]);
+        return $this->instantiate($this->database->select("curso", "*", ["codCurso" => $courseId])[0]);
     }
 
-    public function getAllCourses($teacherID): array
+    public function getCoursesById($identificationDocument): array
     {
-        $QUERY = "SELECT  * from curso where codcurso in (select codcurso from curso_profesor where dniProfesor = '$teacherID')";
-        $result = $this->database->query($QUERY);
-        $courses = array();
 
+        $result = $this->database->select("curso",
+            [
+                "[>]curso_profesor" => "codcurso"
+            ],
+            "*",
+            [
+                "curso_profesor.dniprofesor" => $identificationDocument
+            ]
+        );
+
+        $courses = [];
         foreach ($result as $value) {
-            $course = array(
-                "codcurso" => $value["codcurso"],
-                "centroed" => $value["centroed"],
-                "año_ini" => $value["año_ini"],
-                "año_fin" => $value["año_fin"],
-                "descrip" => $value["descrip"]
-            );
-            array_push($courses, $this->instantiateCourse($course));
+            array_push($courses, $this->instantiate($value));
         }
+
         return $courses;
     }
 
-    private function instantiateCourse(array $course): Course
+    private function instantiate(array $course): Course
     {
-        return Course::build($course["codcurso"], $course["centroed"], $course["año_ini"], $course["año_fin"], $course["descrip"]);
+        return Course::build(
+            $course["codcurso"],
+            $course["centroed"],
+            $course["año_ini"],
+            $course["año_fin"],
+            $course["descrip"]
+        );
     }
 
     public function getLastCourseInserted(): int

@@ -29,8 +29,8 @@ class SubjectController
     {
         $user = $this->userRepository->getByDni($_SESSION['uid']);
         $this->subjects = $this->subjectRepository->get();
-        $this->courses = $this->courseRepository->getAllCourses();
+        $this->courses = $this->courseRepository->getCoursesById();
         $this->teachers = $this->userRepository->getTeachers();
-        return require __DIR__ . '/../../Views/subject/subject.php';
+        return require __DIR__ . '/../../Views/Subject/Subject.php';
     }
 }

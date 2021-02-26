@@ -4,10 +4,11 @@ namespace HLC\AP\Controller\Course;
 
 use DateTime;
 use HLC\AP\Domain\Course\Course;
-use HLC\AP\Repository\PdoCourseRepository;
-use HLC\AP\Repository\PdoCourseTeacherRepository;
-use HLC\AP\Repository\PdoUserRepository;
-
+use HLC\AP\Domain\Course\CourseRepositoryInterface;
+use HLC\AP\Domain\CourseTeacher\CourseTeacherRepositoryInterface;
+use HLC\AP\Domain\User\User;
+use HLC\AP\Domain\User\UserRepositoryInterface;
+use HLC\AP\Utils\ErrorsMessages;
 
 class CourseController
 {
@@ -17,27 +18,10 @@ class CourseController
     private string $description;
     /** @var string[] $errors */
     private array $errors = [];
-
-    public function __construct(
-        private PdoUserRepository $userRepository,
-        private PdoCourseRepository $courseRepository,
-        private PdoCourseTeacherRepository $courseTeacherRepository
-    ) {}
-
-    public function execute(): string
-    {
-
-        //Check if the user wants delete a Course.
-        if ($this->saveCourse()) {
-            $this->validateFields();
-            if (empty($this->errors)) {
-                $this->insertCourse();
-            }
-            unset($_POST['saveCourse']);
-        }
-
-        $tableHeaders =
-            [
+    protected ?User $user;
+    /** @var Course[] $errors */
+    protected array $courses;
+    public const COURSE_HEADERS = [
                 "Course ID",
                 "Education Center",
                 "Start year",
@@ -45,25 +29,30 @@ class CourseController
                 "Description"
             ];
 
+    public function __construct(
+        private UserRepositoryInterface $userRepository,
+        private CourseRepositoryInterface $courseRepository,
+        private CourseTeacherRepositoryInterface $courseTeacherRepository
+    )
+    {
         $currentUserID = $_SESSION['uid'];
-        $user = $this->userRepository->getByDni($currentUserID);
-        $result = $this->courseRepository->getAllCourses($currentUserID);
-        $courses = [];
-        foreach ($result as $c) {
-            if ($c instanceof Course) {
-                //Do subquery
-                $course = array(
-                    $c->getCourseId(),
-                    $c->getEducationCenter(),
-                    $c->getYearStart(),
-                    $c->getYearEnd(),
-                    $c->getDescription(),
-                );
-                array_push($courses, $course);
-            }
-        }
-        //Render a Course view.
+        $this->user = $this->userRepository->getByDni($currentUserID);
+    }
+
+    public function execute(): string
+    {
+        $this->courses = $this->courseRepository->getCoursesById($this->user->getIdentificationDocument());
+
         return require __DIR__ . '/../../Views/Course/Course.php';
+    }
+
+    public function save()
+    {
+        $this->validateFields();
+        if (empty($this->errors)) {
+            $this->insertCourse();
+        }
+        $this->execute();
     }
 
     private function validateEducationCenter(): void
@@ -83,17 +72,18 @@ class CourseController
 
         if (empty($_POST["endYear"]) || empty($_POST["startYear"])) {
             array_push($this->errors, ErrorsMessages::getError("yearEmpty:invalid"));
-            return;
         }
 
         if ($_POST["endYear"] < $year || $_POST["endYear"] > 2050 ||
             $_POST["startYear"] < 2000 || $_POST["startYear"] > 2050) {
             array_push($this->errors, ErrorsMessages::getError("year:invalid"));
-            return;
         }
 
         if ($_POST["startYear"] > $_POST["endYear"]) {
             array_push($this->errors, ErrorsMessages::getError("yearStart:invalid"));
+        }
+
+        if (!empty($this->errors)) {
             return;
         }
 
@@ -107,15 +97,16 @@ class CourseController
             array_push($this->errors, ErrorsMessages::getError("description:invalid"));
             return;
         }
+
         $this->description = self::sanitize($_POST["description"]);
     }
 
     private static function sanitize(string $data): string
     {
-        $data = trim($data); // Delete All spaces before and after the data
-        $data = stripslashes($data); // Delete backslashes \
-        $data = htmlspecialchars($data); // Translate special characters in HTML entities
-        return $data;
+        $data = trim($data);
+        $data = stripslashes($data);
+
+        return htmlspecialchars($data);
     }
 
     public function insertCourse(): void
@@ -128,13 +119,8 @@ class CourseController
             $this->description
         );
         $courseId = $this->courseRepository->getLastCourseInserted();
-        $teacherID = $_SESSION['uid'];
-        $this->courseTeacherRepository->insertCourseTeacher($courseId, $teacherID);
-    }
-
-    public function saveCourse(): bool
-    {
-        return $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['saveCourse']);
+        $teacherID = $this->user->getIdentificationDocument();
+        $this->courseTeacherRepository->insert($courseId, $teacherID);
     }
 
     public function validateFields(): void
@@ -143,10 +129,4 @@ class CourseController
         $this->validateDescription();
         $this->validateYear();
     }
-
-    private function deleteCourse(): bool
-    {
-        return $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['deleteCourse']) && isset($_POST['courseId']);
-    }
-
 }

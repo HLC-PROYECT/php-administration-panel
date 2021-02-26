@@ -16,7 +16,7 @@ final class PdoCourseTeacherRepository implements CourseTeacherRepositoryInterfa
     }
 
 
-    public function insertCourseTeacher(int $courseID, string $identificationDocument)
+    public function insert(int $courseID, string $identificationDocument)
     {
         $this->database->insert('curso_profesor',
             [
