@@ -35,8 +35,8 @@ class TaskController
         }
         $user = $this->userRepository->getByDni($_SESSION['uid']);
         $task = $this->TaskSubjectRepository->getTaskSubjectUsingDni($user->getIdentificationDocument());
-        $subjectNames = $this->subjectRepository->getAllSubject();
-        return require __DIR__ . '/../../views/task/task.php';
+        $subjectNames = $this->subjectRepository->get();
+        return require __DIR__ . '/../../Views/task/task.php';
     }
 
     public function saveTask(): bool

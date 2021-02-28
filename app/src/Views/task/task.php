@@ -20,12 +20,12 @@
 <div class="page-wrapper">
     <?php use HLC\AP\Domain\TaskSubject\TaskSubject;
 
-    require '../src/views/parts/header-mobile.php' ?>
-    <?php require '../src/views/parts/aside.php' ?>
+    require '../src/Views/parts/header-mobile.php' ?>
+    <?php require '../src/Views/parts/aside.php' ?>
 
     <div class="page-container">
 
-        <?php require '../src/views/parts/header-desktop.php' ?>
+        <?php require '../src/Views/parts/header-desktop.php' ?>
         <div class="main-content" style="background-color: rgba(133,133,133,0.09)">
             <div class="section__content section__content--p30">
                 <div class="container-fluid">
@@ -162,7 +162,7 @@
             </div>
         </div>
         <!--Modal-->
-        <?php require '../src/views/task/addTaskModal.php' ?>
+        <?php require '../src/Views/task/addTaskModal.php' ?>
     </div>
 </div>
 <script src="resources/toastr/jquery-3.5.1.min.js"></script>

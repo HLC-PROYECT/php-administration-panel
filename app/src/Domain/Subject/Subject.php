@@ -2,6 +2,8 @@
 
 namespace HLC\AP\Domain\Subject;
 
+use DateTime;
+
 class Subject
 {
     private int $subjectId;
@@ -10,18 +12,57 @@ class Subject
     private int $yearEnd;
     private int $courseId;
     private string $identificationDocumentTeacher;
+    private ?DateTime $dateStart;
+    private ?DateTime $dateEnd;
+    private ?DateTime $dateUpdate;
 
-    public function __construct(int $subjectId, string $name, int $numHours, int $yearEnd, int $courseId, string $identificationDocumentTeacher)
-    {
+    public function __construct(
+        int $subjectId,
+        string $name,
+        int $numHours,
+        int $yearEnd,
+        int $courseId,
+        string $identificationDocumentTeacher,
+        DateTime $dateStart = null,
+        DateTime $dateEnd = null,
+        DateTime $dateUpdate = null
+    ) {
         $this->subjectId = $subjectId;
         $this->name = $name;
         $this->numHours = $numHours;
         $this->yearEnd = $yearEnd;
         $this->courseId = $courseId;
         $this->identificationDocumentTeacher = $identificationDocumentTeacher;
+        $this->dateStart = $dateStart;
+        $this->dateEnd = $dateEnd;
+        $this->dateUpdate = $dateUpdate;
     }
 
-    public function getSubjectId(): int
+    public static function build(
+        int $subjectId,
+        string $name,
+        int $numHours,
+        int $yearEnd,
+        int $courseId,
+        string $identificationDocumentTeacher,
+        DateTime $dateStart = null,
+        DateTime $dateEnd = null,
+        DateTime $dateUpdate = null
+    ): self {
+        return new self(
+            $subjectId,
+            $name,
+            $numHours,
+            $yearEnd,
+            $courseId,
+            $identificationDocumentTeacher,
+            $dateStart,
+            $dateEnd,
+            $dateUpdate
+        );
+    }
+
+    public function getId(): int
     {
         return $this->subjectId;
     }
@@ -49,9 +90,5 @@ class Subject
     public function getIdentificationDocumentTeacher(): string
     {
         return $this->identificationDocumentTeacher;
-    }
-
-    public static function build(int $subjectId, string $name, int $numHours, int $yearEnd, int $courseId, string $identificationDocumentTeacher): self {
-        return new self($subjectId,$name,$numHours,$yearEnd,$courseId,$identificationDocumentTeacher);
     }
 }

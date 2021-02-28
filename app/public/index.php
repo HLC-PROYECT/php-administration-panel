@@ -1,4 +1,5 @@
 <?php
+
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use DI\ContainerBuilder;
@@ -72,5 +73,5 @@ function set_url($url)
 function navigateTo404()
 {
     set_url('404');
-    require __DIR__ . '/../src/views/404/404.php';
+    require __DIR__ . '/../src/Views/404/404.php';
 }
