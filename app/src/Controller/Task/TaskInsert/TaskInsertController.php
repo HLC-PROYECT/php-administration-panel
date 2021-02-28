@@ -12,7 +12,7 @@ class TaskInsertController
 {
     public function __construct(
         private ErrorsMessages $errorsMessages,
-        private PdoTaskRepository $taskRepo,
+        private TaskRepositoryInterface $taskRepository,
     ){
 
     }

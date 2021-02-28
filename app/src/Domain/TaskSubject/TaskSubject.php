@@ -15,9 +15,11 @@ class TaskSubject
         $this->task = $task;
         $this->subject = $subject;
     }
+
     public static function build(Task $task, Subject $subject): self {
         return new self($task, $subject);
     }
+
     public function getTask(): Task
     {
         return $this->task;

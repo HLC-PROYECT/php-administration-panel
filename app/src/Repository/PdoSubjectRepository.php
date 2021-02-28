@@ -2,7 +2,7 @@
 
 namespace HLC\AP\Repository;
 
-use HLC\AP\Domain\Subject\Course;
+use HLC\AP\Domain\Course\Course;
 use HLC\AP\Domain\Subject\Subject;
 use HLC\AP\Domain\Subject\SubjectRepositoryInterface;
 use HLC\AP\Utils\DatabaseConnection;
@@ -71,6 +71,7 @@ class PdoSubjectRepository implements SubjectRepositoryInterface
     public function getCourse(int $subjectId): ?Course
     {
         // TODO: Implement getCourse() method.
+        return null;
     }
 
     public function getTotalHours(int $subjectId): int

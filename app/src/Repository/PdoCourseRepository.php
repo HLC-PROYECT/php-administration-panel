@@ -16,19 +16,11 @@ class PdoCourseRepository implements CourseRepositoryInterface
         $this->database = $databaseConnection->getMedooDatabase();
     }
 
-
-    public function save(int $courseId, string $educationCenter, int $yearStart, int $yearEnd, string $description): bool
+    public function insert(int $courseId, string $educationCenter, int $yearStart, int $yearEnd, string $description): bool
     {
-        $response = $this->database->insert("curso",
-            [
-                "codCurso" => $courseId,
-                "centroed" => $educationCenter,
-                "año_ini" => $yearStart,
-                "año_fin" => $yearEnd
-            ]);
+        $response = $this->database->query("INSERT INTO curso value ($courseId,'$educationCenter',$yearStart,$yearEnd,'$description');");
 
         return $response->errorCode() == '00000';
-
     }
 
     public function delete(int $courseId): bool
@@ -39,47 +31,48 @@ class PdoCourseRepository implements CourseRepositoryInterface
 
     public function getById(int $courseId): Course
     {
-        return $this->instantiateCourse($this->database->select("curso", "*", ["codCurso" => $courseId])[0]);
+        return $this->instantiate($this->database->select("curso", "*", ["codCurso" => $courseId])[0]);
     }
 
-    public function getAllCourses(): array
+    public function getCoursesById($identificationDocument): array
     {
-        $result = $this->database->select("curso", "*");
-        $tasksubject = array();
 
+        $result = $this->database->select("curso",
+            [
+                "[>]curso_profesor" => "codcurso"
+            ],
+            "*",
+            [
+                "curso_profesor.dniprofesor" => $identificationDocument
+            ]
+        );
+
+        $courses = [];
         foreach ($result as $value) {
-            $course = array(
-                "codcurso" => $value["codcurso"],
-                "centroed" => $value["centroed"],
-                "año_ini" => $value["año_ini"],
-                "año_fin" => $value["año_fin"],
-                "descrip" => $value["descrip"]
-            );
-            $tasksubject[] = $this->instantiateCourse($course);
+            array_push($courses, $this->instantiate($value));
         }
-        return $tasksubject;
+
+        return $courses;
     }
 
-    private function instantiateCourse(array $course): Course
+    private function instantiate(array $course): Course
     {
-        return Course::build($course["codcurso"], $course["centroed"], $course["año_ini"], $course["año_fin"], $course["descrip"]);
+        return Course::build(
+            $course["codcurso"],
+            $course["centroed"],
+            $course["año_ini"],
+            $course["año_fin"],
+            $course["descrip"]
+        );
     }
 
-    public function getTeacherCourses(): array
+    public function getLastCourseInserted(): int
     {
-        $result = $this->database->select("curso", "*");
-
-        $tasksubject = array();
+        $result = $this->database->query("SELECT codcurso from curso order by codcurso desc limit 1");
+        $codcurso = 0;
         foreach ($result as $value) {
-            $course = array(
-                "codcurso" => $value["codcurso"],
-                "centroed" => $value["centroed"],
-                "año_ini" => $value["año_ini"],
-                "año_fin" => $value["año_fin"],
-                "descrip" => $value["descrip"]
-            );
-            $tasksubject[] = $this->instantiateCourse($course);
+            $codcurso = $value["codcurso"];
         }
-        return $tasksubject;
+        return $codcurso;
     }
 }
