@@ -3,8 +3,9 @@
 namespace HLC\AP\Domain\Subject;
 
 use DateTime;
+use HLC\AP\Domain\Task\Task;
 
-class Subject
+final class Subject
 {
     private int $subjectId;
     private string $name;
@@ -12,6 +13,8 @@ class Subject
     private int $yearEnd;
     private int $courseId;
     private string $identificationDocumentTeacher;
+    /** @var Task[] */
+    private array $tasks;
     private ?DateTime $dateStart;
     private ?DateTime $dateEnd;
     private ?DateTime $dateUpdate;
@@ -23,16 +26,19 @@ class Subject
         int $yearEnd,
         int $courseId,
         string $identificationDocumentTeacher,
+        array $tasks = [],
         DateTime $dateStart = null,
         DateTime $dateEnd = null,
         DateTime $dateUpdate = null
-    ) {
+    )
+    {
         $this->subjectId = $subjectId;
         $this->name = $name;
         $this->numHours = $numHours;
         $this->yearEnd = $yearEnd;
         $this->courseId = $courseId;
         $this->identificationDocumentTeacher = $identificationDocumentTeacher;
+        $this->tasks = $tasks;
         $this->dateStart = $dateStart;
         $this->dateEnd = $dateEnd;
         $this->dateUpdate = $dateUpdate;
@@ -45,10 +51,12 @@ class Subject
         int $yearEnd,
         int $courseId,
         string $identificationDocumentTeacher,
+        array $tasks,
         DateTime $dateStart = null,
         DateTime $dateEnd = null,
         DateTime $dateUpdate = null
-    ): self {
+    ): self
+    {
         return new self(
             $subjectId,
             $name,
@@ -56,6 +64,7 @@ class Subject
             $yearEnd,
             $courseId,
             $identificationDocumentTeacher,
+            $tasks,
             $dateStart,
             $dateEnd,
             $dateUpdate
@@ -91,4 +100,11 @@ class Subject
     {
         return $this->identificationDocumentTeacher;
     }
+
+    /** @return Task[] */
+    public function getTasks(): array
+    {
+        return $this->tasks;
+    }
+
 }

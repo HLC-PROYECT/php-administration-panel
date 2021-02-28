@@ -5,6 +5,7 @@ namespace HLC\AP\Repository;
 use HLC\AP\Domain\Course\Course;
 use HLC\AP\Domain\Subject\Subject;
 use HLC\AP\Domain\Subject\SubjectRepositoryInterface;
+use HLC\AP\Domain\Task\Task;
 use HLC\AP\Utils\DatabaseConnection;
 use Medoo\Medoo;
 
@@ -52,6 +53,46 @@ class PdoSubjectRepository implements SubjectRepositoryInterface
         return $this->build($this->database->select("asignatura", "*", ["codasig" => $subjectId]));
     }
 
+    public function getByTeacherId(string $id): array
+    {
+        $result = $this->database->select("asignatura",
+            [
+                "[><]tarea" => "codasig"
+            ],
+            [
+                "asignatura.codasig",
+                "asignatura.nombreasignatura",
+                "asignatura.n_horas",
+                "asignatura.anyo_fin",
+                "asignatura.codcurso",
+                "asignatura.dniprofesor",
+                "tarea" => [
+                    "codtarea",
+                    "nombretarea",
+                    "f_inicio",
+                    "f_fin",
+                    "estado",
+                    "descrip",
+                    "codasig"
+                ]
+            ],
+            [
+                "asignatura.dniprofesor" => $id
+            ]
+        );
+
+        if (true === empty($result)) {
+            return [];
+        }
+
+        $result = self::mergeSubjectTasks($result);
+        $subjects = [];
+        foreach ($result as $rawSubject) {
+            $subjects[] = $this->build($rawSubject);
+        }
+        return $subjects;
+    }
+
     private function build(array $subject): subject
     {
         return Subject::build(
@@ -60,7 +101,9 @@ class PdoSubjectRepository implements SubjectRepositoryInterface
             intval($subject['n_horas']),
             intval($subject['anyo_fin']),
             intval($subject['codcurso']),
-            $subject['dniprofesor']);
+            $subject['dniprofesor'],
+            self::arrayTaskBuild($subject['tareas'] ?? [])
+        );
     }
 
     public function getName(int $subjectId): string
@@ -82,5 +125,45 @@ class PdoSubjectRepository implements SubjectRepositoryInterface
     public function getTeacherId(int $subjectId): int
     {
         // TODO: Implement getTeacherId() method.
+    }
+
+    private static function mergeSubjectTasks(array $rows): array
+    {
+        $subjects = [];
+        $aux = [];
+        foreach ($rows as $row) {
+            $aux[$row['codasig']][] = $row;
+        }
+
+        foreach ($aux as $rowSubject) {
+            $subject = $rowSubject[0];
+            unset($subject["tarea"]);
+            foreach ($rowSubject as $row) {
+                $subject["tareas"][] = $row["tarea"];
+            }
+            $subjects[] = $subject;
+        }
+        return $subjects;
+    }
+
+    /**
+     * @param array $rawTasks
+     * @return Task[]
+     */
+    private static function arrayTaskBuild(array $rawTasks): array
+    {
+        $tasks = [];
+        foreach ($rawTasks as $rawTask) {
+            $tasks[] = Task::build(
+                intval($rawTask["codtarea"]),
+                $rawTask["nombretarea"],
+                $rawTask["descrip"],
+                $rawTask["f_inicio"],
+                $rawTask["f_fin"],
+                $rawTask["estado"],
+                $rawTask["codasig"]
+            );
+        }
+        return $tasks;
     }
 }

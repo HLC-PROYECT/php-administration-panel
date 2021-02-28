@@ -9,8 +9,8 @@
     <meta name="description" content="home">
     <meta name="author" content="HLC TEAM">
     <meta name="keywords" content="home">
-    <link rel="stylesheet" href="resources/styles/style.css">
-    <link href="resources/toastr/toastr.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="/resources/styles/style.css">
+    <link href="/resources/toastr/toastr.css" rel="stylesheet"/>
     <!-- Title Page-->
     <title>Home</title>
 </head>
@@ -18,14 +18,17 @@
 <body class="animsition">
 
 <div class="page-wrapper">
-    <?php use HLC\AP\Domain\TaskSubject\TaskSubject;
+    <?php
 
-    require '../src/Views/Parts/HeaderMobile.php' ?>
-    <?php require '../src/Views/Parts/Aside.php' ?>
+    use HLC\AP\Domain\Task\Task;
+
+    require __DIR__ . '/../Parts/HeaderMobile.php';
+    require __DIR__ . '/../Parts/Aside.php';
+    ?>
 
     <div class="page-container">
 
-        <?php require '../src/Views/Parts/HeaderDesktop.php' ?>
+        <?php require __DIR__ . '/../Parts/HeaderDesktop.php' ?>
         <div class="main-content" style="background-color: rgba(133,133,133,0.09)">
             <div class="section__content section__content--p30">
                 <div class="container-fluid">
@@ -36,7 +39,7 @@
                             <div class="table-data__tool">
                                 <?php
 
-                                if ($this->task != null) {
+                                if (false === empty($this->subjectsTeacher)) {
                                     ?>
                                     <div class="table-data__tool-left">
                                         <div class="rs-select2--light rs-select2--md">
@@ -75,7 +78,7 @@
                             <!-- tabla -->
 
                             <?php
-                            if ($this->task != null) {
+                            if (false === empty($this->subjectsTeacher)) {
                                 ?>
                                 <div class="table-responsive table-responsive-data2">
                                     <table class="table table-data2">
@@ -93,30 +96,27 @@
                                         <tbody>
                                         <?php
 
-                                        foreach ($this->task as $k => $value) {
-                                            if ($value instanceof TaskSubject) {
+                                        foreach ($this->subjectsTeacher as $subject) {
+                                            /** @var Task $task */
+                                            foreach ($subject->getTasks() as $task) {
                                                 echo '<tr class="tr-shadow">';
-                                                echo '<td>' . $value->getTask()->getName() . '</td>';
-                                                echo '<td>' . $value->getTask()->getDescription() . '</td>';
-                                                echo '<td>' . $value->getTask()->getDateStart() . '</td>';
-                                                echo '<td>' . $value->getTask()->getDateEnd() . '</td>';
-                                                if ($user->getType() == 'P') {
-                                                    $es = $value->getTask()->getStatus(true);
-                                                } else {
-                                                    $es = $value->getTask()->getStatus(false);
-                                                }
-                                                if ($es == "finalizada") {
-                                                    echo '<td> <span class="status--process">' . $es . '</span></td>';
-                                                } else {
-                                                    echo '<td> <span class="status--denied">' . $es . '</span></td>';
-                                                }
-                                                echo '<td>' . $value->getSubject()->getName() . '</td>';
-                                                $id = $value->getTask()->getTaskId();
+                                                echo '<td>' . $task->getName() . '</td>';
+                                                echo '<td>' . $task->getDescription() . '</td>';
+                                                echo '<td>' . $task->getDateStart() . '</td>';
+                                                echo '<td>' . $task->getDateEnd() . '</td>';
+                                                $es = $task->status($this->user->getType() === 'P');
+                                                echo '<td> <span class="status--'.
+                                                    ($es == "finalizada" ? "process" : "denied") .
+                                                    '">' . $es . '</span></td>';
+
+                                                echo '<td>' . $subject->getName() . '</td>';
+
+                                                $id = $task->getTaskId();
                                                 ?>
                                                 <td>
                                                     <div class="table-data-feature">
                                                         <?php
-                                                        if ($user->getType() == 'A') {
+                                                        if ($this->user->getType() == 'A') {
                                                         //TODO: BOTONES
                                                         ?>
                                                         <button class="item" data-toggle="tooltip"
@@ -145,6 +145,7 @@
                                                 </tr>
                                                 <tr class="spacer"></tr>
                                                 <?php
+
                                             }
                                         } ?>
 
@@ -162,22 +163,10 @@
             </div>
         </div>
         <!--Modal-->
-        <?php require '../src/Views/Task/AddTaskModal.php' ?>
+        <?php require  __DIR__ . '/AddTaskModal.php' ?>
     </div>
 </div>
-<?php include '../src/Views/Parts/Js.php' ?>
+<?php include  __DIR__ . '/../Parts/Js.php' ?>
 
-<?php
-foreach ($this->errors as $value) {
-    echo $value;
-    echo '<script type="text/javascript">',
-        'showError("' . $value . '");',
-    '</script>';
-}
-?>
-
-<script src="resources/js/app.js"></script>
-<?php require '../src/Views/Parts/ErrorToast.php' ?>
 </body>
 </html>
-

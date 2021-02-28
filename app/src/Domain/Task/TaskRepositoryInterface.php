@@ -2,21 +2,26 @@
 
 namespace HLC\AP\Domain\Task;
 
+use Exception;
+
 interface TaskRepositoryInterface
 {
-    public function save(
-        string $name,
-        string $dateStart,
-        string $dateEnd,
-        string $status,
-        string $description,
-        int $subjectId
-    ): bool;
+    /**
+     * @param Task $task
+     * @return Task
+     * @throws Exception
+     */
+    public function save(Task $task): Task;
 
     /** @return Task[] */
     public function get(): array;
 
     public function deleteById(int $taskId): bool;
 
-    public function getById(int $taskId): ?Task;
+    /**
+     * @param int $taskId
+     * @return Task
+     * @throws Exception
+     */
+    public function getById(int $taskId): Task;
 }

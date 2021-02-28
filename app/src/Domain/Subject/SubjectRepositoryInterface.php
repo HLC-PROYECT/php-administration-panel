@@ -29,4 +29,10 @@ interface SubjectRepositoryInterface
     public function getTotalHours(int $subjectId): int;
 
     public function getTeacherId(int $subjectId): int;
+
+    /**
+     * @param string $id
+     * @return Subject[]
+     */
+    public function getByTeacherId(string $id): array;
 }
