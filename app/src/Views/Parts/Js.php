@@ -1,7 +1,7 @@
 <!--TODO: Cambiar rutas-->
 <!-- Jquery JS-->
 <script src="/resources/toastr/jquery-3.5.1.min.js"></script>
-<script src="resources/toastr/toastr.min.js"></script>
+<script src="/resources/toastr/toastr.min.js"></script>
 <!-- Bootstrap JS-->
 <script src="/resources/template/vendor/bootstrap-4.1/popper.min.js"></script>
 <script src="/resources/template/vendor/bootstrap-4.1/bootstrap.min.js"></script>
@@ -23,3 +23,5 @@
 <!-- Main JS-->
 <script src="/resources/template/js/main.js"></script>
 <script src="/resources/js/authErrorController.js"></script>
+
+<?php require  __DIR__ . '/../Parts/ErrorToast.php' ?>

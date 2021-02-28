@@ -16,7 +16,6 @@ require '../../domain/composed/Task-Subject/taskSubjectDataSource.php';
 require '../../respository/PdoUserRepository.php';
 require '../../respository/PdoTaskRepository.php';
 require '../../respository/PdoSubjectRepository.php';
-require '../../respository/composed/PdoTaskSubjectRepository.php';
 
 
 

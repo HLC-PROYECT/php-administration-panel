@@ -19,6 +19,7 @@ final class ErrorsMessages
             "yearEmpty:invalid" => "Year fields is empty",
             "year:invalid" => "Year is invalid, must be between 2000 and 2050",
             "yearStart:invalid" => "Year start cant not be greater than the end",
+            "20001" => "Problem occurred when trying to create a task",
             default => "Error not controlled",
         };
     }

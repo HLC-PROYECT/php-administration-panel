@@ -2,6 +2,7 @@
 
 namespace HLC\AP\Repository;
 
+use Exception;
 use Medoo\Medoo;
 use HLC\AP\Domain\Task\Task;
 use HLC\AP\Domain\Task\TaskRepositoryInterface;
@@ -16,69 +17,53 @@ final class PdoTaskRepository implements TaskRepositoryInterface
         $this->database = $databaseConnection->getMedooDatabase();
     }
 
-    public function save(
-        string $name,
-        string $dateStart,
-        string $dateEnd,
-        string $status,
-        string $description,
-        int $subjectId
-    ): bool {
+    public function save(Task $task): Task
+    {
         $r = $this->database->insert("tarea",
             [
-                "nombretarea" => $name,
-                "f_inicio" => $dateStart,
-                "f_fin" => $dateEnd,
-                "estado" => $status,
-                "descrip" => $description,
-                "codasig" => $subjectId
+                "nombretarea" => $task->getName(),
+                "f_inicio" => $task->getDateStart(),
+                "f_fin" => $task->getDateEnd(),
+                "estado" => $task->getStatus(),
+                "descrip" => $task->getDescription(),
+                "codasig" => $task->getSubjectId()
             ]
         );
 
-        if ($r->errorCode() == '00000') {
-            return true;
-        } else {
-            //TODO: ERROR: Añadir error al session
-            return false;
+        if ($r->errorCode() != '00000') {
+            throw new Exception($r->errorInfo(),20001);
         }
+
+        return $task;
     }
 
-    /** @return Task[] */
     public function get(): array
     {
-        //TODO: Comprobar lo que esta devolviendo
-
         $task = array();
-        $r = $this->database->select("tarea", "*");
+        $response = $this->database->select("tarea", "*");
 
-        if (isset($r["codtarea"])) {
-            $r[] = $r;
+        foreach ($response as $row) {
+            array_push($tasks, $this->instantiate($row));
         }
 
-        foreach ($r as $value) {
-            $t = array(
-                "codtarea" => $value["codtarea"],
-                "nombretarea" => $value["nombretarea"],
-                "f_inicio" => $value["f_inicio"],
-                "f_fin" => $value["f_fin"],
-                "estado" => $value["estado"],
-                "descrip" => $value["descrip"]
-            );
-            array_push($tasks, $this->instantiate($t));
-        }
         return $task;
     }
 
     public function deleteById(int $taskId): bool
     {
-        $r = $this->database->delete("tarea", ["codtarea" => $taskId]);
-        if ($r->errorCode() == '00000') return true;
-        else return false;
+        $response = $this->database->delete("tarea", ["codtarea" => $taskId]);
+        return $response->errorCode() === '00000';
     }
 
-    public function getById(int $taskId): ?Task
+    public function getById(int $taskId): Task
     {
-        return $this->instantiate($this->database->select("tarea", "*", ["codtarea" => $taskId]));
+        $response = $this->database->select("tarea", "*", ["codtarea" => $taskId]);
+
+        if (true === empty($response)) {
+            throw new Exception('task not found');
+        }
+
+        return $this->instantiate($response[0]);
     }
 
     private function instantiate(array $task): Task
@@ -89,7 +74,8 @@ final class PdoTaskRepository implements TaskRepositoryInterface
             $task["descrip"],
             $task["f_inicio"],
             $task["f_fin"],
-            $task["estado"]
+            $task["estado"],
+            $task["codasig"]
         );
     }
 }

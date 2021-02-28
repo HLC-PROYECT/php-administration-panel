@@ -34,10 +34,8 @@ final class DependencyInjection
             CourseRepositoryInterface::class => fn(ContainerInterface $container) => self::initCourseRepository($container),
             SubjectRepositoryInterface::class => fn(ContainerInterface $container) => self::initSubjectRepository($container),
             TaskRepositoryInterface::class => fn(ContainerInterface $container) => self::initTaskResponse($container),
-            TaskSubjectRepositoryInterface::class => fn(ContainerInterface $container) => self::initTaskSubjectRepository($container),
             CourseTeacherRepositoryInterface::class => fn(ContainerInterface $container) => self::initCourseTeacherRepository($container),
             TaskController::class => fn(ContainerInterface $container) => self::initTaskController($container),
-            TaskInsertController::class => fn(ContainerInterface $container) => self::initTaskInsertController($container),
             LoginController::class => fn(ContainerInterface $container) => self::initLoginController($container),
             CourseController::class => fn(ContainerInterface $container) => self::initCourseController($container),
             SubjectController::class => fn(ContainerInterface $container) => self::initSubjectController($container)
@@ -66,17 +64,10 @@ final class DependencyInjection
     {
         return new TaskController(
             $container->get(UserRepositoryInterface::class),
-            $container->get(TaskSubjectRepositoryInterface::class),
             $container->get(SubjectRepositoryInterface::class),
             $container->get(TaskRepositoryInterface::class)
         );
     }
-
-    private static function initTaskSubjectRepository(ContainerInterface $container): TaskSubjectRepositoryInterface
-    {
-        return new PdoTaskSubjectRepository($container->get(DatabaseConnection::class));
-    }
-
     public static function initCourseTeacherRepository(ContainerInterface $container): CourseTeacherRepositoryInterface
     {
         return new PdoCourseTeacherRepository($container->get(DatabaseConnection::class));
@@ -103,14 +94,6 @@ final class DependencyInjection
             $container->get(UserRepositoryInterface::class),
             $container->get(CourseRepositoryInterface::class),
             $container->get(CourseTeacherRepositoryInterface::class)
-        );
-    }
-
-    private static function initTaskInsertController(ContainerInterface $container): TaskInsertController
-    {
-        return new TaskInsertController(
-            $container->get(ErrorsMessages::class),
-            $container->get(TaskRepositoryInterface::class)
         );
     }
 

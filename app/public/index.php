@@ -42,9 +42,9 @@ function navigate($container, string $class): void
     $controller->execute();
 }
 
-//BY isGood ? "Jose" : "Victor";
 function set_url($url)
 {
+    $_SERVER['REQUEST_URI'] = "/$url";
     echo("<script>history.replaceState({},'','/$url');</script>");
 }
 

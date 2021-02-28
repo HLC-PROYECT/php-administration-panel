@@ -20,6 +20,10 @@
 
     .header-button {
         justify-content: flex-end;
+        margin-top: 0px;
+    }
+    .header-desktop{
+        height: 100px;
     }
 }
 .page-wrapper{

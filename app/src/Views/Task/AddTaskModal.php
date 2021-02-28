@@ -1,8 +1,11 @@
+<?php
+use HLC\AP\Views\Helpers\ComponentsHelper;
+?>
 <div class="modal fade" id="addTask" tabindex="-1" role="dialog" aria-labelledby="addTaskLabel"
      aria-hidden="true">
     <div class="modal-dialog modal-sm" role="document">
         <div class="modal-content">
-            <form action="Task/TaskInsert" method="post">
+            <form action="/task/save" method="post">
                 <div class="modal-header">
                     <h5 class="modal-title" id="addTaskLabel">Nueva tarea</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -22,35 +25,34 @@
                     </div>
                     <div class="form-group">
                         <label>Fecha inicio</label>
-                        <input class="au-input au-input--full" id="finicio" type="date"
-                               name="finicio"
+                        <input class="au-input au-input--full" type="date"
+                               name="startDate"
                                placeholder="dd/mm/yyyy">
                     </div>
                     <div class="form-group">
                         <label>Fecha fin</label>
-                        <input class="au-input au-input--full" id="ffin" type="date"
-                               name="ffin"
+                        <input class="au-input au-input--full" type="date"
+                               name="endDate"
                                placeholder="dd/mm/yyyy">
                     </div>
                     <div class="form-group">
                         <div>
-                            <label for="asigs" class=" form-control-label">Asignatura</label>
+                            <label for="subjectId" class=" form-control-label">Asignatura</label>
                         </div>
                         <div>
-                            <select name="asigs" id="asigs" class="form-control">
-                                <?php
-                                foreach ($subjectNames as $key => $value) {
-                                    $cod = $value["codasig"];
-                                    $nombre = $value["nombreasignatura"];
-                                    echo "<option value='$cod'> $nombre </option>";
-                                }
+                                <?=
+                                ComponentsHelper::selectorBuilder(
+                                    "subjectId",
+                                    "subjectId",
+                                    $this->subjects,
+                                    ["getId", "getName"]
+                                );
                                 ?>
-                            </select>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" name="submit" class="au-btn au-btn--green">Añadir</button>
+                    <button type="submit" name="save" class="au-btn au-btn--green">Añadir</button>
                 </div>
             </form>
         </div>

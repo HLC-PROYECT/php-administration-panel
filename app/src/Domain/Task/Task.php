@@ -2,6 +2,8 @@
 
 namespace HLC\AP\Domain\Task;
 
+use DateTime;
+
 final class Task
 {
     private int $taskId;
@@ -10,6 +12,7 @@ final class Task
     private string $dateStart;
     private string $dateEnd;
     private string $status;
+    private string $subjectId;
 
     private function __construct(
         int $taskId,
@@ -17,14 +20,17 @@ final class Task
         string $description,
         string $dateStart,
         string $dateEnd,
-        string $status
-    ) {
+        string $status,
+        string $subjectId
+    )
+    {
         $this->taskId = $taskId;
         $this->name = $name;
         $this->description = $description;
         $this->dateStart = $dateStart;
         $this->dateEnd = $dateEnd;
         $this->status = $status;
+        $this->subjectId = $subjectId;
     }
 
     public static function build(
@@ -33,15 +39,18 @@ final class Task
         string $description,
         string $dateStart,
         string $dateEnd,
-        string $status
-    ): self {
+        string $status,
+        string $subjectId
+    ): self
+    {
         return new self(
-             $taskId,
-             $name,
-             $description,
-             $dateStart,
-             $dateEnd,
-             $status
+            $taskId,
+            $name,
+            $description,
+            $dateStart,
+            $dateEnd,
+            $status,
+            $subjectId
         );
     }
 
@@ -73,6 +82,28 @@ final class Task
     public function getStatus(): string
     {
         return $this->status;
+    }
+
+    public function getSubjectId(): string
+    {
+        return $this->subjectId;
+    }
+
+    public function status(bool $isTeacher): string
+    {
+        if (false === $isTeacher) {
+            return $this->status;
+        }
+
+        $date = new DateTime();
+        $actualDate = $date->getTimestamp();
+        $end = strtotime($this->dateEnd);
+        if ($end < $actualDate) {
+            return "finalizada";
+        }
+        //TODO(): Cambiar en base de datos forma del estado, quitar en profesor
+        //Cambiar de tarea alumno completada por complete
+        return "pendiente";
     }
 
     public function setStatus(string $status): void
