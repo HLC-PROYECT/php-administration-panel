@@ -94,7 +94,7 @@ module.exports = __WEBPACK_EXTERNAL_MODULE_1__;
 derived from:
 https://github.com/Microsoft/tslib/blob/v1.6.0/tslib.js
 
-only include the helpers we need, to keep down filesize
+only include the Helpers we need, to keep down filesize
 */
 var extendStatics = Object.setPrototypeOf ||
     ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||

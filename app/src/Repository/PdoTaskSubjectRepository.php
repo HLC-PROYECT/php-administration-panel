@@ -18,65 +18,62 @@ class PdoTaskSubjectRepository implements TaskSubjectRepositoryInterface
         $this->database = $databaseConnection->getMedooDatabase();
     }
 
-    private function instantiate(Task $task, Subject $subject): TaskSubject
+    private function instantiate(array $row): TaskSubject
     {
-        return new TaskSubject($task, $subject);
+        $taskId = $row["codtarea"];
+        $taskName = $row["nombretarea"];
+        $taskDateStart = $row["f_inicio"];
+        $taskDateEnd = $row["f_fin"];
+        $status = $row["estado"];
+        $description = $row["descrip"];
+
+        $subjectId = $row["codasig"];
+        $subjectName = $row["nombreasignatura"];
+        $subjectNumHours = $row["n_horas"];
+        $subjectDateEnd = $row["anyo_fin"];
+        $courseId = $row["codcurso"];
+        $identificationDocumentTeacher = $row["dniprofesor"];
+
+        return TaskSubject::build(
+            Task::build(
+                $taskId,
+                $taskName,
+                $description,
+                $taskDateStart,
+                $taskDateEnd,
+                $status
+            ),
+            Subject::build(
+                $subjectId,
+                $subjectName,
+                $subjectNumHours,
+                $subjectDateEnd,
+                $courseId,
+                $identificationDocumentTeacher
+            )
+        );
     }
-    /** @return TaskSubject[] */
-    public function getTaskSubjectUsingDni(string $identificationDocument): taskSubject|array|null
+
+    public function getTaskSubjectUsingDni(string $identificationDocument): array
     {
-        $QUERY = "select * from tarea t left join asignatura a on t.codasig = a.codasig where dniprofesor = '$identificationDocument'";
 
-        $result = $this->database->query($QUERY)->fetchAll();
-        if (is_array($result)) {
-            $taskSubject = array();
-            foreach ($result as $key => $value) {
+        $result = $this->database->select("tarea",
+            [
+                "[>]asignatura" => "codasig"
+            ],
+            "*",
+            [
+                "asignatura.dniprofesor" => $identificationDocument
+            ]
+        );
 
-                    $taskId = $value["codtarea"];
-                    $taskName = $value["nombretarea"];
-                    $taskDateStart =  $value["f_inicio"];
-                    $taskDateEnd = $value["f_fin"];
-                    $status = $value["estado"];
-                    $description = $value["descrip"];
-
-
-                    $subjectId = $value["codasig"];
-                    $subjectName = $value["nombreasignatura"];
-                    $subjectNumHours = $value["n_horas"];
-                    $subjectDateEnd = $value["anyo_fin"];
-                    $courseId =  $value["codcurso"];
-                    $identificationDocumentTeacher = $value["dniprofesor"];
-
-                array_push($taskSubject,
-                    $this->instantiate(
-                        Task::build($taskId,$taskName,$description,$taskDateStart,$taskDateEnd,$status),
-                        Subject::build($subjectId,$subjectName,$subjectNumHours,$subjectDateEnd,$courseId,$identificationDocumentTeacher))
-                );
-
-            }
-            return $taskSubject;
-
-        } elseif ($result == null) {
-            return null;
-        }
-                    $taskId = $result["codtarea"];
-                    $taskName = $result["nombretarea"];
-                    $taskDateStart =  $result["f_inicio"];
-                    $taskDateEnd = $result["f_fin"];
-                    $status = $result["estado"];
-                    $description = $result["descrip"];
-
-
-                    $subjectId = $result["codasig"];
-                    $subjectName = $result["nombreasignatura"];
-                    $subjectNumHours = $result["n_horas"];
-                    $subjectDateEnd = $result["anyo_fin"];
-                    $courseId =  $result["codcurso"];
-                    $identificationDocumentTeacher = $result["dniprofesor"];
-
-            return  $this->instantiate(
-                Task::build($taskId,$taskName,$description,$taskDateStart,$taskDateEnd,$status),
-                Subject::build($subjectId,$subjectName,$subjectNumHours,$subjectDateEnd,$courseId,$identificationDocumentTeacher)
+        $taskSubject = [];
+        foreach ($result as $value) {
+            array_push($taskSubject,
+                $this->instantiate($value)
             );
         }
+
+        return $taskSubject;
+    }
 }

@@ -49,7 +49,7 @@ final class LoginController
 
         $_SESSION['uid'] = $user->getIdentificationDocument();
         session_write_close();
-        set_url( '/task');
+        set_url( '/Task');
         return $this->taskController->execute();
     }
 
@@ -75,7 +75,7 @@ final class LoginController
     }
 
     private function errorsView(): string {
-        return require __DIR__ . '/../../Views/auth/login.php';
+        return require __DIR__ . '/../../Views/Auth/Login.php';
     }
 
     private static function sanitize(string $data): string

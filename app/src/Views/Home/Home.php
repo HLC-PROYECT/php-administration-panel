@@ -31,7 +31,7 @@ session_write_close();
         <div class="header-mobile__bar">
             <div class="container-fluid">
                 <div class="header-mobile-inner">
-                    <a class="logo" href="home.php">
+                    <a class="logo" href="Home.php">
                         <img src="../../../public/resources/img/logo.png" width="40%" alt="Logo"/>
                     </a>
                     <button class="hamburger hamburger--slider" type="button">

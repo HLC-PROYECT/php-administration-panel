@@ -93,7 +93,7 @@ module.exports = __WEBPACK_EXTERNAL_MODULE_0__;
 derived from:
 https://github.com/Microsoft/tslib/blob/v1.6.0/tslib.js
 
-only include the helpers we need, to keep down filesize
+only include the Helpers we need, to keep down filesize
 */
 var extendStatics = Object.setPrototypeOf ||
     ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -629,7 +629,7 @@ function multiplyDuration(dur, n) {
     return moment.duration({ days: dur.asDays() * n });
 }
 exports.multiplyDuration = multiplyDuration;
-// Returns a boolean about whether the given duration has any time parts (hours/minutes/seconds/ms)
+// Returns a boolean about whether the given duration has any time Parts (hours/minutes/seconds/ms)
 function durationHasTime(dur) {
     return Boolean(dur.hours() || dur.minutes() || dur.seconds() || dur.milliseconds());
 }
@@ -1847,9 +1847,9 @@ var HitDragListener = /** @class */ (function (_super) {
                 point = util_1.constrainPoint(point, subjectRect);
             }
             this.origHit = this.queryHit(point.left, point.top);
-            // treat the center of the subject as the collision point?
+            // treat the center of the Subject as the collision point?
             if (subjectEl && this.options.subjectCenter) {
-                // only consider the area the subject overlaps the hit. best for large subjects.
+                // only consider the area the Subject overlaps the hit. best for large subjects.
                 // TODO: skip this if hit didn't supply left/right/top/bottom
                 if (this.origHit) {
                     subjectRect = util_1.intersectRects(this.origHit, subjectRect) ||
@@ -5031,7 +5031,7 @@ function chunkFormatString(formatStr) {
     return chunks;
 }
 /*
-Potentially splits a literal-text string into multiple parts. For special cases.
+Potentially splits a literal-text string into multiple Parts. For special cases.
 */
 function splitStringLiteral(s) {
     if (s === '. ') {
@@ -5107,7 +5107,7 @@ function renderFakeFormatString(fakeFormatString, date) {
     return processMaybeMarkers(renderFakeFormatStringParts(fakeFormatString, date).join(''));
 }
 /*
-Formats a date into parts that will have been post-processed, EXCEPT for the "maybe" markers.
+Formats a date into Parts that will have been post-processed, EXCEPT for the "maybe" markers.
 */
 function renderFakeFormatStringParts(fakeFormatString, date) {
     var parts = [];
@@ -7562,10 +7562,10 @@ var DayGrid = /** @class */ (function (_super) {
         for (i = 0; i < eventFootprints.length; i++) {
             this.renderHighlight(eventFootprints[i].componentFootprint);
         }
-        // render drags from OTHER components as helpers
+        // render drags from OTHER components as Helpers
         if (eventFootprints.length && seg && seg.component !== this) {
             this.helperRenderer.renderEventDraggingFootprints(eventFootprints, seg, isTouch);
-            return true; // signal helpers rendered
+            return true; // signal Helpers rendered
         }
     };
     // Unrenders any visual indication of a hovering event
@@ -9832,7 +9832,7 @@ var TaskQueue = /** @class */ (function () {
         this.tryStart();
     };
     TaskQueue.prototype.runTask = function (task) {
-        return task(); // task *is* the function, but subclasses can change the format of a task
+        return task(); // Task *is* the function, but subclasses can change the format of a Task
     };
     return TaskQueue;
 }());
@@ -9911,7 +9911,7 @@ var RenderQueue = /** @class */ (function (_super) {
         // waiting for a certain namespace to stop receiving tasks?
         if (this.waitNamespace) {
             var q = this.q;
-            // if there was a different namespace task in the meantime,
+            // if there was a different namespace Task in the meantime,
             // that forces all previously-waiting tasks to suddenly execute.
             // TODO: find a way to do this in constant time.
             for (var i = 0; i < q.length; i++) {
@@ -9944,7 +9944,7 @@ var RenderQueue = /** @class */ (function (_super) {
                         case 'add':
                         /* falls through */
                         case 'remove':
-                            q.splice(i, 1); // remove task
+                            q.splice(i, 1); // remove Task
                     }
                 }
             }

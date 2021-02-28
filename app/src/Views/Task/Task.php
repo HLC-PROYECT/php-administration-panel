@@ -20,12 +20,12 @@
 <div class="page-wrapper">
     <?php use HLC\AP\Domain\TaskSubject\TaskSubject;
 
-    require '../src/Views/parts/header-mobile.php' ?>
-    <?php require '../src/Views/parts/aside.php' ?>
+    require '../src/Views/Parts/HeaderMobile.php' ?>
+    <?php require '../src/Views/Parts/Aside.php' ?>
 
     <div class="page-container">
 
-        <?php require '../src/Views/parts/header-desktop.php' ?>
+        <?php require '../src/Views/Parts/HeaderDesktop.php' ?>
         <div class="main-content" style="background-color: rgba(133,133,133,0.09)">
             <div class="section__content section__content--p30">
                 <div class="container-fluid">
@@ -36,7 +36,7 @@
                             <div class="table-data__tool">
                                 <?php
 
-                                if ($task != null) {
+                                if ($this->task != null) {
                                     ?>
                                     <div class="table-data__tool-left">
                                         <div class="rs-select2--light rs-select2--md">
@@ -75,7 +75,7 @@
                             <!-- tabla -->
 
                             <?php
-                            if ($task != null) {
+                            if ($this->task != null) {
                                 ?>
                                 <div class="table-responsive table-responsive-data2">
                                     <table class="table table-data2">
@@ -93,7 +93,7 @@
                                         <tbody>
                                         <?php
 
-                                        foreach ($task as $k => $value) {
+                                        foreach ($this->task as $k => $value) {
                                             if ($value instanceof TaskSubject) {
                                                 echo '<tr class="tr-shadow">';
                                                 echo '<td>' . $value->getTask()->getName() . '</td>';
@@ -162,13 +162,10 @@
             </div>
         </div>
         <!--Modal-->
-        <?php require '../src/Views/task/addTaskModal.php' ?>
+        <?php require '../src/Views/Task/AddTaskModal.php' ?>
     </div>
 </div>
-<script src="resources/toastr/jquery-3.5.1.min.js"></script>
-<script src="resources/toastr/toastr.min.js"></script>
-<script src="resources/js/authErrorController.js"></script>
-<?php include '../src/views/parts/js.php' ?>
+<?php include '../src/Views/Parts/Js.php' ?>
 
 <?php
 foreach ($this->errors as $value) {
@@ -180,6 +177,7 @@ foreach ($this->errors as $value) {
 ?>
 
 <script src="resources/js/app.js"></script>
+<?php require '../src/Views/Parts/ErrorToast.php' ?>
 </body>
 </html>
 
