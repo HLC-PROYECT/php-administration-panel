@@ -90,7 +90,7 @@ class componentsHelper
                             data-placement='top' 
                             title='$title' 
                             name='po' 
-                            onclick='$onclick()'>";
+                            onclick='$onclick($id)'>";
 
                 $table .= "<i class='zmdi $iconClass' ></i >";
                 $table .= '</button>';

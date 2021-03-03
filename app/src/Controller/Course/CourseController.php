@@ -46,6 +46,31 @@ class CourseController
         return require __DIR__ . '/../../Views/Course/Course.php';
     }
 
+    public function delete()
+    {
+        if (
+            $_SERVER['REQUEST_METHOD'] === 'POST'
+            && isset($_POST['courseId'])
+        ) {
+            $courseId = $_POST['courseId'];
+            $this->deleteCourse($courseId);
+        }
+        $this->execute();
+    }
+
+    public function edit()//TODO
+    {
+        if(
+            $_SERVER['REQUEST_METHOD'] === 'POST'
+            && isset($_POST['courseId'])
+        ) {
+        $courseId = $_POST['courseId'];
+        $this->deleteCourse($courseId);
+    }
+        $this->execute();
+    }
+
+
     public function save()
     {
         $this->validateFields();
@@ -109,7 +134,7 @@ class CourseController
         return htmlspecialchars($data);
     }
 
-    public function insertCourse(): void
+    private function insertCourse(): void
     {
         $this->courseRepository->insert(
             0,
@@ -128,5 +153,11 @@ class CourseController
         $this->validateEducationCenter();
         $this->validateDescription();
         $this->validateYear();
+    }
+
+    private function deleteCourse(string $courseId)
+    {
+        $this->courseTeacherRepository->deleteByCourse($courseId);
+        $this->courseRepository->delete($courseId);
     }
 }

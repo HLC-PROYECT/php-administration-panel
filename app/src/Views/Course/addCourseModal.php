@@ -11,21 +11,34 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label>Education center</label>
-                        <input required class="au-input au-input--full" type="text" name="educationCenter"
+                        <input required class="au-input au-input--full"
+                               id="form_educationCenter"
+                               type="text"
+                               name="educationCenter"
                                placeholder="Education Center">
                     </div>
                     <div class="form-group">
                         <label>Start year</label>
-                        <input class="au-input au-input--full" type="number" name="startYear" placeholder="Start Year">
+                        <input class="au-input au-input--full"
+                               type="number"
+                               id="form_startYear"
+                               name="startYear"
+                               placeholder="Start Year">
                     </div>
                     <div class="form-group">
                         <label>End year</label>
-                        <input class="au-input au-input--full" id="finicio" type="number" name="endYear"
+                        <input class="au-input au-input--full"
+                               id="form_endYear"
+                               type="number"
+                               name="endYear"
                                placeholder="End Year">
                     </div>
                     <div class="form-group">
                         <label>Description</label>
-                        <input class="au-input au-input--full" id="description" type="text" name="description"
+                        <input class="au-input au-input--full"
+                               id="form_description"
+                               type="text"
+                               name="description"
                                placeholder="Description">
                     </div>
                     <div class="modal-footer">

@@ -79,8 +79,13 @@ use HLC\AP\Views\Helpers\ComponentsHelper;
                                     [
                                         [
                                             'title' => 'Delete',
-                                            'onclick' => 'delete',
+                                            'onclick' => 'remove',
                                             'iconClass' => 'zmdi-delete'
+                                        ],
+                                        [
+                                            'title' => 'Edit',
+                                            'onclick' => 'edit',
+                                            'iconClass' => 'zmdi-edit'
                                         ]
                                     ]
                                 );
@@ -93,7 +98,7 @@ use HLC\AP\Views\Helpers\ComponentsHelper;
             </div>
         </div>
         <!--Modal-->
-        <?php require  __DIR__ . '/AddCourseModal.php' ?>
+        <?php require __DIR__ . '/AddCourseModal.php' ?>
     </div>
 </div>
 
@@ -102,7 +107,7 @@ require __DIR__ . '/../Parts/Js.php';
 ?>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function(){
+    document.addEventListener('DOMContentLoaded', function () {
         <?php
         foreach ($this->errors as $value) {
             echo 'showError("' . $value . '");';
@@ -110,20 +115,30 @@ require __DIR__ . '/../Parts/Js.php';
         ?>
     })
 
-    function remove(courseId) {
-        console.log(courseId);
-        $.ajax({
-            url: "/course/delete",  //the page containing php script
-            type: "post",    //request type,
-            data: {
-                deleteCourse: true,
-                courseId: courseId
-            },
-            success() {
-                console.log('Curso eliminado');
-            }
-        });
+    function edit(courseId){
+        //Open form modal
+        $('#addTask').modal('show');
+
+        //createForm("courseId",courseId,"course/edit");
     }
+
+    function remove(courseId) {
+        createForm("courseId", courseId, "course/delete")
+    }
+
+    function createForm(name, value, url) {
+        form = document.createElement('form');
+        form.setAttribute('method', 'POST');
+        form.setAttribute('action', url);
+        courseField = document.createElement('input');
+        courseField.setAttribute('name', name);
+        courseField.setAttribute('type', 'hidden');
+        courseField.setAttribute('value', value);
+        form.appendChild(courseField);
+        document.body.appendChild(form);
+        form.submit();
+    }
+
 </script>
 
 </body>
