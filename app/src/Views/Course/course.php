@@ -75,6 +75,13 @@ use HLC\AP\Views\Helpers\ComponentsHelper;
                                         'getYearStart',
                                         'getYearEnd',
                                         'getDescription',
+                                    ],
+                                    [
+                                        [
+                                            'title' => 'Delete',
+                                            'onclick' => 'delete',
+                                            'iconClass' => 'zmdi-delete'
+                                        ]
                                     ]
                                 );
                                 ?>
