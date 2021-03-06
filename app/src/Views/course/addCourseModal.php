@@ -1,12 +1,12 @@
 <div class="modal fade" id="addTask" tabindex="-1" role="dialog" aria-labelledby="addTaskLabel" aria-hidden="true">
     <div class="modal-dialog modal-sm" role="document">
         <div class="modal-content">
-            <form action="course/save" method="post">
+            <form action="/course/save" method="post">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="addTaskLabel">New course</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+                    <h5 class="modal-title" id="addCourseLabel">New course</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
@@ -41,6 +41,14 @@
                                name="description"
                                placeholder="Description">
                     </div>
+
+                    <input class="au-input au-input--full"
+                           id="form_courseId"
+                           type="hidden"
+                           value="0"
+                           name="courseId"
+                           placeholder="Description">
+
                     <div class="modal-footer">
                         <button type="submit" name="saveCourse" class="au-btn au-btn--green">Save
                         </button>

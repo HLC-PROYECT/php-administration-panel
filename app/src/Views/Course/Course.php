@@ -97,14 +97,13 @@ use HLC\AP\Views\Helpers\ComponentsHelper;
                 </div>
             </div>
         </div>
+
         <!--Modal-->
         <?php require __DIR__ . '/AddCourseModal.php' ?>
     </div>
 </div>
 
-<?php
-require __DIR__ . '/../Parts/Js.php';
-?>
+<?php require __DIR__ . '/../Parts/Js.php'; ?>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -115,15 +114,30 @@ require __DIR__ . '/../Parts/Js.php';
         ?>
     })
 
-    function edit(courseId){
-        //Open form modal
-        $('#addTask').modal('show');
-
-        //createForm("courseId",courseId,"course/edit");
+    function edit(courseId) {
+        $.ajax({
+            url: "/course/fetchCourse",  //the page containing php script
+            type: "post",
+            data: {
+                courseId: courseId
+            },
+            success(response) {
+                response = response.substring(response.indexOf('{'),response.indexOf('}') + 1);
+                response = JSON.parse(response);
+                document.getElementById('addCourseLabel').innerHTML = 'Edit course';
+                document.getElementById('form_educationCenter').value = response.educationCenter;
+                document.getElementById('form_startYear').value = response.startYear;
+                document.getElementById('form_endYear').value = response.endYear;
+                document.getElementById('form_description').value = response.description;
+                document.getElementById('form_courseId').value = response.courseId;
+                //Open modal
+                $('#addTask').modal('show');
+            }
+        });
     }
 
     function remove(courseId) {
-        createForm("courseId", courseId, "course/delete")
+        createForm("courseId", courseId, "/course/delete")
     }
 
     function createForm(name, value, url) {

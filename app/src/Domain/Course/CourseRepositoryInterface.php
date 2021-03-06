@@ -6,6 +6,10 @@ interface CourseRepositoryInterface
 {
     public function insert(int $courseId, string $educationCenter, int $yearStart, int $yearEnd, string $description): bool;
 
+    public function save(int $courseId, string $educationCenter, int $yearStart, int $yearEnd, string $description): string;
+
+    public function update(int $courseId, string $educationCenter, int $yearStart, int $yearEnd, string $description): bool;
+
     public function getLastCourseInserted():int;
 
     public function delete(int $courseId): bool;

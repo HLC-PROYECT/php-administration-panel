@@ -12,6 +12,7 @@ use HLC\AP\Utils\ErrorsMessages;
 
 class CourseController
 {
+    private string $courseId;
     private string $educationCenter;
     private string $startYear;
     private int $endYear;
@@ -22,12 +23,12 @@ class CourseController
     /** @var Course[] $errors */
     protected array $courses;
     public const COURSE_HEADERS = [
-                "Course ID",
-                "Education Center",
-                "Start year",
-                "End year",
-                "Description"
-            ];
+        "Course ID",
+        "Education Center",
+        "Start year",
+        "End year",
+        "Description"
+    ];
 
     public function __construct(
         private UserRepositoryInterface $userRepository,
@@ -58,18 +59,25 @@ class CourseController
         $this->execute();
     }
 
-    public function edit()//TODO
+    public function fetchCourse()
     {
-        if(
+        if (
             $_SERVER['REQUEST_METHOD'] === 'POST'
             && isset($_POST['courseId'])
         ) {
-        $courseId = $_POST['courseId'];
-        $this->deleteCourse($courseId);
-    }
-        $this->execute();
-    }
+            $course = $this->courseRepository->getById($_POST['courseId']);
 
+            print(json_encode(
+                [
+                    'courseId' => $course->getCourseId(),
+                    'educationCenter' => $course->getEducationCenter(),
+                    'startYear' => $course->getYearStart(),
+                    'endYear' => $course->getYearEnd(),
+                    'description' => $course->getDescription()
+                ]
+            ));
+        }
+    }
 
     public function save()
     {
@@ -77,6 +85,7 @@ class CourseController
         if (empty($this->errors)) {
             $this->insertCourse();
         }
+
         $this->execute();
     }
 
@@ -136,16 +145,19 @@ class CourseController
 
     private function insertCourse(): void
     {
-        $this->courseRepository->insert(
-            0,
+        $this->courseId = (int)$_POST['courseId'];
+        $resp = $this->courseRepository->save(
+            $this->courseId,
             $this->educationCenter,
             $this->startYear,
             $this->endYear,
             $this->description
         );
-        $courseId = $this->courseRepository->getLastCourseInserted();
-        $teacherID = $this->user->getIdentificationDocument();
-        $this->courseTeacherRepository->insert($courseId, $teacherID);
+        if ($resp === 'insert') {
+            $courseId = $this->courseRepository->getLastCourseInserted();
+            $teacherID = $this->user->getIdentificationDocument();
+            $this->courseTeacherRepository->insert($courseId, $teacherID);
+        }
     }
 
     public function validateFields(): void
