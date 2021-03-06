@@ -6,6 +6,8 @@ use HLC\AP\Domain\Course\Course;
 use HLC\AP\Domain\Subject\Subject;
 use HLC\AP\Domain\Subject\SubjectRepositoryInterface;
 use HLC\AP\Domain\Task\Task;
+use HLC\AP\Domain\Teacher\Teacher;
+use HLC\AP\Domain\User\User;
 use HLC\AP\Utils\DatabaseConnection;
 use Medoo\Medoo;
 
@@ -18,22 +20,51 @@ class PdoSubjectRepository implements SubjectRepositoryInterface
         $this->database = $databaseConnection->getMedooDatabase();
     }
 
-    public function save(int $subjectId, string $name, int $numHours, int $yearEnd, int $courseId, string $identificationDocumentTeacher): bool
+    public function save(Subject $subject): bool
     {
-        //TODO(): Cambiar todos los nombres en la base de datos
-        $r = $this->database->insert("asignatura", ["codasig" => $subjectId, "nombreasignatura" => $name, "n_horas" => $numHours,
-            "anyo_fin" => $yearEnd, "codcurso" => $courseId, "dniprofesor" => $identificationDocumentTeacher]);
-        if ($r->errorCode() == '00000') {
-            return true;
-        } else {
-            //TODO(): ERROR: Añadir error al session
-            return false;
-        }
+        $responseQuery = $this->database->insert("asignatura",
+            [
+                "codasig" => $subject->getId(),
+                "nombreasignatura" => $subject->getName(),
+                "n_horas" => $subject->getNumHours(),
+                "anyo_fin" => $subject->getYearEnd(),
+                "codcurso" => $subject->getCourse()->getCourseId(),
+                "dniprofesor" => $subject->getTeacher()->getIdentificationDocument()
+            ]
+        );
+
+        return $responseQuery->errorCode() === '00000';
     }
 
     public function get(): array
     {
-        $responseQuery = $this->database->select("asignatura", "*");
+        $responseQuery = $this->database->select("asignatura",
+            [
+                "[><]curso" => "codcurso",
+                "[><]usuario" => ["dniprofesor" => "dni"]
+            ],
+            [
+                "asignatura.codasig",
+                "asignatura.nombreasignatura",
+                "asignatura.n_horas",
+                "asignatura.anyo_fin",
+                "curso" => [
+                    "curso.codcurso",
+                    "curso.centroed",
+                    "curso.descrip"
+                ],
+                "profesor" => [
+                    "usuario.dni",
+                    "usuario.email",
+                    "usuario.nomb_usuario",
+                    "usuario.password",
+                    "usuario.nombre",
+                    "usuario.f_alta",
+                    "usuario.tipo"
+                ]
+            ]
+        );
+
         $subjects = [];
         foreach ($responseQuery as $row) {
             array_push($subjects, $this->build($row));
@@ -43,9 +74,9 @@ class PdoSubjectRepository implements SubjectRepositoryInterface
 
     public function deleteById(int $subjectId): bool
     {
-        $r = $this->database->delete("asignatura", ["codasig" => $subjectId]);
-        if ($r->errorCode() == '00000') return true;
-        else return false;
+        $responseQuery = $this->database->delete("asignatura", ["codasig" => $subjectId]);
+
+        return $responseQuery->errorCode() === '00000';
     }
 
     public function getById(int $subjectId): ?subject
@@ -100,8 +131,24 @@ class PdoSubjectRepository implements SubjectRepositoryInterface
             $subject['nombreasignatura'],
             intval($subject['n_horas']),
             intval($subject['anyo_fin']),
-            intval($subject['codcurso']),
-            $subject['dniprofesor'],
+            Course::build(
+                $subject["curso"]["codcurso"] ?? $subject["codcurso"],
+                $subject["curso"]["centroed"] ?? "",
+                $subject["curso"]["a_inicio"] ?? 0,
+                $subject["curso"]["a_fin"] ?? 0,
+                $subject["curso"]["descrip"] ?? ""
+            ),
+            User::build(
+                $subject["profesor"]["dni"] ?? $subject["dniprofesor"],
+                $subject["profesor"]["email"] ?? "",
+                $subject["profesor"]["password"] ?? "",
+                $subject["profesor"]["nomb_usuario"] ?? "",
+                $subject["profesor"]["nombre"] ?? "",
+                $subject["profesor"]["f_alta"] ?? "",
+                "",
+                "",
+                $subject["profesor"]["tipo"] ?? "P"
+            ),
             self::arrayTaskBuild($subject['tareas'] ?? [])
         );
     }

@@ -55,13 +55,25 @@ class PdoCourseRepository implements CourseRepositoryInterface
         return $courses;
     }
 
+    public function get(): array
+    {
+        $result = $this->database->select("curso", "*");
+
+        $courses = [];
+        foreach ($result as $value) {
+            array_push($courses, $this->instantiate($value));
+        }
+
+        return $courses;
+    }
+
     private function instantiate(array $course): Course
     {
         return Course::build(
             $course["codcurso"],
             $course["centroed"],
-            $course["año_ini"],
-            $course["año_fin"],
+            $course["año_ini"] ?? 0,
+            $course["año_fin"] ?? 0,
             $course["descrip"]
         );
     }
@@ -75,4 +87,5 @@ class PdoCourseRepository implements CourseRepositoryInterface
         }
         return $codcurso;
     }
+
 }

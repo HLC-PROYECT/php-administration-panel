@@ -6,14 +6,7 @@ use HLC\AP\Domain\Course\Course;
 
 interface SubjectRepositoryInterface
 {
-    public function save(
-        int $subjectId,
-        string $name,
-        int $numHours,
-        int $yearEnd,
-        int $courseId,
-        string $identificationDocumentTeacher
-    ): bool;
+    public function save(Subject $subject): bool;
 
     /** @return Subject[] */
     public function get(): array;

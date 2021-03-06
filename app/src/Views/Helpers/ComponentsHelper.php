@@ -56,20 +56,18 @@ class componentsHelper
         array $headers,
         array $list,
         array $keys,
-        array $buttons,
+        array $buttons = [],
     ): string {
         $table = "<table class='table table-data2'>";
         $table .= "<thead>";
         $table .= "<tr>";
 
-        //Print headers
         foreach ($headers as $value) {
             $table .= "<th>" . $value . "</th>";
         }
         $table .= "</tr>";
         $table .= "</thead>";
 
-        //Print rows
         foreach ($list as $domain) {
             $table .= '<tr class="tr-shadow">';
             $id =  $keys[0];
@@ -77,23 +75,27 @@ class componentsHelper
             foreach ($keys as $propertyMethod) {
                 $table .= '<td>' . $domain->$propertyMethod() . '</td>';
             }
-            //Print actions buttons.
+
             $table .= '<td>';
             $table .= '<div class="table-data-feature">';
-            foreach ($buttons as $button){
+            foreach ($buttons as $button) {
                 $title = $button['title'];
                 $onclick = $button['onclick'];
                 $iconClass = $button['iconClass'];
+                $formAction = $button['formAction'];
 
+                $table .= null !== $formAction
+                    ? "<form action='$formAction' method='post'><input hidden type='text' name='id' value='$id'>"
+                    : "";
                 $table .= "<button class='item' 
-                            data-toggle='tooltip' 
-                            data-placement='top' 
-                            title='$title' 
-                            name='po' 
-                            onclick='$onclick()'>";
+                           data-toggle='tooltip' 
+                           data-placement='top' 
+                           title='$title' 
+                           name='po' 
+                           onclick='$onclick()'>";
 
                 $table .= "<i class='zmdi $iconClass' ></i >";
-                $table .= '</button>';
+                $table .= '</button></form>';
             }
             $table .= '</td >';
             $table .= '<tr class="spacer" >   </tr >';

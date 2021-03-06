@@ -1,3 +1,9 @@
+<?php
+
+use HLC\AP\Controller\Subject\SubjectController;
+use HLC\AP\Views\Helpers\componentsHelper;
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -8,17 +14,17 @@
     <meta name="description" content="subject">
     <meta name="author" content="HLC TEAM">
     <meta name="keywords" content="subject">
-    <link rel="stylesheet" href="resources/styles/style.css">
+    <link rel="stylesheet" href="/resources/styles/style.css">
     <title>Subject</title>
 </head>
 
 <body class="animsition">
 <div class="page-wrapper">
-    <?php require '../src/Views/Parts/HeaderMobile.php' ?>
-    <?php require '../src/Views/Parts/Aside.php' ?>
+    <?php require __DIR__ . '/../Parts/HeaderMobile.php' ?>
+    <?php require __DIR__ . '/../Parts/Aside.php' ?>
     <div class="page-container">
 
-        <?php require '../src/Views/Parts/HeaderDesktop.php' ?>
+        <?php require __DIR__ . '/../Parts/HeaderDesktop.php' ?>
 
         <div class="main-content" style="background-color: rgba(133,133,133,0.09)">
             <div class="section__content section__content--p30">
@@ -58,57 +64,27 @@
                             </div>
                             <!-- tabla -->
                             <div class="table-responsive table-responsive-data2">
-                                <table class="table table-data2">
-                                    <thead>
-                                    <tr>
-                                        <th>Name</th>
-                                        <th>Course</th>
-                                        <th>Number of hours</th>
-                                        <th>Teacher</th>
-                                        <th></th>
-                                    </tr>
-                                    </thead>
-
-                                    <?php
-                                    foreach ($this->subjects as $subject) {
-                                        echo '<tr class="tr-shadow">';
-                                        echo '<td>' . $subject->getName() . '</td>';
-                                        echo '<td>' . $subject->getCourseName() . '</td>';
-                                        echo '<td>' . $subject->getNumHours() . '</td>';
-                                        echo '<td>' . $subject->getTeacherName() . '</td>';
-                                        ?>
-                                        <td>
-                                            <div class="table-data-feature">
-                                                <button class="item"
-                                                        data-toggle="tooltip"
-                                                        data-placement="top"
-                                                        data-id="<?=$subject->getId()?>"
-                                                        title="Delete">
-                                                    <i class="zmdi zmdi-delete"></i>
-                                                </button>
-                                                <button class="item"
-                                                        data-toggle="tooltip"
-                                                        data-placement="top"
-                                                        data-id="<?=$subject->getId()?>"
-                                                        title="modify">
-                                                    <i class="zmdi zmdi-delete"></i>
-                                                </button>
-                                                <button class="item"
-                                                        data-toggle="tooltip"
-                                                        data-placement="top"
-                                                        data-id="<?=$subject->getId()?>"
-                                                        title="addTask">
-                                                    <i class="zmdi zmdi-delete"></i>
-                                                </button>
-                                            </div>
-                                        </td>
-                                        </tr>
-                                        <tr class="spacer"></tr>
-                                        <?php
-                                    }
-                                    ?>
-
-                                </table>
+                                <?=
+                                ComponentsHelper::tableBuilder(
+                                    SubjectController::SUBJECT_HEADERS,
+                                    $this->subjects,
+                                    [
+                                        'getId',
+                                        'getName',
+                                        'getCourseDescription',
+                                        'getNumHours',
+                                        'getTeacherName'
+                                    ],
+                                    [
+                                            [
+                                                'title' => 'delete',
+                                                'onclick' => '',
+                                                'iconClass' => 'zmdi-delete',
+                                                'formAction' => 'subject/delete'
+                                            ]
+                                    ]
+                                );
+                                ?>
                             </div>
                             <!-- END DATA TABLE -->
                         </div>
@@ -119,10 +95,7 @@
         <?php require __DIR__ . '/AddSubjectModal.php' ?>
     </div>
 </div>
-<?php include '../src/Views/Parts/Js.php' ?>
-<script>
-    const activeTab = '<?= $activeTab ?? "Subject" ?>';
-</script>
+<?php include __DIR__ . '/../Parts/Js.php' ?>
 </body>
 
 </html>
