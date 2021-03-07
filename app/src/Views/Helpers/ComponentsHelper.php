@@ -20,7 +20,8 @@ class componentsHelper
         array $keys,
         ?string $selected = null,
         bool $readOnly = false
-    ): string {
+    ): string
+    {
 
         $selector = "<select name=\"{$name}\" id=\"{$id}\" class=\"form-control\"";
         if ($readOnly) {
@@ -57,7 +58,8 @@ class componentsHelper
         array $list,
         array $keys,
         array $buttons,
-    ): string {
+    ): string
+    {
         $table = "<table class='table table-data2'>";
         $table .= "<thead>";
         $table .= "<tr>";
@@ -72,15 +74,15 @@ class componentsHelper
         //Print rows
         foreach ($list as $domain) {
             $table .= '<tr class="tr-shadow">';
-            $id =  $keys[0];
-            $id = (string) $domain->$id();
+            $id = $keys[0];
+            $id = (string)$domain->$id();
             foreach ($keys as $propertyMethod) {
                 $table .= '<td>' . $domain->$propertyMethod() . '</td>';
             }
             //Print actions buttons.
             $table .= '<td>';
             $table .= '<div class="table-data-feature">';
-            foreach ($buttons as $button){
+            foreach ($buttons as $button) {
                 $title = $button['title'];
                 $onclick = $button['onclick'];
                 $iconClass = $button['iconClass'];
@@ -99,6 +101,72 @@ class componentsHelper
             $table .= '</div>';
             $table .= '</td >';
             $table .= '<tr class="spacer" >   </tr >';
+        }
+
+        $table .= '</table>';
+        return $table;
+    }
+
+    //VICTOR: he tenido que crear uno a parte porque tiene bastante modificacion
+
+    /**
+     * @param array $headers - Cabeceras de la tabla
+     * @param array $list - Lista de aquello que queremos generar la tabla
+     * @param array $keys - Array con las columnas de la tabla
+     * @param array $buttons - Array con los botones de acción para cada elemento.
+     * @return string - HTML del selector generado
+     */
+    public static function tableBuilderForTasks(
+        array $headers,
+        array $list,
+        array $keys,
+        array $buttons,
+    ): string
+    {
+        $table = "<table class='table table-data2'>";
+        $table .= "<thead>";
+        $table .= "<tr>";
+
+        //Print headers
+        foreach ($headers as $value) {
+            $table .= "<th>" . $value . "</th>";
+        }
+        $table .= "</tr>";
+        $table .= "</thead>";
+
+        //Print rows
+        foreach ($list as $domainSubject) {
+            foreach ($domainSubject->getTasks() as $domain) {
+                $table .= '<tr class="tr-shadow">';
+                $id = $keys[0];
+                $id = (string)$domain->$id();
+                foreach ($keys as $index => $propertyMethod) {
+                    if (count($keys) != ($index + 1)) $table .= '<td>' . $domain->$propertyMethod() . '</td>';
+                    else $table .= '<td>' . $domainSubject->$propertyMethod() . '</td>';
+                }
+                //Print actions buttons.
+                $table .= '<td>';
+                $table .= '<div class="table-data-feature">';
+                foreach ($buttons as $button) {
+                    $title = $button['title'];
+                    $onclick = $button['onclick'];
+                    $iconClass = $button['iconClass'];
+                    $name = $button['name'];
+
+                    $table .= "<button class='item' 
+                            data-toggle='tooltip' 
+                            data-placement='top' 
+                            title='$title' 
+                            name='$name' 
+                            onclick='$onclick($id)'>";
+
+                    $table .= "<i class='zmdi $iconClass' ></i >";
+                    $table .= '</button>';
+                }
+                $table .= '</div>';
+                $table .= '</td >';
+                $table .= '<tr class="spacer" >   </tr >';
+            }
         }
 
         $table .= '</table>';

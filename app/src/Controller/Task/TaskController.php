@@ -20,8 +20,18 @@ class TaskController
     protected array $subjectsTeacher = [];
     /** @var Subject[] */
     protected array $subjects = [];
+    protected array $subjectNames = [];
     /** @var string[] */
     private array $errors = [];
+    public const TASK_HEADERS = [
+        "Task ID",
+        "Name",
+        "Description",
+        "Start Date",
+        "End Date",
+        "Status",
+        "Subject"
+    ];
 
     public function __construct(
         private UserRepositoryInterface $userRepository,
@@ -36,6 +46,11 @@ class TaskController
         $this->user = $this->userRepository->getByDni($_SESSION['uid']);
         $this->subjectsTeacher = $this->subjectRepository->getByTeacherId($this->user->getIdentificationDocument());
         $this->subjects = $this->subjectRepository->get();
+        foreach ($this->subjects as $s) {
+            if ($s->getIdentificationDocumentTeacher() === $this->user->getIdentificationDocument()) {
+                array_push($this->subjectNames, $s);
+            }
+        }
         return require __DIR__ . '/../../Views/Task/Task.php';
     }
 
@@ -88,5 +103,17 @@ class TaskController
         if ($endDate < $startDate) {
             array_push($this->errors, ErrorsMessages::getError("date:EndLessStart"));
         }
+    }
+
+    public function delete()
+    {
+        if (
+            $_SERVER['REQUEST_METHOD'] === 'POST'
+            && isset($_POST['taskId'])
+        ) {
+            $taskId = $_POST['taskId'];
+            $this->taskRepository->deleteById($taskId);
+        }
+        $this->execute();
     }
 }

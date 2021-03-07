@@ -44,7 +44,7 @@ use HLC\AP\Views\Helpers\ComponentsHelper;
                                 ComponentsHelper::selectorBuilder(
                                     "subjectId",
                                     "subjectId",
-                                    $this->subjects,
+                                    $this->subjectNames,
                                     ["getId", "getName"]
                                 );
                                 ?>

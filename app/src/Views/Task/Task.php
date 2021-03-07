@@ -1,3 +1,38 @@
+<?php
+
+use HLC\AP\Controller\Task\TaskController;
+use HLC\AP\Domain\Task\Task;
+use HLC\AP\Views\Helpers\componentsHelper;
+
+if ($this->user->getType() === 'P') {
+    $buttons = [
+        [
+            'title' => 'Edit',
+            'onclick' => 'edit',
+            'iconClass' => 'zmdi-edit',
+            'name' => 'edit'
+        ],
+        [
+            'title' => 'Delete',
+            'onclick' => 'remove',
+            'iconClass' => 'zmdi-delete',
+            'name' => 'delete'
+        ],
+    ];
+    $status = 'getTeacherStatus';
+} else {
+    $buttons = [
+        [
+            'title' => 'Send',
+            'onclick' => 'send',
+            'iconClass' => 'zmdi-mail-send',
+            'name' => 'send'
+        ],
+    ];
+    $status = 'getStudentStatus';
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -19,8 +54,6 @@
 
 <div class="page-wrapper">
     <?php
-
-    use HLC\AP\Domain\Task\Task;
 
     require __DIR__ . '/../Parts/HeaderMobile.php';
     require __DIR__ . '/../Parts/Aside.php';
@@ -76,97 +109,106 @@
                                 </div>
                             </div>
                             <!-- tabla -->
-
-                            <?php
-                            if (false === empty($this->subjectsTeacher)) {
+                            <div class="table-responsive table-responsive-data2">
+                                <?=
+                                ComponentsHelper::tableBuilderForTasks(
+                                    TaskController::TASK_HEADERS,
+                                    $this->subjectsTeacher,
+                                    [
+                                        'getTaskId',
+                                        'getName',
+                                        'getDescription',
+                                        'getDateStart',
+                                        'getDateEnd',
+                                        $status,
+                                        'getName',
+                                    ],
+                                    $buttons
+                                );
                                 ?>
-                                <div class="table-responsive table-responsive-data2">
-                                    <table class="table table-data2">
-                                        <thead>
-                                        <tr>
-                                            <th>Nombre</th>
-                                            <th>description</th>
-                                            <th>Inicio</th>
-                                            <th>Fin</th>
-                                            <th>Estado</th>
-                                            <th>Asignatura</th>
-                                            <th></th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <?php
-
-                                        foreach ($this->subjectsTeacher as $subject) {
-                                            /** @var Task $task */
-                                            foreach ($subject->getTasks() as $task) {
-                                                echo '<tr class="tr-shadow">';
-                                                echo '<td>' . $task->getName() . '</td>';
-                                                echo '<td>' . $task->getDescription() . '</td>';
-                                                echo '<td>' . $task->getDateStart() . '</td>';
-                                                echo '<td>' . $task->getDateEnd() . '</td>';
-                                                $es = $task->status($this->user->getType() === 'P');
-                                                echo '<td> <span class="status--'.
-                                                    ($es == "finalizada" ? "process" : "denied") .
-                                                    '">' . $es . '</span></td>';
-
-                                                echo '<td>' . $subject->getName() . '</td>';
-
-                                                $id = $task->getTaskId();
-                                                ?>
-                                                <td>
-                                                    <div class="table-data-feature">
-                                                        <?php
-                                                        if ($this->user->getType() == 'A') {
-                                                        //TODO: BOTONES
-                                                        ?>
-                                                        <button class="item" data-toggle="tooltip"
-                                                                data-placement="top"
-                                                                title="Send"
-                                                                name="po" onclick="send()"
-                                                                value="<?php echo $id ?>">
-                                                            <i class="zmdi zmdi-mail-send"></i>
-                                                            <p id="demo"></p>
-                                                            <?php
-                                                            }else {
-
-                                                            ?>
-                                                            <button class="item" data-toggle="tooltip"
-                                                                    data-placement="top"
-                                                                    title="Delete"
-                                                                    name="po" onclick="loadDoc()"
-                                                                    value="<?php echo $id ?>">
-                                                                <i class="zmdi zmdi-delete"></i>
-                                                                <p id="demo"></p>
-                                                                <?php
-                                                                }
-                                                                ?>
-                                                    </div>
-                                                </td>
-                                                </tr>
-                                                <tr class="spacer"></tr>
-                                                <?php
-
-                                            }
-                                        } ?>
-
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <?php
-                            }
-                            ?>
-
+                            </div>
                             <!-- END DATA TABLE -->
+                            <!--start Spinner-->
+                            <div id="richList"></div>
+
+
+                            <div id="loader" class="lds-dual-ring hidden overlay spinner-box">
+                                <div class="configure-border-1">
+                                    <div class="configure-core"></div>
+                                </div>
+                                <div class="configure-border-2">
+                                    <div class="configure-core"></div>
+                                </div>
+                            </div>
+                            <!--end spinner-->
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         <!--Modal-->
-        <?php require  __DIR__ . '/AddTaskModal.php' ?>
+        <?php require __DIR__ . '/AddTaskModal.php' ?>
     </div>
 </div>
-<?php include  __DIR__ . '/../Parts/Js.php' ?>
+<?php include __DIR__ . '/../Parts/Js.php' ?>
+<script>
+    /*
+     function onSelectorOrder(selector) {
 
+         $.ajax({
+             url: "/task/orderBy",
+             type: "post",
+             data: {
+                 orderBy: selector.value
+             },
+             success() {
+                 window.location.reload();
+             }
+         });
+     }
+
+     function edit(id) {
+         $.ajax({
+             url: "/task/fetch",
+             type: "post",
+             data: {
+                 courseId: id
+             },
+             success(response) {
+                 response = response.substring(response.indexOf('{'), response.indexOf('}') + 1);
+                 response = JSON.parse(response);
+                 document.getElementById('addCourseLabel').innerHTML = 'Edit course';
+                 document.getElementById('form_educationCenter').value = response.educationCenter;
+                 document.getElementById('form_startYear').value = response.startYear;
+                 document.getElementById('form_endYear').value = response.endYear;
+                 document.getElementById('form_description').value = response.description;
+                 document.getElementById('form_courseId').value = response.courseId;
+                 //Open modal
+                 $('#addTask').modal('show');
+             }
+         });
+     }*/
+
+    function remove(taskId) {
+        $.ajax({
+            url: "/task/delete",  //the page containing php script
+            type: "post",
+            data: {
+                taskId: taskId
+            },
+            beforeSend: function () { // Before we send the request, remove the .hidden class from the spinner and default to inline-block.
+                $('#loader').removeClass('hidden')
+            },
+            success(response) {
+                console.log('ok');
+                window.location.reload();
+            },
+            complete: function () { // Set our complete callback, adding the .hidden class and hiding the spinner.
+                $('#loader').addClass('hidden')
+            },
+        });
+    }
+
+</script>
 </body>
 </html>
