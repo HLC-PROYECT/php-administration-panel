@@ -71,9 +71,11 @@ class TaskController
         }
 
         if (true === empty($this->errors)) {
+            if (isset($_POST["taskId"])) $taskId = $_POST["taskId"];
+            else $taskId = 0;
             try {
                 $this->taskRepository->save(Task::build(
-                    0,
+                    $taskId,
                     $_POST['name'],
                     $_POST['desc'],
                     date("Y-m-d", strtotime($_POST['startDate'])),

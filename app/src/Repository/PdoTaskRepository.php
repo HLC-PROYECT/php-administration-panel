@@ -19,19 +19,33 @@ final class PdoTaskRepository implements TaskRepositoryInterface
 
     public function save(Task $task): Task
     {
-        $r = $this->database->insert("tarea",
-            [
-                "nombretarea" => $task->getName(),
-                "f_inicio" => $task->getDateStart(),
-                "f_fin" => $task->getDateEnd(),
-                "estado" => $task->getStatus(),
-                "descrip" => $task->getDescription(),
-                "codasig" => $task->getSubjectId()
-            ]
-        );
+        if ($task->getTaskId() == 0) {
+            $r = $this->database->insert("tarea",
+                [
+                    "nombretarea" => $task->getName(),
+                    "f_inicio" => $task->getDateStart(),
+                    "f_fin" => $task->getDateEnd(),
+                    "estado" => $task->getStatus(),
+                    "descrip" => $task->getDescription(),
+                    "codasig" => $task->getSubjectId()
+                ]
+            );
+        } else {
+            $r = $this->database->update("tarea",
+                [
+                    "nombretarea" => $task->getName(),
+                    "f_inicio" => $task->getDateStart(),
+                    "f_fin" => $task->getDateEnd(),
+                    "estado" => $task->getStatus(),
+                    "descrip" => $task->getDescription(),
+                    "codasig" => $task->getSubjectId()
+                ],
+                ["codtarea" => $task->getTaskId()]
+            );
+        }
 
         if ($r->errorCode() != '00000') {
-            throw new Exception($r->errorInfo(),20001);
+            throw new Exception($r->errorInfo(), 20001);
         }
 
         return $task;

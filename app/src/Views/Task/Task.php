@@ -165,7 +165,7 @@ if ($this->user->getType() === 'P') {
      }
 */
     $("#addTask").on('hidden.bs.modal', function () {
-        document.getElementById('addTaskLabel').innerHTML = 'New tarea';
+        document.getElementById('addTaskLabel').innerHTML = 'New task';
         document.getElementById('form_name').value = '';
         document.getElementById('form_description').value = '';
         document.getElementById('form_startDate').value = '';
