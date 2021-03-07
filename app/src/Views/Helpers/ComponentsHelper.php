@@ -47,7 +47,7 @@ class componentsHelper
 
     /**
      * @param array $headers - Cabeceras de la tabla
-     * @param array $list - Lista de aquello que queremos generar el selector
+     * @param array $list - Lista de aquello que queremos generar la tabla
      * @param array $keys - Array con las columnas de la tabla
      * @param array $buttons - Array con los botones de acción para cada elemento.
      * @return string - HTML del selector generado
@@ -84,17 +84,19 @@ class componentsHelper
                 $title = $button['title'];
                 $onclick = $button['onclick'];
                 $iconClass = $button['iconClass'];
+                $name = $button['name'];
 
                 $table .= "<button class='item' 
                             data-toggle='tooltip' 
                             data-placement='top' 
                             title='$title' 
-                            name='po' 
+                            name='$name' 
                             onclick='$onclick($id)'>";
 
                 $table .= "<i class='zmdi $iconClass' ></i >";
                 $table .= '</button>';
             }
+            $table .= '</div>';
             $table .= '</td >';
             $table .= '<tr class="spacer" >   </tr >';
         }

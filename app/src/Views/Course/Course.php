@@ -80,18 +80,26 @@ use HLC\AP\Views\Helpers\ComponentsHelper;
                                         [
                                             'title' => 'Delete',
                                             'onclick' => 'remove',
-                                            'iconClass' => 'zmdi-delete'
+                                            'iconClass' => 'zmdi-delete',
+                                            'name' => 'delete'
                                         ],
                                         [
                                             'title' => 'Edit',
                                             'onclick' => 'edit',
-                                            'iconClass' => 'zmdi-edit'
-                                        ]
+                                            'iconClass' => 'zmdi-edit',
+                                            'name' => 'edit'
+                                        ],
                                     ]
                                 );
                                 ?>
                             </div>
                             <!-- END DATA TABLE -->
+
+                            <!--Spinner-->
+                            <div id="richList"></div>
+
+
+                            <div id="loader" class="lds-dual-ring hidden overlay"></div>
                         </div>
                     </div>
                 </div>
@@ -122,7 +130,7 @@ use HLC\AP\Views\Helpers\ComponentsHelper;
                 courseId: courseId
             },
             success(response) {
-                response = response.substring(response.indexOf('{'),response.indexOf('}') + 1);
+                response = response.substring(response.indexOf('{'), response.indexOf('}') + 1);
                 response = JSON.parse(response);
                 document.getElementById('addCourseLabel').innerHTML = 'Edit course';
                 document.getElementById('form_educationCenter').value = response.educationCenter;
@@ -137,24 +145,26 @@ use HLC\AP\Views\Helpers\ComponentsHelper;
     }
 
     function remove(courseId) {
-        createForm("courseId", courseId, "/course/delete")
-    }
-
-    function createForm(name, value, url) {
-        form = document.createElement('form');
-        form.setAttribute('method', 'POST');
-        form.setAttribute('action', url);
-        courseField = document.createElement('input');
-        courseField.setAttribute('name', name);
-        courseField.setAttribute('type', 'hidden');
-        courseField.setAttribute('value', value);
-        form.appendChild(courseField);
-        document.body.appendChild(form);
-        form.submit();
+        $.ajax({
+            url: "/course/delete",  //the page containing php script
+            type: "post",
+            data: {
+                courseId: courseId
+            },
+            beforeSend: function () { // Before we send the request, remove the .hidden class from the spinner and default to inline-block.
+                $('#loader').removeClass('hidden')
+            },
+            success(response) {
+                console.log('ok');
+                window.location.reload();
+            },
+            complete: function () { // Set our complete callback, adding the .hidden class and hiding the spinner.
+                $('#loader').addClass('hidden')
+            },
+        });
     }
 
 </script>
-
 </body>
 
 </html>
