@@ -75,6 +75,18 @@ use HLC\AP\Views\Helpers\ComponentsHelper;
                                         'getYearStart',
                                         'getYearEnd',
                                         'getDescription',
+                                    ],
+                                    [
+                                        [
+                                            'title' => 'Delete',
+                                            'onclick' => 'remove',
+                                            'iconClass' => 'zmdi-delete'
+                                        ],
+                                        [
+                                            'title' => 'Edit',
+                                            'onclick' => 'edit',
+                                            'iconClass' => 'zmdi-edit'
+                                        ]
                                     ]
                                 );
                                 ?>
@@ -85,17 +97,16 @@ use HLC\AP\Views\Helpers\ComponentsHelper;
                 </div>
             </div>
         </div>
+
         <!--Modal-->
-        <?php require  __DIR__ . '/AddCourseModal.php' ?>
+        <?php require __DIR__ . '/AddCourseModal.php' ?>
     </div>
 </div>
 
-<?php
-require __DIR__ . '/../Parts/Js.php';
-?>
+<?php require __DIR__ . '/../Parts/Js.php'; ?>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function(){
+    document.addEventListener('DOMContentLoaded', function () {
         <?php
         foreach ($this->errors as $value) {
             echo 'showError("' . $value . '");';
@@ -103,20 +114,45 @@ require __DIR__ . '/../Parts/Js.php';
         ?>
     })
 
-    function remove(courseId) {
-        console.log(courseId);
+    function edit(courseId) {
         $.ajax({
-            url: "/course/delete",  //the page containing php script
-            type: "post",    //request type,
+            url: "/course/fetchCourse",  //the page containing php script
+            type: "post",
             data: {
-                deleteCourse: true,
                 courseId: courseId
             },
-            success() {
-                console.log('Curso eliminado');
+            success(response) {
+                response = response.substring(response.indexOf('{'),response.indexOf('}') + 1);
+                response = JSON.parse(response);
+                document.getElementById('addCourseLabel').innerHTML = 'Edit course';
+                document.getElementById('form_educationCenter').value = response.educationCenter;
+                document.getElementById('form_startYear').value = response.startYear;
+                document.getElementById('form_endYear').value = response.endYear;
+                document.getElementById('form_description').value = response.description;
+                document.getElementById('form_courseId').value = response.courseId;
+                //Open modal
+                $('#addTask').modal('show');
             }
         });
     }
+
+    function remove(courseId) {
+        createForm("courseId", courseId, "/course/delete")
+    }
+
+    function createForm(name, value, url) {
+        form = document.createElement('form');
+        form.setAttribute('method', 'POST');
+        form.setAttribute('action', url);
+        courseField = document.createElement('input');
+        courseField.setAttribute('name', name);
+        courseField.setAttribute('type', 'hidden');
+        courseField.setAttribute('value', value);
+        form.appendChild(courseField);
+        document.body.appendChild(form);
+        form.submit();
+    }
+
 </script>
 
 </body>
