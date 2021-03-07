@@ -99,7 +99,14 @@ use HLC\AP\Views\Helpers\ComponentsHelper;
                             <div id="richList"></div>
 
 
-                            <div id="loader" class="lds-dual-ring hidden overlay"></div>
+                            <div id="loader" class="lds-dual-ring hidden overlay spinner-box">
+                                <div class="configure-border-1">
+                                    <div class="configure-core"></div>
+                                </div>
+                                <div class="configure-border-2">
+                                    <div class="configure-core"></div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
