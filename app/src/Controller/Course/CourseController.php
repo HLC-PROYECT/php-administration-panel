@@ -38,13 +38,23 @@ class CourseController
     {
         $currentUserID = $_SESSION['uid'];
         $this->user = $this->userRepository->getByDni($currentUserID);
+        if (!isset($_SESSION['courseOrder'])) {
+            $_SESSION['courseOrder'] = $this->setOrder();
+        }
     }
 
     public function execute(): string
     {
-        $this->courses = $this->courseRepository->getCoursesById($this->user->getIdentificationDocument());
+        $orderBy = $_SESSION['courseOrder'];
+        $this->courses = $this->courseRepository->getCoursesById($this->user->getIdentificationDocument(), $orderBy);
 
         return require __DIR__ . '/../../Views/Course/Course.php';
+    }
+
+    public function orderBy()
+    {
+        $_SESSION['courseOrder'] = $this->setOrder($_POST['orderBy']);
+        $this->execute();
     }
 
     public function delete()
@@ -171,5 +181,14 @@ class CourseController
     {
         $this->courseTeacherRepository->deleteByCourse($courseId);
         $this->courseRepository->delete($courseId);
+    }
+
+    public function setOrder($order = 'codcurso'): string
+    {
+        return match ($order) {
+            'yearStart' => 'a_inicio',
+            'yearEnd' => 'a_fin',
+            default => 'codcurso'
+        };
     }
 }
