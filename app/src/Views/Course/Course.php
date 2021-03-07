@@ -39,19 +39,18 @@ use HLC\AP\Views\Helpers\ComponentsHelper;
                             <div class="table-data__tool">
                                 <div class="table-data__tool-left">
                                     <div class="rs-select2--light rs-select2--md">
-                                        <label for="order" class="dropdown-header">Order by</label>
-                                        <select class="js-select2" id="order" name="property">
-                                            <option selected="selected" value="">Course ID</option>
-                                            <option value="">Start Date</option>
-                                            <option value="">End Date</option>
-                                        </select>
-                                        <div class="dropDownSelect2"></div>
-                                    </div>
-                                    <div class="rs-select2--light rs-select2--sm">
-                                        <select class="js-select2" name="time">
-                                            <option selected="selected">Today</option>
-                                            <option value="">3 Days</option>
-                                            <option value="">1 Week</option>
+                                        <label for="orderBy" class="dropdown-header">Order by</label>
+                                        <select onchange="onSelectorOrder(this)" class="js-select2" id="orderBy"
+                                                name="property">
+                                            <option <?php echo $_SESSION['courseOrder'] === 'codcurso' ? 'selected="selected"' : ''; ?>
+                                                    value="courseId">Course ID
+                                            </option>
+                                            <option <?php echo $_SESSION['courseOrder'] === 'a_inicio' ? 'selected="selected"' : ''; ?>
+                                                    value="yearStart">Start Date
+                                            </option>
+                                            <option <?php echo $_SESSION['courseOrder'] === 'a_fin' ? 'selected="selected"' : ''; ?>
+                                                    value="yearEnd">End Date
+                                            </option>
                                         </select>
                                         <div class="dropDownSelect2"></div>
                                     </div>
@@ -114,15 +113,30 @@ use HLC\AP\Views\Helpers\ComponentsHelper;
         ?>
     })
 
+    function onSelectorOrder(selector) {
+
+        $.ajax({
+            url: "/course/orderBy",
+            type: "post",
+            data: {
+                orderBy: selector.value
+            },
+            success() {
+                window.location.reload();
+            }
+        });
+    }
+
     function edit(courseId) {
         $.ajax({
-            url: "/course/fetchCourse",  //the page containing php script
+            url: "/course/fetchCourse",
             type: "post",
             data: {
                 courseId: courseId
             },
             success(response) {
-                response = response.substring(response.indexOf('{'),response.indexOf('}') + 1);
+                console.log(response);
+                response = response.substring(response.indexOf('{'), response.indexOf('}') + 1);
                 response = JSON.parse(response);
                 document.getElementById('addCourseLabel').innerHTML = 'Edit course';
                 document.getElementById('form_educationCenter').value = response.educationCenter;
