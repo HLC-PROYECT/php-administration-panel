@@ -166,19 +166,18 @@ use HLC\AP\Views\Helpers\ComponentsHelper;
 
     function remove(courseId) {
         $.ajax({
-            url: "/course/delete",  //the page containing php script
+            url: "/course/delete",
             type: "post",
             data: {
                 courseId: courseId
             },
-            beforeSend: function () { // Before we send the request, remove the .hidden class from the spinner and default to inline-block.
+            beforeSend: function () {
                 $('#loader').removeClass('hidden')
             },
-            success(response) {
-                console.log('ok');
+            success() {
                 window.location.reload();
             },
-            complete: function () { // Set our complete callback, adding the .hidden class and hiding the spinner.
+            complete: function () {
                 $('#loader').addClass('hidden')
             },
         });
@@ -186,5 +185,4 @@ use HLC\AP\Views\Helpers\ComponentsHelper;
 
 </script>
 </body>
-
 </html>

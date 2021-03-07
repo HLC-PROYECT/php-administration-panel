@@ -183,7 +183,7 @@ class CourseController
         $this->courseRepository->delete($courseId);
     }
 
-    public function setOrder($order = 'codcurso'): string
+    public function setOrder($order = 'courseId'): string
     {
         return match ($order) {
             'yearStart' => 'a_inicio',
