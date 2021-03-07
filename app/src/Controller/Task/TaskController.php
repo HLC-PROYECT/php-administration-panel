@@ -116,4 +116,25 @@ class TaskController
         }
         $this->execute();
     }
+
+    public function fetch()
+    {
+        if (
+            $_SERVER['REQUEST_METHOD'] === 'POST'
+            && isset($_POST['taskId'])
+        ) {
+            $task = $this->taskRepository->getById($_POST['taskId']);
+
+            print(json_encode(
+                [
+                    'taskId' => $task->getTaskId(),
+                    'name' => $task->getName(),
+                    'startDate' => $task->getDateStart(),
+                    'endDate' => $task->getDateEnd(),
+                    'description' => $task->getDescription(),
+                    'subjectId' => $task->getSubjectId()
+                ]
+            ));
+        }
+    }
 }

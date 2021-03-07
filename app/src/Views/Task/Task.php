@@ -68,7 +68,7 @@ if ($this->user->getType() === 'P') {
                     <div class="row">
                         <div class="col-md-12">
                             <!-- DATA TABLE -->
-                            <h3 class="title-5 m-b-35">Tareas</h3>
+                            <h3 class="title-5 m-b-35">Tasks</h3>
                             <div class="table-data__tool">
                                 <?php
 
@@ -91,9 +91,6 @@ if ($this->user->getType() === 'P') {
                                             </select>
                                             <div class="dropDownSelect2"></div>
                                         </div>
-                                        <button class="au-btn-filter">
-                                            <i class="zmdi zmdi-filter-list"></i>filters
-                                        </button>
                                     </div>
 
                                     <?php
@@ -104,7 +101,7 @@ if ($this->user->getType() === 'P') {
                                 <div class="table-data__tool-right">
                                     <button class="au-btn au-btn-icon au-btn--green au-btn--small" data-toggle="modal"
                                             data-target="#addTask">
-                                        <i class="zmdi zmdi-plus"></i>añadir tarea
+                                        <i class="zmdi zmdi-plus"></i>add task
                                     </button>
                                 </div>
                             </div>
@@ -166,28 +163,38 @@ if ($this->user->getType() === 'P') {
              }
          });
      }
+*/
+    $("#addTask").on('hidden.bs.modal', function () {
+        document.getElementById('addTaskLabel').innerHTML = 'New tarea';
+        document.getElementById('form_name').value = '';
+        document.getElementById('form_description').value = '';
+        document.getElementById('form_startDate').value = '';
+        document.getElementById('form_endDate').value = '';
+        document.getElementById('form_taskId').value = '';
+    })
+     function edit(taskId) {
 
-     function edit(id) {
          $.ajax({
              url: "/task/fetch",
              type: "post",
              data: {
-                 courseId: id
+                 taskId: taskId
              },
              success(response) {
                  response = response.substring(response.indexOf('{'), response.indexOf('}') + 1);
                  response = JSON.parse(response);
-                 document.getElementById('addCourseLabel').innerHTML = 'Edit course';
-                 document.getElementById('form_educationCenter').value = response.educationCenter;
-                 document.getElementById('form_startYear').value = response.startYear;
-                 document.getElementById('form_endYear').value = response.endYear;
+                 document.getElementById('addTaskLabel').innerHTML = 'Edit task';
+                 document.getElementById('form_name').value = response.name;
                  document.getElementById('form_description').value = response.description;
-                 document.getElementById('form_courseId').value = response.courseId;
+                 document.getElementById('form_startDate').value = response.startDate;
+                 document.getElementById('form_endDate').value = response.endDate;
+                 document.getElementById('form_taskId').value = response.taskId;
+                 document.getElementById('subjectId').value = response.subjectId;
                  //Open modal
                  $('#addTask').modal('show');
              }
          });
-     }*/
+     }
 
     function remove(taskId) {
         $.ajax({
