@@ -75,4 +75,9 @@ class PdoCourseRepository implements CourseRepositoryInterface
         }
         return $codcurso;
     }
+
+    public function checkCourseId($courseId): bool
+    {
+        return $this->database->has("curso", ["codcurso" => $courseId]);
+    }
 }

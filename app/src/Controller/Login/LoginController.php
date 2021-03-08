@@ -50,6 +50,7 @@ final class LoginController
         $_SESSION['uid'] = $user->getIdentificationDocument();
         session_write_close();
         set_url( '/Task');
+
         return $this->taskController->execute();
     }
 

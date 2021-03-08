@@ -52,7 +52,7 @@
                             <div class="register-link">
                                 <p>
                                     Don't you have account?
-                                    <a href="register.html">Sign Up Here</a>
+                                    <a href="/register">Sign Up Here</a>
                                 </p>
                             </div>
                         </div>
