@@ -26,6 +26,7 @@ final class ErrorsMessages
             "courseID:invalid" => "Course id introduced is not valid. Must be a number",
             "courseID:notfound" => "Course id introduced not found, please check your ID",
             "date:invalid" => "Date invalid, must be greater than or equal to 1900 or less than actual",
+            "description:invalid" => "Description  must have almost 4 of lenght",
             "20001" => "Problem occurred when trying to create a task",
             default => "Error not controlled",
         };

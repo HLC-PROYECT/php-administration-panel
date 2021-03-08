@@ -12,6 +12,7 @@ use HLC\AP\Utils\ErrorsMessages;
 
 class CourseController
 {
+    private string $courseId;
     private string $educationCenter;
     private string $startYear;
     private int $endYear;
@@ -22,12 +23,12 @@ class CourseController
     /** @var Course[] $errors */
     protected array $courses;
     public const COURSE_HEADERS = [
-                "Course ID",
-                "Education Center",
-                "Start year",
-                "End year",
-                "Description"
-            ];
+        "Course ID",
+        "Education Center",
+        "Start year",
+        "End year",
+        "Description"
+    ];
 
     public function __construct(
         private UserRepositoryInterface $userRepository,
@@ -37,13 +38,55 @@ class CourseController
     {
         $currentUserID = $_SESSION['uid'];
         $this->user = $this->userRepository->getByDni($currentUserID);
+        if (!isset($_SESSION['courseOrder'])) {
+            $_SESSION['courseOrder'] = $this->setOrder();
+        }
     }
 
     public function execute(): string
     {
-        $this->courses = $this->courseRepository->getCoursesById($this->user->getIdentificationDocument());
+        $orderBy = $_SESSION['courseOrder'];
+        $this->courses = $this->courseRepository->getCoursesById($this->user->getIdentificationDocument(), $orderBy);
 
         return require __DIR__ . '/../../Views/Course/Course.php';
+    }
+
+    public function orderBy()
+    {
+        $_SESSION['courseOrder'] = $this->setOrder($_POST['orderBy']);
+        $this->execute();
+    }
+
+    public function delete()
+    {
+        if (
+            $_SERVER['REQUEST_METHOD'] === 'POST'
+            && isset($_POST['courseId'])
+        ) {
+            $courseId = $_POST['courseId'];
+            $this->deleteCourse($courseId);
+        }
+        $this->execute();
+    }
+
+    public function fetchCourse()
+    {
+        if (
+            $_SERVER['REQUEST_METHOD'] === 'POST'
+            && isset($_POST['courseId'])
+        ) {
+            $course = $this->courseRepository->getById($_POST['courseId']);
+
+            print(json_encode(
+                [
+                    'courseId' => $course->getCourseId(),
+                    'educationCenter' => $course->getEducationCenter(),
+                    'startYear' => $course->getYearStart(),
+                    'endYear' => $course->getYearEnd(),
+                    'description' => $course->getDescription()
+                ]
+            ));
+        }
     }
 
     public function save()
@@ -52,6 +95,7 @@ class CourseController
         if (empty($this->errors)) {
             $this->insertCourse();
         }
+
         $this->execute();
     }
 
@@ -93,7 +137,7 @@ class CourseController
 
     private function validateDescription(): void
     {
-        if (empty($_POST["description"]) || strlen($_POST["description"]) < 4) {
+        if (empty($_POST["description"]) || strlen($_POST["description"]) < 3) {
             array_push($this->errors, ErrorsMessages::getError("description:invalid"));
             return;
         }
@@ -109,18 +153,21 @@ class CourseController
         return htmlspecialchars($data);
     }
 
-    public function insertCourse(): void
+    private function insertCourse(): void
     {
-        $this->courseRepository->insert(
-            0,
+        $this->courseId = (int)$_POST['courseId'];
+        $resp = $this->courseRepository->save(
+            $this->courseId,
             $this->educationCenter,
             $this->startYear,
             $this->endYear,
             $this->description
         );
-        $courseId = $this->courseRepository->getLastCourseInserted();
-        $teacherID = $this->user->getIdentificationDocument();
-        $this->courseTeacherRepository->insert($courseId, $teacherID);
+        if ($resp === 'insert') {
+            $courseId = $this->courseRepository->getLastCourseInserted();
+            $teacherID = $this->user->getIdentificationDocument();
+            $this->courseTeacherRepository->insert($courseId, $teacherID);
+        }
     }
 
     public function validateFields(): void
@@ -128,5 +175,20 @@ class CourseController
         $this->validateEducationCenter();
         $this->validateDescription();
         $this->validateYear();
+    }
+
+    private function deleteCourse(string $courseId)
+    {
+        $this->courseTeacherRepository->deleteByCourse($courseId);
+        $this->courseRepository->delete($courseId);
+    }
+
+    public function setOrder($order = 'courseId'): string
+    {
+        return match ($order) {
+            'yearStart' => 'a_inicio',
+            'yearEnd' => 'a_fin',
+            default => 'codcurso'
+        };
     }
 }

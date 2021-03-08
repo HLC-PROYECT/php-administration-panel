@@ -18,7 +18,16 @@ class PdoCourseRepository implements CourseRepositoryInterface
 
     public function insert(int $courseId, string $educationCenter, int $yearStart, int $yearEnd, string $description): bool
     {
-        $response = $this->database->query("INSERT INTO curso value ($courseId,'$educationCenter',$yearStart,$yearEnd,'$description');");
+
+        $response = $this->database->insert('curso',
+            [
+                'codcurso' => $courseId,
+                'centroed' => $educationCenter,
+                'a_inicio' => $yearStart,
+                'a_fin' => $yearEnd,
+                'descrip' => $description
+            ]
+        );
 
         return $response->errorCode() == '00000';
     }
@@ -34,16 +43,16 @@ class PdoCourseRepository implements CourseRepositoryInterface
         return $this->instantiate($this->database->select("curso", "*", ["codCurso" => $courseId])[0]);
     }
 
-    public function getCoursesById($identificationDocument): array
+    public function getCoursesById($identificationDocument,$order): array
     {
-
         $result = $this->database->select("curso",
             [
                 "[>]curso_profesor" => "codcurso"
             ],
             "*",
             [
-                "curso_profesor.dniprofesor" => $identificationDocument
+                "curso_profesor.dniprofesor" => $identificationDocument,
+                'ORDER' => $order
             ]
         );
 
@@ -60,8 +69,8 @@ class PdoCourseRepository implements CourseRepositoryInterface
         return Course::build(
             $course["codcurso"],
             $course["centroed"],
-            $course["año_ini"],
-            $course["año_fin"],
+            $course["a_inicio"],
+            $course["a_fin"],
             $course["descrip"]
         );
     }
@@ -73,11 +82,40 @@ class PdoCourseRepository implements CourseRepositoryInterface
         foreach ($result as $value) {
             $codcurso = $value["codcurso"];
         }
+
         return $codcurso;
     }
 
     public function checkCourseId($courseId): bool
     {
         return $this->database->has("curso", ["codcurso" => $courseId]);
+    }
+    
+    public function save(int $courseId, string $educationCenter, int $yearStart, int $yearEnd, string $description): string
+    {
+        if ($courseId === 0) {
+            $this->insert($courseId, $educationCenter, $yearStart, $yearEnd, $description);
+            return 'insert';
+        } else {
+            $this->update($courseId, $educationCenter, $yearStart, $yearEnd, $description);
+            return 'update';
+        }
+    }
+
+    public function update(int $courseId, string $educationCenter, int $yearStart, int $yearEnd, string $description): bool
+    {
+        $response = $this->database->update(
+            'curso',
+            [
+                'centroed' => $educationCenter,
+                'a_inicio' => $yearStart,
+                'a_fin' => $yearEnd,
+                'descrip' => $description
+
+            ],
+            ['codcurso' => $courseId]
+        );
+
+        return $response->errorCode() == '00000';
     }
 }
