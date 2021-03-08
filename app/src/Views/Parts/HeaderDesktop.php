@@ -2,8 +2,19 @@
     <div class="section__content section__content--p30">
         <div class="container-fluid">
             <div class="header3-wrap">
-                <div class="form-header ">
-                </div>
+                    <div class="form-header" >
+
+                        <input class="au-input au-input--xl"
+                               onkeyup="searchTable()"
+                               type="text"
+                               id="searchBar"
+                               name="search"
+                               placeholder="Search in table..." />
+
+                        <div class="au-btn--submit">
+                            <i class="zmdi zmdi-search"></i>
+                        </div>
+                    </div>
                 <div class="header-button">
                     <div class="account-wrap">
                         <div class="account-item clearfix js-item-menu">

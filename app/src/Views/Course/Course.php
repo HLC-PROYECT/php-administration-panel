@@ -39,7 +39,7 @@ use HLC\AP\Views\Helpers\ComponentsHelper;
                             <div class="table-data__tool">
                                 <div class="table-data__tool-left">
                                     <?php
-                                    if (!empty($this->subjectsTeacher)) {
+                                    if (!empty($this->courses)) {
                                         ?>
                                         <div class="rs-select2--light rs-select2--md">
                                             <label for="orderBy" class="dropdown-header">Order by</label>
@@ -61,7 +61,9 @@ use HLC\AP\Views\Helpers\ComponentsHelper;
                                     }
                                     ?>
                                 </div>
+
                                 <div class="table-data__tool-right">
+                                    <label for="orderBy" class="dropdown-header">&nbsp</label>
                                     <button class="au-btn au-btn-icon au-btn--green au-btn--small"
                                             data-toggle="modal" data-target="#addTask">
                                         <i class="zmdi zmdi-plus"></i>Add Course
@@ -70,11 +72,13 @@ use HLC\AP\Views\Helpers\ComponentsHelper;
                             </div>
                             <!-- tabla -->
 
-                            <div class="table-responsive table-responsive-data2">
+                            <div class="table-responsive table-responsive-data2" id="table-container">
+                                <div class='alert alert-info' id="coursesNotFound" style="display: none;" role='alert'>
+                                    No courses to display.
+                                </div>
                                 <?=
                                 empty($this->courses) ?
-                                    ComponentsHelper::emptyViewBuilder('courses', 'warning') :
-
+                                    ComponentsHelper::emptyViewBuilder('courses', 'warning') : 
                                     ComponentsHelper::tableBuilder(
                                         CourseController::COURSE_HEADERS,
                                         $this->courses,
@@ -87,17 +91,17 @@ use HLC\AP\Views\Helpers\ComponentsHelper;
                                         ],
                                         [
                                             [
-                                                'title' => 'Delete',
-                                                'onclick' => 'remove',
-                                                'iconClass' => 'zmdi-delete',
-                                                'name' => 'delete'
-                                            ],
-                                            [
                                                 'title' => 'Edit',
                                                 'onclick' => 'edit',
                                                 'iconClass' => 'zmdi-edit',
                                                 'name' => 'edit'
                                             ],
+                                            [
+                                                'title' => 'Delete',
+                                                'onclick' => 'remove',
+                                                'iconClass' => 'zmdi-delete',
+                                                'name' => 'delete'
+                                            ]
                                         ]
                                     );
                                 ?>
@@ -128,85 +132,15 @@ use HLC\AP\Views\Helpers\ComponentsHelper;
 </div>
 
 <?php require __DIR__ . '/../Parts/Js.php'; ?>
-
+<script src="/resources/js/course.js"></script>
 <script>
-    function onHiddenModal() {
-        $("#addTask").on('hidden.bs.modal', function () {
-            document.getElementById('addCourseLabel').innerHTML = 'New Course';
-            document.getElementById('form_educationCenter').value = '';
-            document.getElementById('form_startYear').value = '';
-            document.getElementById('form_endYear').value = '';
-            document.getElementById('form_description').value = '';
-            document.getElementById('form_courseId').value = '';
-        })
-    }
-
     document.addEventListener('DOMContentLoaded', function () {
-        //Reset modal values when close it.
-        onHiddenModal();
-
         <?php
         foreach ($this->errors as $value) {
             echo 'showError("' . $value . '");';
         }
         ?>
     })
-
-    function onSelectorOrder(selector) {
-
-        $.ajax({
-            url: "/course/orderBy",
-            type: "post",
-            data: {
-                orderBy: selector.value
-            },
-            success() {
-                window.location.reload();
-            }
-        });
-    }
-
-    function edit(courseId) {
-        $.ajax({
-            url: "/course/fetchCourse",
-            type: "post",
-            data: {
-                courseId: courseId
-            },
-            success(response) {
-                response = response.substring(response.indexOf('{'), response.indexOf('}') + 1);
-                response = JSON.parse(response);
-                document.getElementById('addCourseLabel').innerHTML = 'Edit course';
-                document.getElementById('form_educationCenter').value = response.educationCenter;
-                document.getElementById('form_startYear').value = response.startYear;
-                document.getElementById('form_endYear').value = response.endYear;
-                document.getElementById('form_description').value = response.description;
-                document.getElementById('form_courseId').value = response.courseId;
-                //Open modal
-                $('#addTask').modal('show');
-            }
-        });
-    }
-
-    function remove(courseId) {
-        $.ajax({
-            url: "/course/delete",
-            type: "post",
-            data: {
-                courseId: courseId
-            },
-            beforeSend: function () {
-                $('#loader').removeClass('hidden')
-            },
-            success() {
-                window.location.reload();
-            },
-            complete: function () {
-                $('#loader').addClass('hidden')
-            },
-        });
-    }
-
 </script>
 </body>
 </html>
