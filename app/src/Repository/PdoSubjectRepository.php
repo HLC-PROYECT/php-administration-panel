@@ -93,6 +93,47 @@ class PdoSubjectRepository implements SubjectRepositoryInterface
         return $subjects;
     }
 
+    public function getByStudentId(string $id): array
+    {
+        $result = $this->database->select("asignatura",
+            [
+                "[><]tarea" => "codasig",
+                "[><]tarea_alumno" => "codtarea",
+            ],
+            [
+                "asignatura.codasig",
+                "asignatura.nombreasignatura",
+                "asignatura.n_horas",
+                "asignatura.anyo_fin",
+                "asignatura.codcurso",
+                "asignatura.dniprofesor",
+                "tarea" => [
+                    "codtarea",
+                    "nombretarea",
+                    "f_inicio",
+                    "f_fin",
+                    "tarea_alumno.completada",
+                    "descrip",
+                    "codasig"
+                ]
+            ],
+            [
+                "tarea_alumno.dni" => $id
+            ]
+        );
+
+        if (true === empty($result)) {
+            return [];
+        }
+
+        $result = self::mergeSubjectTasks($result);
+        $subjects = [];
+        foreach ($result as $rawSubject) {
+            $subjects[] = $this->build($rawSubject);
+        }
+        return $subjects;
+    }
+
     private function build(array $subject): subject
     {
         return Subject::build(
@@ -154,13 +195,14 @@ class PdoSubjectRepository implements SubjectRepositoryInterface
     {
         $tasks = [];
         foreach ($rawTasks as $rawTask) {
+
             $tasks[] = Task::build(
                 intval($rawTask["codtarea"]),
                 $rawTask["nombretarea"],
                 $rawTask["descrip"],
                 $rawTask["f_inicio"],
                 $rawTask["f_fin"],
-                $rawTask["estado"],
+                isset($rawTask["estado"]) ? $rawTask["estado"] : $rawTask['completada'],
                 $rawTask["codasig"]
             );
         }

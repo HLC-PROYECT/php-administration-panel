@@ -21,6 +21,7 @@ final class ErrorsMessages
             "yearStart:invalid" => "Year start cant not be greater than the end",
             "description:invalid" => "Description  must have almost 4 of lenght",
             "20001" => "Problem occurred when trying to create a task",
+            "task:SendTask" => "Problem occurred when trying to send a task",
             default => "Error not controlled",
         };
     }

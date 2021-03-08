@@ -30,6 +30,27 @@ final class PdoTaskRepository implements TaskRepositoryInterface
                     "codasig" => $task->getSubjectId()
                 ]
             );
+
+            $codcurso = $this->database->select("asignatura", "codcurso", ["codasig" => $task->getSubjectId()])[0];
+
+            $taskId = $this->database->select(
+                "tarea",
+                "codtarea",
+                ["ORDER" =>
+                    [
+                        "codtarea" => "DESC"
+                    ],
+                    "LIMIT" => 1
+                ]
+            )[0];
+
+            $this->database->query(
+                "insert into tarea_alumno (dni, codtarea)
+                             select dni, $taskId
+                                from alumno
+                                    where codcurso = $codcurso"
+            );
+
         } else {
             $r = $this->database->update("tarea",
                 [
@@ -51,10 +72,17 @@ final class PdoTaskRepository implements TaskRepositoryInterface
         return $task;
     }
 
-    public function get(): array
+    public function get($isTeacher = true): array
     {
         $task = array();
-        $response = $this->database->select("tarea", "*");
+
+        if ($isTeacher) $response = $this->database->select("tarea", "*");
+        //TODO: Alumno
+        else $response = $this->database->query(
+            "select t.*
+                        from tarea t 
+                            join tarea_alumno ta on t.codtarea = ta.codtarea 
+                                where ta.dni = '12345678C'");
 
         foreach ($response as $row) {
             array_push($tasks, $this->instantiate($row));
@@ -63,13 +91,16 @@ final class PdoTaskRepository implements TaskRepositoryInterface
         return $task;
     }
 
-    public function deleteById(int $taskId): bool
+    public
+    function deleteById(int $taskId): bool
     {
+        $response2 = $this->database->delete("tarea_alumno", ["codtarea" => $taskId]);
         $response = $this->database->delete("tarea", ["codtarea" => $taskId]);
-        return $response->errorCode() === '00000';
+        return $response->errorCode() === '00000' && $response2 === '00000';
     }
 
-    public function getById(int $taskId): Task
+    public
+    function getById(int $taskId): Task
     {
         $response = $this->database->select("tarea", "*", ["codtarea" => $taskId]);
 
@@ -80,7 +111,8 @@ final class PdoTaskRepository implements TaskRepositoryInterface
         return $this->instantiate($response[0]);
     }
 
-    private function instantiate(array $task): Task
+    private
+    function instantiate(array $task): Task
     {
         return Task::build(
             intval($task["codtarea"]),
@@ -91,5 +123,17 @@ final class PdoTaskRepository implements TaskRepositoryInterface
             $task["estado"],
             $task["codasig"]
         );
+    }
+
+    public function send(string $dni, string $taskId): bool
+    {
+       $response =  $this->database->update("tarea_alumno",
+            ["completada" => true],
+            [
+                "dni" => $dni,
+                "codtarea" => $taskId
+            ]
+        );
+        return $response->errorCode() === '00000';
     }
 }

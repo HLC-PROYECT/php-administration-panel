@@ -35,4 +35,10 @@ interface SubjectRepositoryInterface
      * @return Subject[]
      */
     public function getByTeacherId(string $id): array;
+
+    /**
+     * @param string $id
+     * @return Subject[]
+     */
+    public function getByStudentId(string $id): array;
 }

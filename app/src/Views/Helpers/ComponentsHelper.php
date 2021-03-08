@@ -121,6 +121,7 @@ class componentsHelper
         array $list,
         array $keys,
         array $buttons,
+        bool $isTeacher
     ): string
     {
         $table = "<table class='table table-data2'>";
@@ -147,6 +148,7 @@ class componentsHelper
                 //Print actions buttons.
                 $table .= '<td>';
                 $table .= '<div class="table-data-feature">';
+                if ($domain->getStatus() != '1')
                 foreach ($buttons as $button) {
                     $title = $button['title'];
                     $onclick = $button['onclick'];

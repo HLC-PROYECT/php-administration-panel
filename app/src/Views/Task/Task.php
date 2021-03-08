@@ -20,6 +20,14 @@ if ($this->user->getType() === 'P') {
         ],
     ];
     $status = 'getTeacherStatus';
+    $addTaskButton =
+        '<div class="table-data__tool-right">
+            <button class="au-btn au-btn-icon au-btn--green au-btn--small" data-toggle="modal"
+                    data-target="#addTask">
+                <i class="zmdi zmdi-plus"></i>add task
+            </button>
+        </div>';
+    $isTeacher = true;
 } else {
     $buttons = [
         [
@@ -30,6 +38,8 @@ if ($this->user->getType() === 'P') {
         ],
     ];
     $status = 'getStudentStatus';
+    $addTaskButton = '';
+    $isTeacher = false;
 }
 ?>
 
@@ -47,7 +57,7 @@ if ($this->user->getType() === 'P') {
     <link rel="stylesheet" href="/resources/styles/style.css">
     <link href="/resources/toastr/toastr.css" rel="stylesheet"/>
     <!-- Title Page-->
-    <title>Home</title>
+    <title>Task</title>
 </head>
 
 <body class="animsition">
@@ -83,27 +93,13 @@ if ($this->user->getType() === 'P') {
                                             </select>
                                             <div class="dropDownSelect2"></div>
                                         </div>
-                                        <div class="rs-select2--light rs-select2--sm">
-                                            <select class="js-select2" name="time">
-                                                <option selected="selected">All Time</option>
-                                                <option value="">Today</option>
-                                                <option value="">1 Week</option>
-                                            </select>
-                                            <div class="dropDownSelect2"></div>
-                                        </div>
                                     </div>
 
                                     <?php
                                 }
                                 ?>
 
-
-                                <div class="table-data__tool-right">
-                                    <button class="au-btn au-btn-icon au-btn--green au-btn--small" data-toggle="modal"
-                                            data-target="#addTask">
-                                        <i class="zmdi zmdi-plus"></i>add task
-                                    </button>
-                                </div>
+                                <?= $addTaskButton ?>
                             </div>
                             <!-- tabla -->
                             <div class="table-responsive table-responsive-data2">
@@ -120,14 +116,15 @@ if ($this->user->getType() === 'P') {
                                         $status,
                                         'getName',
                                     ],
-                                    $buttons
+                                    $buttons,
+                                    $isTeacher
                                 );
                                 ?>
                             </div>
                             <!-- END DATA TABLE -->
+
                             <!--start Spinner-->
                             <div id="richList"></div>
-
 
                             <div id="loader" class="lds-dual-ring hidden overlay spinner-box">
                                 <div class="configure-border-1">
@@ -148,6 +145,7 @@ if ($this->user->getType() === 'P') {
     </div>
 </div>
 <?php include __DIR__ . '/../Parts/Js.php' ?>
+<script src="/resources/js/task.js"></script>
 <script>
     /*
      function onSelectorOrder(selector) {
@@ -164,58 +162,6 @@ if ($this->user->getType() === 'P') {
          });
      }
 */
-    $("#addTask").on('hidden.bs.modal', function () {
-        document.getElementById('addTaskLabel').innerHTML = 'New task';
-        document.getElementById('form_name').value = '';
-        document.getElementById('form_description').value = '';
-        document.getElementById('form_startDate').value = '';
-        document.getElementById('form_endDate').value = '';
-        document.getElementById('form_taskId').value = '';
-    })
-     function edit(taskId) {
-
-         $.ajax({
-             url: "/task/fetch",
-             type: "post",
-             data: {
-                 taskId: taskId
-             },
-             success(response) {
-                 response = response.substring(response.indexOf('{'), response.indexOf('}') + 1);
-                 response = JSON.parse(response);
-                 document.getElementById('addTaskLabel').innerHTML = 'Edit task';
-                 document.getElementById('form_name').value = response.name;
-                 document.getElementById('form_description').value = response.description;
-                 document.getElementById('form_startDate').value = response.startDate;
-                 document.getElementById('form_endDate').value = response.endDate;
-                 document.getElementById('form_taskId').value = response.taskId;
-                 document.getElementById('subjectId').value = response.subjectId;
-                 //Open modal
-                 $('#addTask').modal('show');
-             }
-         });
-     }
-
-    function remove(taskId) {
-        $.ajax({
-            url: "/task/delete",  //the page containing php script
-            type: "post",
-            data: {
-                taskId: taskId
-            },
-            beforeSend: function () { // Before we send the request, remove the .hidden class from the spinner and default to inline-block.
-                $('#loader').removeClass('hidden')
-            },
-            success(response) {
-                console.log('ok');
-                window.location.reload();
-            },
-            complete: function () { // Set our complete callback, adding the .hidden class and hiding the spinner.
-                $('#loader').addClass('hidden')
-            },
-        });
-    }
-
 </script>
 </body>
 </html>

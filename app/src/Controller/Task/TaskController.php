@@ -44,13 +44,18 @@ class TaskController
     public function execute(): string
     {
         $this->user = $this->userRepository->getByDni($_SESSION['uid']);
-        $this->subjectsTeacher = $this->subjectRepository->getByTeacherId($this->user->getIdentificationDocument());
+        if ($this->user->getType() == "P") $this->subjectsTeacher = $this->subjectRepository->getByTeacherId($this->user->getIdentificationDocument());
+        //Alumno
+        else $this->subjectsTeacher = $this->subjectRepository->getByStudentId($this->user->getIdentificationDocument());
+
         $this->subjects = $this->subjectRepository->get();
+
         foreach ($this->subjects as $s) {
             if ($s->getIdentificationDocumentTeacher() === $this->user->getIdentificationDocument()) {
                 array_push($this->subjectNames, $s);
             }
         }
+
         return require __DIR__ . '/../../Views/Task/Task.php';
     }
 
@@ -83,6 +88,7 @@ class TaskController
                     "pendiente",
                     intval($_POST['subjectId'])
                 ));
+
             } catch (Exception $e) {
                 array_push($this->errors, ErrorsMessages::getError((string)$e->getCode()));
             }
@@ -94,7 +100,7 @@ class TaskController
     private function validateDates(): void
     {
         $date = new DateTime();
-        //TODO() Mirar fallo de date end
+
         $actualDate = $date->getTimestamp();
         $endDate = strtotime($_POST['endDate']);
         $startDate = strtotime($_POST['startDate']);
@@ -115,6 +121,7 @@ class TaskController
         ) {
             $taskId = $_POST['taskId'];
             $this->taskRepository->deleteById($taskId);
+
         }
         $this->execute();
     }
@@ -137,6 +144,20 @@ class TaskController
                     'subjectId' => $task->getSubjectId()
                 ]
             ));
+        }
+    }
+
+    public function send()
+    {
+        if (
+            $_SERVER['REQUEST_METHOD'] === 'POST'
+            && isset($_POST['taskId'])
+        ) {
+
+            if (!$this->taskRepository->send($_SESSION['uid'], $_POST['taskId'])) {
+                array_push($this->errors, ErrorsMessages::getError("task:SendTask"));
+            }
+
         }
     }
 }

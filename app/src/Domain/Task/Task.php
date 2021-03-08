@@ -114,8 +114,8 @@ final class Task
 
     public function getStudentStatus(): string
     {
-        return ($this->getStatus() == 'finalizada') ?
-            '<span class="status--process">finalizada</span>' :
+        return ($this->getStatus() === '1') ?
+            '<span class="status--process">entregada</span>' :
             '<span class="status--denied">pendiente</span>';
     }
 

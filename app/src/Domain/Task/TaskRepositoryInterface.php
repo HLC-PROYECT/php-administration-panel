@@ -13,8 +13,11 @@ interface TaskRepositoryInterface
      */
     public function save(Task $task): Task;
 
-    /** @return Task[] */
-    public function get(): array;
+    /**
+     * @param bool $isTeacher
+     * @return Task[]
+     */
+    public function get( bool $isTeacher): array;
 
     public function deleteById(int $taskId): bool;
 
@@ -24,4 +27,6 @@ interface TaskRepositoryInterface
      * @throws Exception
      */
     public function getById(int $taskId): Task;
+
+    public function send(string $dni, string $taskId): bool;
 }
