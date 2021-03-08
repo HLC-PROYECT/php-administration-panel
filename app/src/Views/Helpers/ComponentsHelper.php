@@ -104,4 +104,15 @@ class componentsHelper
         $table .= '</table>';
         return $table;
     }
+
+    /**
+     * @param string name - Nombre descriptivo que aparece en el alert.
+     * @param string $type - Tipo de alert que se desea hacer. [info, success, warning, error].
+     * @return string - HTML del alert generado.
+     */
+    public static function emptyViewBuilder(string $name,string $type): string{
+
+        return "<div class='alert alert-$type' role='alert'>There are no $name yet. To add one, click the add button at the top.</div>";
+    }
+
 }

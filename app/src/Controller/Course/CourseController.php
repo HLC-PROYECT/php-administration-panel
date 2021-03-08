@@ -137,7 +137,7 @@ class CourseController
 
     private function validateDescription(): void
     {
-        if (empty($_POST["description"]) || strlen($_POST["description"]) < 4) {
+        if (empty($_POST["description"]) || strlen($_POST["description"]) < 3) {
             array_push($this->errors, ErrorsMessages::getError("description:invalid"));
             return;
         }

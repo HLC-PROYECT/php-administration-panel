@@ -38,22 +38,28 @@ use HLC\AP\Views\Helpers\ComponentsHelper;
                             <h3 class="title-5 m-b-35">Courses</h3>
                             <div class="table-data__tool">
                                 <div class="table-data__tool-left">
-                                    <div class="rs-select2--light rs-select2--md">
-                                        <label for="orderBy" class="dropdown-header">Order by</label>
-                                        <select onchange="onSelectorOrder(this)" class="js-select2" id="orderBy"
-                                                name="property">
-                                            <option <?php echo $_SESSION['courseOrder'] === 'codcurso' ? 'selected="selected"' : ''; ?>
-                                                    value="courseId">Course ID
-                                            </option>
-                                            <option <?php echo $_SESSION['courseOrder'] === 'a_inicio' ? 'selected="selected"' : ''; ?>
-                                                    value="yearStart">Start Date
-                                            </option>
-                                            <option <?php echo $_SESSION['courseOrder'] === 'a_fin' ? 'selected="selected"' : ''; ?>
-                                                    value="yearEnd">End Date
-                                            </option>
-                                        </select>
-                                        <div class="dropDownSelect2"></div>
-                                    </div>
+                                    <?php
+                                    if (!empty($this->subjectsTeacher)) {
+                                        ?>
+                                        <div class="rs-select2--light rs-select2--md">
+                                            <label for="orderBy" class="dropdown-header">Order by</label>
+                                            <select onchange="onSelectorOrder(this)" class="js-select2" id="orderBy"
+                                                    name="property">
+                                                <option <?php echo $_SESSION['courseOrder'] === 'codcurso' ? 'selected="selected"' : ''; ?>
+                                                        value="courseId">Course ID
+                                                </option>
+                                                <option <?php echo $_SESSION['courseOrder'] === 'a_inicio' ? 'selected="selected"' : ''; ?>
+                                                        value="yearStart">Start Date
+                                                </option>
+                                                <option <?php echo $_SESSION['courseOrder'] === 'a_fin' ? 'selected="selected"' : ''; ?>
+                                                        value="yearEnd">End Date
+                                                </option>
+                                            </select>
+                                            <div class="dropDownSelect2"></div>
+                                        </div>
+                                        <?php
+                                    }
+                                    ?>
                                 </div>
                                 <div class="table-data__tool-right">
                                     <button class="au-btn au-btn-icon au-btn--green au-btn--small"
@@ -63,33 +69,37 @@ use HLC\AP\Views\Helpers\ComponentsHelper;
                                 </div>
                             </div>
                             <!-- tabla -->
+
                             <div class="table-responsive table-responsive-data2">
                                 <?=
-                                ComponentsHelper::tableBuilder(
-                                    CourseController::COURSE_HEADERS,
-                                    $this->courses,
-                                    [
-                                        'getCourseId',
-                                        'getEducationCenter',
-                                        'getYearStart',
-                                        'getYearEnd',
-                                        'getDescription',
-                                    ],
-                                    [
+                                empty($this->courses) ?
+                                    ComponentsHelper::emptyViewBuilder('courses', 'warning') :
+
+                                    ComponentsHelper::tableBuilder(
+                                        CourseController::COURSE_HEADERS,
+                                        $this->courses,
                                         [
-                                            'title' => 'Delete',
-                                            'onclick' => 'remove',
-                                            'iconClass' => 'zmdi-delete',
-                                            'name' => 'delete'
+                                            'getCourseId',
+                                            'getEducationCenter',
+                                            'getYearStart',
+                                            'getYearEnd',
+                                            'getDescription',
                                         ],
                                         [
-                                            'title' => 'Edit',
-                                            'onclick' => 'edit',
-                                            'iconClass' => 'zmdi-edit',
-                                            'name' => 'edit'
-                                        ],
-                                    ]
-                                );
+                                            [
+                                                'title' => 'Delete',
+                                                'onclick' => 'remove',
+                                                'iconClass' => 'zmdi-delete',
+                                                'name' => 'delete'
+                                            ],
+                                            [
+                                                'title' => 'Edit',
+                                                'onclick' => 'edit',
+                                                'iconClass' => 'zmdi-edit',
+                                                'name' => 'edit'
+                                            ],
+                                        ]
+                                    );
                                 ?>
                             </div>
                             <!-- END DATA TABLE -->
