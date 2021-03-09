@@ -22,12 +22,28 @@ class CourseController
     protected ?User $user;
     /** @var Course[] $errors */
     protected array $courses;
+    protected array $notJoinedCourses;
     public const COURSE_HEADERS = [
         "Course ID",
         "Education Center",
         "Start year",
         "End year",
         "Description"
+    ];
+
+    public const  COURSE_BUTTONS = [
+        [
+            'title' => 'Edit',
+            'onclick' => 'edit',
+            'iconClass' => 'zmdi-edit',
+            'name' => 'edit'
+        ],
+        [
+            'title' => 'Delete',
+            'onclick' => 'remove',
+            'iconClass' => 'zmdi-delete',
+            'name' => 'delete'
+        ]
     ];
 
     public function __construct(
@@ -46,7 +62,14 @@ class CourseController
     public function execute(): string
     {
         $orderBy = $_SESSION['courseOrder'];
-        $this->courses = $this->courseRepository->getCoursesById($this->user->getIdentificationDocument(), $orderBy);
+
+
+        if ($this->user->getType() === 'P') {
+            $this->notJoinedCourses = $this->courseRepository->getNotJoinedCourse($this->user->getIdentificationDocument());
+            $this->courses = $this->courseRepository->getCoursesById($this->user->getIdentificationDocument(), $orderBy);
+        } else {
+            $this->courses = $this->courseRepository->getPupilCourse($this->user->getIdentificationDocument());
+        }
 
         return require __DIR__ . '/../../Views/Course/Course.php';
     }

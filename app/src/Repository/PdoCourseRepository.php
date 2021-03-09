@@ -43,7 +43,7 @@ class PdoCourseRepository implements CourseRepositoryInterface
         return $this->instantiate($this->database->select("curso", "*", ["codCurso" => $courseId])[0]);
     }
 
-    public function getCoursesById($identificationDocument,$order): array
+    public function getCoursesById($identificationDocument, $order): array
     {
         $result = $this->database->select("curso",
             [
@@ -112,5 +112,42 @@ class PdoCourseRepository implements CourseRepositoryInterface
         );
 
         return $response->errorCode() == '00000';
+    }
+
+    public function getPupilCourse($identificationDocument): array
+    {
+        $result = $this->database->select(
+            'curso',
+            ["[><]alumno" => "codcurso"],
+            [
+                "curso.codcurso",
+                "centroed",
+                "a_inicio",
+                "a_fin",
+                "descrip"
+            ],
+            ["dni" => $identificationDocument]
+        );
+
+        $courses = [];
+        foreach ($result as $value) {
+            array_push($courses, $this->instantiate($value));
+        }
+
+        return $courses;
+    }
+
+    public function getNotJoinedCourse($identificationDocument): array
+    {
+        $result = $this->database->query("Select C.* from curso C join curso_profesor cp on C.codcurso = cp.codCurso  where cp.dniProfesor != '$identificationDocument'");
+
+        $courses = [];
+        foreach ($result as $value) {
+            array_push($courses, $this->instantiate($value));
+        }
+
+        return $courses;
+
+
     }
 }

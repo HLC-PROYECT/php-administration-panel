@@ -3,6 +3,11 @@
 use HLC\AP\Controller\Course\CourseController;
 use HLC\AP\Views\Helpers\ComponentsHelper;
 
+$buttons = [];
+$isTeacher = $this->user->getType() === 'P';
+if ($isTeacher) {
+    $buttons = CourseCOntroller::COURSE_BUTTONS;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -62,14 +67,36 @@ use HLC\AP\Views\Helpers\ComponentsHelper;
                                     ?>
                                 </div>
 
+                                <div class="table-data__tool-left">
+                                    <label for="orderBy" class="dropdown-header">Join to course</label>
+                                    <?=
+                                    ComponentsHelper::selectorBuilder(
+                                        'courses',
+                                        'joinCourse',
+                                        $this->notJoinedCourses,
+                                        [
+                                            'getCourseId',
+                                            'getDescription'
+                                        ]
+                                    )
+                                    ?>
+                                </div>
+
                                 <div class="table-data__tool-right">
                                     <label for="orderBy" class="dropdown-header">&nbsp</label>
-                                    <button class="au-btn au-btn-icon au-btn--green au-btn--small"
-                                            data-toggle="modal" data-target="#addTask">
-                                        <i class="zmdi zmdi-plus"></i>Add Course
-                                    </button>
+                                    <?php
+                                    if ($isTeacher) {
+                                        ?>
+                                        <button class="au-btn au-btn-icon au-btn--green au-btn--small"
+                                                data-toggle="modal" data-target="#addTask">
+                                            <i class="zmdi zmdi-plus"></i>Add Course
+                                        </button>
+                                        <?php
+                                    }
+                                    ?>
                                 </div>
                             </div>
+
                             <!-- tabla -->
 
                             <div class="table-responsive table-responsive-data2" id="table-container">
@@ -77,8 +104,9 @@ use HLC\AP\Views\Helpers\ComponentsHelper;
                                     No courses to display.
                                 </div>
                                 <?=
+
                                 empty($this->courses) ?
-                                    ComponentsHelper::emptyViewBuilder('courses', 'warning') : 
+                                    ComponentsHelper::emptyViewBuilder('courses', 'warning') :
                                     ComponentsHelper::tableBuilder(
                                         CourseController::COURSE_HEADERS,
                                         $this->courses,
@@ -89,20 +117,7 @@ use HLC\AP\Views\Helpers\ComponentsHelper;
                                             'getYearEnd',
                                             'getDescription',
                                         ],
-                                        [
-                                            [
-                                                'title' => 'Edit',
-                                                'onclick' => 'edit',
-                                                'iconClass' => 'zmdi-edit',
-                                                'name' => 'edit'
-                                            ],
-                                            [
-                                                'title' => 'Delete',
-                                                'onclick' => 'remove',
-                                                'iconClass' => 'zmdi-delete',
-                                                'name' => 'delete'
-                                            ]
-                                        ]
+                                        $buttons
                                     );
                                 ?>
                             </div>
