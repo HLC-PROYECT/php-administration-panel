@@ -139,7 +139,8 @@ class PdoCourseRepository implements CourseRepositoryInterface
 
     public function getNotJoinedCourse($identificationDocument): array
     {
-        $result = $this->database->query("Select C.* from curso C join curso_profesor cp on C.codcurso = cp.codCurso  where cp.dniProfesor != '$identificationDocument'");
+        $result = $this->database->query("Select distinct C.* from curso C
+                                                     where C.codCurso not in (Select codCurso from curso_profesor where dniProfesor = '$identificationDocument')");
 
         $courses = [];
         foreach ($result as $value) {

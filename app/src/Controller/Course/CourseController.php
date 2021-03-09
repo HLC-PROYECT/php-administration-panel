@@ -39,11 +39,18 @@ class CourseController
             'name' => 'edit'
         ],
         [
+            'title' => 'Leave',
+            'onclick' => 'leave',
+            'iconClass' => 'zmdi-redo',
+            'name' => 'delete'
+        ],
+        [
             'title' => 'Delete',
             'onclick' => 'remove',
             'iconClass' => 'zmdi-delete',
             'name' => 'delete'
-        ]
+        ],
+
     ];
 
     public function __construct(
@@ -72,6 +79,28 @@ class CourseController
         }
 
         return require __DIR__ . '/../../Views/Course/Course.php';
+    }
+
+    public function leave()
+    {
+        if (
+            $_SERVER['REQUEST_METHOD'] === 'POST'
+            && isset($_POST['courseId'])
+        ) {
+            $courseId = (int) $_POST['courseId'];
+            $this->leaveCourse($courseId);
+        }
+    }
+
+    public function join()
+    {
+        if (
+            $_SERVER['REQUEST_METHOD'] === 'POST'
+            && isset($_POST['courseToJoin'])
+        ) {
+            $courseId = (int)$_POST['courseToJoin'];
+            $this->joinCourse($courseId);
+        }
     }
 
     public function orderBy()
@@ -213,5 +242,15 @@ class CourseController
             'yearEnd' => 'a_fin',
             default => 'codcurso'
         };
+    }
+
+    private function joinCourse(int $courseId)
+    {
+        $this->courseTeacherRepository->insert($courseId, $this->user->getIdentificationDocument());
+    }
+
+    private function leaveCourse(int $courseId)
+    {
+        $this->courseTeacherRepository->deleteByCourse($courseId);
     }
 }
