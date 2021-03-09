@@ -35,25 +35,20 @@ final class RegisterController
     public function execute(): string
     {
         if ($_SERVER['REQUEST_METHOD'] != 'POST' || !isset($_POST["submit"])) {
-            return $this->errorsView();
+            return $this->showView();
         }
 
-        $this->validateIdentificationDocument();
-        $this->validateEmail();
-        $this->validateCourse();
-        $this->validateDateBirth();
-        $this->validateNickName();
-        $this->validateName();
-        $this->validatePassword();
-        $this->validateType();
+        $this->validateFields();
 
         if (!empty($this->errors)) {
-            return $this->errorsView();
+            return $this->showView();
         }
 
         $this->registerUser();
-        
-        set_url( '/Course');
+
+        $this->saveUserData();
+
+        set_url('/Course');
         return $this->courseController->execute();
     }
 
@@ -84,11 +79,12 @@ final class RegisterController
                 ErrorsMessages::getError("identificationDocument:invalid"));
             return;
         }
+
         $this->identificationDocument = self::sanitize($_POST['identificationDocument']);
 
         $idRepeat = $this->userRepository->checkDni($this->identificationDocument);
 
-        if ($idRepeat) {
+        if ($idRepeat === true) {
             array_push(
                 $this->errors,
                 ErrorsMessages::getError("identificationDocument:repeat"));
@@ -129,6 +125,10 @@ final class RegisterController
 
     private function validateCourse()
     {
+        if ($this->type === 'p') {
+            return;
+        }
+
         if (
             !isset($_POST["courseId"]) ||
             empty($_POST["courseId"])
@@ -143,7 +143,7 @@ final class RegisterController
 
         $courseRepeat = $this->courseRepository->checkCourseId($this->courseId);
 
-        if (!$courseRepeat) {
+        if ($courseRepeat === false) {
             array_push(
                 $this->errors,
                 ErrorsMessages::getError("courseID:notFound"));
@@ -153,6 +153,9 @@ final class RegisterController
 
     private function validateDateBirth()
     {
+        if ($this->type === 'p') {
+            return;
+        }
         $date = new DateTime();
         $actualDate = $date->getTimestamp();
         $year = date('Y', $actualDate);
@@ -190,7 +193,7 @@ final class RegisterController
 
         $emailRepeat = $this->userRepository->checkEmail($this->email);
 
-        if ($emailRepeat) {
+        if ($emailRepeat === true) {
             array_push(
                 $this->errors,
                 ErrorsMessages::getError("email:repeat"));
@@ -207,7 +210,7 @@ final class RegisterController
         $this->password = self::sanitize($_POST["password"]);
     }
 
-    private function errorsView(): string
+    private function showView(): string
     {
         return require __DIR__ . '/../../Views/Auth/Register.php';
     }
@@ -250,4 +253,29 @@ final class RegisterController
         }
     }
 
+    public function saveUserData(): void
+    {
+        if (isset($_POST["remember"]) && $_POST["remember"] == 'remember') {
+            //Save 30 days
+            setcookie("loggedId", $this->identificationDocument, time() + 60 * 60 * 24 * 30, "/");
+        }
+
+        //Save 1 day
+        setcookie("loggedId", $this->identificationDocument, time() + 60 * 60 * 24, "/");
+        $_SESSION['uid'] = $this->identificationDocument;
+        session_write_close();
+    }
+
+    public function validateFields(): void
+    {
+        $this->validateIdentificationDocument();
+        $this->validateType();
+        $this->validateEmail();
+        $this->validateDateBirth();
+        $this->validateNickName();
+        $this->validateName();
+        $this->validatePassword();
+        $this->validateCourse();
+    }
 }
+

@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <!-- Required meta tags-->
     <meta charset="UTF-8">
@@ -22,7 +21,6 @@
 <body class="animsition">
 
 <form action="" method="post">
-
     <div class="page-wrapper">
         <div class="page-content--bge5">
             <div class="container">
@@ -105,7 +103,6 @@
                                     </div>
                                 </div>
                                 <div class="form-group" id="selector1">
-                                    <!--TODO  Show selector with available courses -->
                                     <label>Course ID</label>
                                     <input class="au-input au-input--full"
                                            id="courseId"
@@ -150,18 +147,15 @@
     </div>
 </form>
 
-<script src="/resources/js/registerInputController.js"></script>
-
+<?php include __DIR__ . '/../Parts/Js.php'; ?>
 <?php
-include __DIR__ . '/../Parts/Js.php';
+    foreach ($this->errors as $value) {
+        echo '<script type="text/javascript">',
+            'showError("' . $value . '");',
+        '</script>';
+    }
 ?>
-<?php
-foreach ($this->errors as $value) {
-    echo '<script type="text/javascript">',
-        'showError("' . $value . '");',
-    '</script>';
-}
-?>
+<script src="/resources/js/registerInputControllers.js"></script>
 </body>
 </html>
 

@@ -36,8 +36,7 @@ class CourseController
         private CourseTeacherRepositoryInterface $courseTeacherRepository
     )
     {
-        $currentUserID = $_SESSION['uid'];
-        $this->user = $this->userRepository->getByDni($currentUserID);
+
         if (!isset($_SESSION['courseOrder'])) {
             $_SESSION['courseOrder'] = $this->setOrder();
         }
@@ -45,6 +44,9 @@ class CourseController
 
     public function execute(): string
     {
+        $currentUserID = $_SESSION['uid'];
+        $this->user = $this->userRepository->getByDni($currentUserID);
+
         $orderBy = $_SESSION['courseOrder'];
         $this->courses = $this->courseRepository->getCoursesById($this->user->getIdentificationDocument(), $orderBy);
 
