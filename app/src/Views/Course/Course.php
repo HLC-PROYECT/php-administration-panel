@@ -67,20 +67,27 @@ if ($isTeacher) {
                                     ?>
                                 </div>
 
-                                <div class="table-data__tool-left">
-                                    <label for="orderBy" class="dropdown-header">Join to course</label>
-                                    <?=
-                                    ComponentsHelper::selectorBuilder(
-                                        'courses',
-                                        'joinCourse',
-                                        $this->notJoinedCourses,
-                                        [
-                                            'getCourseId',
-                                            'getDescription'
-                                        ]
-                                    )
+                                <!-- Selector con los cursos disponibles para unirte -->
+                                <?php
+                                if ($isTeacher) {
                                     ?>
-                                </div>
+                                    <div class="table-data__tool-left">
+                                        <label for="orderBy" class="dropdown-header">Join to course</label>
+                                        <?=
+                                        ComponentsHelper::selectorBuilder(
+                                            'courses',
+                                            'joinCourse',
+                                            $this->notJoinedCourses,
+                                            [
+                                                'getCourseId',
+                                                'getDescription'
+                                            ]
+                                        )
+                                        ?>
+                                    </div>
+                                    <?php
+                                }
+                                ?>
 
                                 <div class="table-data__tool-right">
                                     <label for="orderBy" class="dropdown-header">&nbsp</label>
