@@ -3,6 +3,7 @@
 namespace HLC\AP\Controller\Course;
 
 use DateTime;
+use HLC\AP\Controller\Login\LoginController;
 use HLC\AP\Domain\Course\Course;
 use HLC\AP\Domain\Course\CourseRepositoryInterface;
 use HLC\AP\Domain\CourseTeacher\CourseTeacherRepositoryInterface;
@@ -33,7 +34,8 @@ class CourseController
     public function __construct(
         private UserRepositoryInterface $userRepository,
         private CourseRepositoryInterface $courseRepository,
-        private CourseTeacherRepositoryInterface $courseTeacherRepository
+        private CourseTeacherRepositoryInterface $courseTeacherRepository,
+        private LoginController $loginController
     )
     {
 
@@ -44,12 +46,18 @@ class CourseController
 
     public function execute(): string
     {
+        if (!isset($_SESSION['uid'])) {
+            return $this->loginController->execute();
+        }
+
+        echo $_SESSION['uid'];
         $currentUserID = $_SESSION['uid'];
         $this->user = $this->userRepository->getByDni($currentUserID);
 
         $orderBy = $_SESSION['courseOrder'];
         $this->courses = $this->courseRepository->getCoursesById($this->user->getIdentificationDocument(), $orderBy);
 
+        echo("<script>history.replaceState({},'','/Course');</script>");
         return require __DIR__ . '/../../Views/Course/Course.php';
     }
 

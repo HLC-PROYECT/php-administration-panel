@@ -34,6 +34,9 @@ final class RegisterController
 
     public function execute(): string
     {
+        $this->deleteUserData();
+
+
         if ($_SERVER['REQUEST_METHOD'] != 'POST' || !isset($_POST["submit"])) {
             return $this->showView();
         }
@@ -276,6 +279,12 @@ final class RegisterController
         $this->validateName();
         $this->validatePassword();
         $this->validateCourse();
+    }
+
+    private function deleteUserData()
+    {
+        unset($_SESSION['uid']);
+        setcookie("loggedId", null, -1, '/');
     }
 }
 

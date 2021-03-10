@@ -70,6 +70,7 @@ final class DependencyInjection
             $container->get(TaskRepositoryInterface::class)
         );
     }
+
     public static function initCourseTeacherRepository(ContainerInterface $container): CourseTeacherRepositoryInterface
     {
         return new PdoCourseTeacherRepository($container->get(DatabaseConnection::class));
@@ -95,7 +96,8 @@ final class DependencyInjection
         return new CourseController(
             $container->get(UserRepositoryInterface::class),
             $container->get(CourseRepositoryInterface::class),
-            $container->get(CourseTeacherRepositoryInterface::class)
+            $container->get(CourseTeacherRepositoryInterface::class),
+            $container->get(LoginController::class)
         );
     }
 

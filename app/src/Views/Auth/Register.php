@@ -148,13 +148,7 @@
 </form>
 
 <?php include __DIR__ . '/../Parts/Js.php'; ?>
-<?php
-    foreach ($this->errors as $value) {
-        echo '<script type="text/javascript">',
-            'showError("' . $value . '");',
-        '</script>';
-    }
-?>
+
 <script src="/resources/js/registerInputControllers.js"></script>
 </body>
 </html>

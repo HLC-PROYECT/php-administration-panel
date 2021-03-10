@@ -24,7 +24,7 @@ final class ErrorsMessages
             "userName:invalid" => "User name is invalid, must be almost 4 characters long",
             "nickName:invalid" => "Nick name is invalid, must be almost 4 characters long",
             "courseID:invalid" => "Course id introduced is not valid. Must be a number",
-            "courseID:notfound" => "Course id introduced not found, please check your ID",
+            "courseID:notFound" => "Course id introduced not found, please check your ID",
             "date:invalid" => "Date invalid, must be greater than or equal to 1900 or less than actual",
             "description:invalid" => "Description  must have almost 4 of lenght",
             "20001" => "Problem occurred when trying to create a task",
