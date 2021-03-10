@@ -3,6 +3,7 @@
 namespace HLC\AP\Controller\Course;
 
 use DateTime;
+use HLC\AP\Controller\Login\LoginController;
 use HLC\AP\Domain\Course\Course;
 use HLC\AP\Domain\Course\CourseRepositoryInterface;
 use HLC\AP\Domain\CourseTeacher\CourseTeacherRepositoryInterface;
@@ -22,6 +23,7 @@ class CourseController
     protected ?User $user;
     /** @var Course[] $errors */
     protected array $courses;
+    protected array $notJoinedCourses;
     public const COURSE_HEADERS = [
         "Course ID",
         "Education Center",
@@ -30,14 +32,36 @@ class CourseController
         "Description"
     ];
 
+    public const  COURSE_BUTTONS = [
+        [
+            'title' => 'Edit',
+            'onclick' => 'edit',
+            'iconClass' => 'zmdi-edit',
+            'name' => 'edit'
+        ],
+        [
+            'title' => 'Leave',
+            'onclick' => 'leave',
+            'iconClass' => 'zmdi-redo',
+            'name' => 'delete'
+        ],
+        [
+            'title' => 'Delete',
+            'onclick' => 'remove',
+            'iconClass' => 'zmdi-delete',
+            'name' => 'delete'
+        ],
+
+    ];
+
     public function __construct(
         private UserRepositoryInterface $userRepository,
         private CourseRepositoryInterface $courseRepository,
-        private CourseTeacherRepositoryInterface $courseTeacherRepository
+        private CourseTeacherRepositoryInterface $courseTeacherRepository,
+        private LoginController $loginController
     )
     {
-        $currentUserID = $_SESSION['uid'];
-        $this->user = $this->userRepository->getByDni($currentUserID);
+
         if (!isset($_SESSION['courseOrder'])) {
             $_SESSION['courseOrder'] = $this->setOrder();
         }
@@ -45,10 +69,46 @@ class CourseController
 
     public function execute(): string
     {
-        $orderBy = $_SESSION['courseOrder'];
-        $this->courses = $this->courseRepository->getCoursesById($this->user->getIdentificationDocument(), $orderBy);
+        if (!isset($_SESSION['uid'])) {
+            return $this->loginController->execute();
+        }
 
+        $currentUserID = $_SESSION['uid'];
+        $this->user = $this->userRepository->getByDni($currentUserID);
+
+        $orderBy = $_SESSION['courseOrder'];
+
+        if ($this->user->getType() === 'P') {
+            $this->notJoinedCourses = $this->courseRepository->getNotJoinedCourse($this->user->getIdentificationDocument());
+            $this->courses = $this->courseRepository->getCoursesById($this->user->getIdentificationDocument(), $orderBy);
+        } else {
+            $this->courses = $this->courseRepository->getPupilCourse($this->user->getIdentificationDocument());
+        }
+
+        echo("<script>history.replaceState({},'','/Course');</script>");
         return require __DIR__ . '/../../Views/Course/Course.php';
+    }
+
+    public function leave()
+    {
+        if (
+            $_SERVER['REQUEST_METHOD'] === 'POST'
+            && isset($_POST['courseId'])
+        ) {
+            $courseId = (int)$_POST['courseId'];
+            $this->leaveCourse($courseId);
+        }
+    }
+
+    public function join()
+    {
+        if (
+            $_SERVER['REQUEST_METHOD'] === 'POST'
+            && isset($_POST['courseToJoin'])
+        ) {
+            $courseId = (int)$_POST['courseToJoin'];
+            $this->joinCourse($courseId);
+        }
     }
 
     public function orderBy()
@@ -137,7 +197,7 @@ class CourseController
 
     private function validateDescription(): void
     {
-        if (empty($_POST["description"]) || strlen($_POST["description"]) < 4) {
+        if (empty($_POST["description"]) || strlen($_POST["description"]) < 3) {
             array_push($this->errors, ErrorsMessages::getError("description:invalid"));
             return;
         }
@@ -165,7 +225,7 @@ class CourseController
         );
         if ($resp === 'insert') {
             $courseId = $this->courseRepository->getLastCourseInserted();
-            $teacherID = $this->user->getIdentificationDocument();
+            $teacherID = $_SESSION['uid'];
             $this->courseTeacherRepository->insert($courseId, $teacherID);
         }
     }
@@ -183,12 +243,22 @@ class CourseController
         $this->courseRepository->delete($courseId);
     }
 
-    public function setOrder($order = 'codcurso'): string
+    public function setOrder($order = 'courseId'): string
     {
         return match ($order) {
             'yearStart' => 'a_inicio',
             'yearEnd' => 'a_fin',
             default => 'codcurso'
         };
+    }
+
+    private function joinCourse(int $courseId)
+    {
+        $this->courseTeacherRepository->insert($courseId, $_SESSION['uid']);
+    }
+
+    private function leaveCourse(int $courseId)
+    {
+        $this->courseTeacherRepository->deleteByCourse($courseId);
     }
 }

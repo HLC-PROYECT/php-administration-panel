@@ -43,7 +43,7 @@ class PdoCourseRepository implements CourseRepositoryInterface
         return $this->instantiate($this->database->select("curso", "*", ["codCurso" => $courseId])[0]);
     }
 
-    public function getCoursesById($identificationDocument,$order): array
+    public function getCoursesById($identificationDocument, $order): array
     {
         $result = $this->database->select("curso",
             [
@@ -86,6 +86,11 @@ class PdoCourseRepository implements CourseRepositoryInterface
         return $codcurso;
     }
 
+    public function checkCourseId($courseId): bool
+    {
+        return $this->database->has("curso", ["codcurso" => $courseId]);
+    }
+    
     public function save(int $courseId, string $educationCenter, int $yearStart, int $yearEnd, string $description): string
     {
         if ($courseId === 0) {
@@ -112,5 +117,41 @@ class PdoCourseRepository implements CourseRepositoryInterface
         );
 
         return $response->errorCode() == '00000';
+    }
+
+    public function getPupilCourse($identificationDocument): array
+    {
+        $result = $this->database->select(
+            'curso',
+            ["[><]alumno" => "codcurso"],
+            [
+                "curso.codcurso",
+                "centroed",
+                "a_inicio",
+                "a_fin",
+                "descrip"
+            ],
+            ["dni" => $identificationDocument]
+        );
+
+        $courses = [];
+        foreach ($result as $value) {
+            array_push($courses, $this->instantiate($value));
+        }
+
+        return $courses;
+    }
+
+    public function getNotJoinedCourse($identificationDocument): array
+    {
+        $result = $this->database->query("Select distinct C.* from curso C
+                                                     where C.codCurso not in (Select codCurso from curso_profesor where dniProfesor = '$identificationDocument')");
+
+        $courses = [];
+        foreach ($result as $value) {
+            array_push($courses, $this->instantiate($value));
+        }
+
+        return $courses;
     }
 }

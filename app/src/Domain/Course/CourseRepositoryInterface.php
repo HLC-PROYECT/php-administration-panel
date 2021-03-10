@@ -17,4 +17,10 @@ interface CourseRepositoryInterface
     public function getById(int $courseId): ?Course;
 
     public function getCoursesById($identificationDocument, $order): array;
+
+    public function checkCourseId($courseId): bool;
+    
+    public function getPupilCourse($identificationDocument): array;
+
+    public function getNotJoinedCourse($identificationDocument):array;
 }

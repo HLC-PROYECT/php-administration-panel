@@ -15,6 +15,7 @@
                                id="form_educationCenter"
                                type="text"
                                name="educationCenter"
+
                                placeholder="Education Center">
                     </div>
                     <div class="form-group">
@@ -23,6 +24,7 @@
                                type="number"
                                id="form_startYear"
                                name="startYear"
+                               min="2000"
                                placeholder="Start Year">
                     </div>
                     <div class="form-group">
@@ -31,6 +33,8 @@
                                id="form_endYear"
                                type="number"
                                name="endYear"
+                               min="2000"
+                               max="2050"
                                placeholder="End Year">
                     </div>
                     <div class="form-group">
@@ -39,6 +43,7 @@
                                id="form_description"
                                type="text"
                                name="description"
+                               minlength="3"
                                placeholder="Description">
                     </div>
 
