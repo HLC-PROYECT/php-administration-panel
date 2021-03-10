@@ -73,12 +73,10 @@ class CourseController
             return $this->loginController->execute();
         }
 
-        echo $_SESSION['uid'];
         $currentUserID = $_SESSION['uid'];
         $this->user = $this->userRepository->getByDni($currentUserID);
 
         $orderBy = $_SESSION['courseOrder'];
-
 
         if ($this->user->getType() === 'P') {
             $this->notJoinedCourses = $this->courseRepository->getNotJoinedCourse($this->user->getIdentificationDocument());
@@ -97,7 +95,7 @@ class CourseController
             $_SERVER['REQUEST_METHOD'] === 'POST'
             && isset($_POST['courseId'])
         ) {
-            $courseId = (int) $_POST['courseId'];
+            $courseId = (int)$_POST['courseId'];
             $this->leaveCourse($courseId);
         }
     }
@@ -227,7 +225,7 @@ class CourseController
         );
         if ($resp === 'insert') {
             $courseId = $this->courseRepository->getLastCourseInserted();
-            $teacherID = $this->user->getIdentificationDocument();
+            $teacherID = $_SESSION['uid'];
             $this->courseTeacherRepository->insert($courseId, $teacherID);
         }
     }
@@ -256,7 +254,7 @@ class CourseController
 
     private function joinCourse(int $courseId)
     {
-        $this->courseTeacherRepository->insert($courseId, $this->user->getIdentificationDocument());
+        $this->courseTeacherRepository->insert($courseId, $_SESSION['uid']);
     }
 
     private function leaveCourse(int $courseId)
