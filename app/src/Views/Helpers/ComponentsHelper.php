@@ -47,7 +47,7 @@ class componentsHelper
 
     /**
      * @param array $headers - Cabeceras de la tabla
-     * @param array $list - Lista de aquello que queremos generar el selector
+     * @param array $list - Lista de aquello que queremos generar la tabla
      * @param array $keys - Array con las columnas de la tabla
      * @param array $buttons - Array con los botones de acción para cada elemento.
      * @return string - HTML del selector generado
@@ -58,7 +58,7 @@ class componentsHelper
         array $keys,
         array $buttons,
     ): string {
-        $table = "<table class='table table-data2'>";
+        $table = "<table class='table table-data2' id='tabla'>";
         $table .= "<thead>";
         $table .= "<tr>";
 
@@ -84,17 +84,19 @@ class componentsHelper
                 $title = $button['title'];
                 $onclick = $button['onclick'];
                 $iconClass = $button['iconClass'];
+                $name = $button['name'];
 
                 $table .= "<button class='item' 
                             data-toggle='tooltip' 
                             data-placement='top' 
                             title='$title' 
-                            name='po' 
-                            onclick='$onclick()'>";
+                            name='$name' 
+                            onclick='$onclick($id)'>";
 
                 $table .= "<i class='zmdi $iconClass' ></i >";
                 $table .= '</button>';
             }
+            $table .= '</div>';
             $table .= '</td >';
             $table .= '<tr class="spacer" >   </tr >';
         }
@@ -102,4 +104,15 @@ class componentsHelper
         $table .= '</table>';
         return $table;
     }
+
+    /**
+     * @param string name - Nombre descriptivo que aparece en el alert.
+     * @param string $type - Tipo de alert que se desea hacer. [info, success, warning, error].
+     * @return string - HTML del alert generado.
+     */
+    public static function emptyViewBuilder(string $name,string $type): string{
+
+        return "<div class='alert alert-$type' role='alert'>There are no $name yet. To add one, click the add button at the top.</div>";
+    }
+
 }

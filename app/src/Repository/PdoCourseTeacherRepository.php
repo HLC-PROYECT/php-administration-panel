@@ -24,4 +24,12 @@ final class PdoCourseTeacherRepository implements CourseTeacherRepositoryInterfa
                 "dniprofesor" => $identificationDocument
             ]);
     }
+
+    public function deleteByCourse(int $courseID)
+    {
+        $this->database->delete(
+            'curso_profesor',
+            ["codcurso" => $courseID]
+        );
+    }
 }

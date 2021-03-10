@@ -27,4 +27,8 @@ interface UserRepositoryInterface
 
     /** @return User[] */
     public function getTeachers(): array;
+
+    public function savePupil($id, $birthDate, $courseID): bool;
+
+    public function saveTeacher($id): bool;
 }

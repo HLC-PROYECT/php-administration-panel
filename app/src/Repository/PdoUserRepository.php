@@ -60,7 +60,7 @@ final class PdoUserRepository implements UserRepositoryInterface
         string $type
     ): bool
     {
-        $r = $this->database->insert(
+        $response = $this->database->insert(
             "usuario",
             [
                 "dni" => $dni,
@@ -73,12 +73,31 @@ final class PdoUserRepository implements UserRepositoryInterface
             ]
         );
 
-        if ($r->errorCode() != '00000') {
-            //TODO(): ERROR: Añadir error al session
-            return false;
-        }
+        return $response->errorCode() != '00000';
+    }
 
-        return true;
+    public function savePupil($id, $birthDate, $courseID): bool
+    {
+        $response = $this->database->insert('alumno',
+            [
+                'dni' => $id,
+                'fnac' => $birthDate,
+                'codcurso' => $courseID
+            ]
+        );
+
+        return $response->errorCode() != '00000';
+    }
+
+    public function saveTeacher($id): bool
+    {
+        $response = $this->database->insert('profesor',
+            [
+                'dni' => $id,
+            ]
+        );
+
+        return $response->errorCode() != '00000';
     }
 
     public function getTeachers(): array
@@ -107,4 +126,6 @@ final class PdoUserRepository implements UserRepositoryInterface
             $user["tipo"]
         );
     }
+
+
 }
