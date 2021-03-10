@@ -86,10 +86,31 @@ if ($this->user->getType() === 'P') {
                                     ?>
                                     <div class="table-data__tool-left">
                                         <div class="rs-select2--light rs-select2--md">
-                                            <select class="js-select2" name="property">
-                                                <option selected="selected">All Properties</option>
-                                                <option value="">Completed</option>
-                                                <option value="">Pending</option>
+                                            <select onchange="onSelectorFilter(this)"
+                                                    class="js-select2"
+                                                    name="property"
+                                                    id="orderBy">
+
+                                                <option
+                                                    <?php echo $_SESSION['taskFilter'] === 'all' ?
+                                                        'selected="selected"' : ''; ?>
+                                                        value="all">
+                                                    All Properties
+                                                </option>
+
+                                                <option
+                                                    <?php echo $_SESSION['taskFilter'] === 'completed' ?
+                                                        'selected="selected"' : ''; ?>
+                                                        value="completed">
+                                                    Completed
+                                                </option>
+
+                                                <option
+                                                    <?php echo $_SESSION['taskFilter'] === 'pending' ?
+                                                        'selected="selected"' : ''; ?>
+                                                        value="pending">
+                                                    Pending
+                                                </option>
                                             </select>
                                             <div class="dropDownSelect2"></div>
                                         </div>
@@ -148,13 +169,13 @@ if ($this->user->getType() === 'P') {
 <script src="/resources/js/task.js"></script>
 <script>
     /*
-     function onSelectorOrder(selector) {
+     function onSelectorFilter(selector) {
 
          $.ajax({
              url: "/task/orderBy",
              type: "post",
              data: {
-                 orderBy: selector.value
+                 filterBy: selector.value
              },
              success() {
                  window.location.reload();

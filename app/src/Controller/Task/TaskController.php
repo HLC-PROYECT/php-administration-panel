@@ -160,4 +160,17 @@ class TaskController
 
         }
     }
+    public function filterBy()
+    {
+        if (
+            $_SERVER['REQUEST_METHOD'] === 'POST'
+            && isset($_POST['filterBy'])
+        ) {
+
+            if (!$this->taskRepository->send($_SESSION['uid'], $_POST['filterBy'])) {
+                array_push($this->errors, ErrorsMessages::getError("task:SendTask"));
+            }
+
+        }
+    }
 }

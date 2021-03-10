@@ -69,3 +69,17 @@ function send(taskId) {
         },
     });
 }
+
+function onSelectorFilter(selector) {
+
+    $.ajax({
+        url: "/task/filterBy",
+        type: "post",
+        data: {
+            filterBy: selector.value
+        },
+        success() {
+            window.location.reload();
+        }
+    });
+}
