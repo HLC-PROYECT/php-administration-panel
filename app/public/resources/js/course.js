@@ -1,5 +1,26 @@
 onHiddenModal();
 
+let joinSelector = document.getElementById('joinCourse');
+joinSelector.addEventListener('change', function () {
+    if (joinSelector.value !== 0) {
+        $.ajax({
+            url: "/course/join",
+            type: "post",
+            data: {
+                courseToJoin: joinSelector.value
+            },
+            beforeSend: function () {
+                $('#loader').removeClass('hidden')
+            },
+            success() {
+                window.location.reload();
+            },
+            complete: function () {
+                $('#loader').addClass('hidden')
+            },
+        });
+    }
+})
 
 function onHiddenModal() {
     $("#addTask").on('hidden.bs.modal', function () {
@@ -21,6 +42,26 @@ function onSelectorOrder(selector) {
         },
         success() {
             window.location.reload();
+        }
+    });
+}
+
+
+function leave(courseId) {
+    $.ajax({
+        url: "/course/leave",
+        type: "post",
+        data: {
+            courseId: courseId
+        },
+        beforeSend: function () {
+            $('#loader').removeClass('hidden')
+        },
+        success() {
+            window.location.reload();
+        },
+        complete: function () {
+            $('#loader').addClass('hidden')
         }
     });
 }

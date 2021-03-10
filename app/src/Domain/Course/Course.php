@@ -4,7 +4,6 @@ namespace HLC\AP\Domain\Course;
 
 class Course
 {
-    //TODO(): Rellenar datos
     private int $courseId;
     private string $educationCenter;
     private int $yearStart;

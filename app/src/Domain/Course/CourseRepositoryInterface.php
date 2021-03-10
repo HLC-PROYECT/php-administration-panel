@@ -20,4 +20,7 @@ interface CourseRepositoryInterface
 
     public function checkCourseId($courseId): bool;
     
+    public function getPupilCourse($identificationDocument): array;
+
+    public function getNotJoinedCourse($identificationDocument):array;
 }

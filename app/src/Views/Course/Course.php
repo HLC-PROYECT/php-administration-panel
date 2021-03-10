@@ -3,6 +3,11 @@
 use HLC\AP\Controller\Course\CourseController;
 use HLC\AP\Views\Helpers\ComponentsHelper;
 
+$buttons = [];
+$isTeacher = $this->user->getType() === 'P';
+if ($isTeacher) {
+    $buttons = CourseCOntroller::COURSE_BUTTONS;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -56,34 +61,62 @@ use HLC\AP\Views\Helpers\ComponentsHelper;
                                         <div class="dropDownSelect2"></div>
                                     </div>
                                 </div>
+
+                                <!-- Selector con los cursos disponibles para unirte -->
+                                <?php
+                                if ($isTeacher) {
+                                    ?>
+                                    <div class="table-data__tool-left">
+                                        <label for="orderBy" class="dropdown-header">Join to course</label>
+                                        <?=
+                                        ComponentsHelper::selectorBuilder(
+                                            'courses',
+                                            'joinCourse',
+                                            $this->notJoinedCourses,
+                                            [
+                                                'getCourseId',
+                                                'getDescription'
+                                            ]
+                                        )
+                                        ?>
+                                    </div>
+                                    <?php
+                                }
+                                ?>
+
                                 <div class="table-data__tool-right">
-                                    <button class="au-btn au-btn-icon au-btn--green au-btn--small"
-                                            data-toggle="modal" data-target="#addTask">
-                                        <i class="zmdi zmdi-plus"></i>Add Course
-                                    </button>
+                                    <label for="orderBy" class="dropdown-header">&nbsp</label>
+                                    <?php
+                                    if ($isTeacher) {
+                                        ?>
+                                        <button class="au-btn au-btn-icon au-btn--green au-btn--small"
+                                                data-toggle="modal" data-target="#addTask">
+                                            <i class="zmdi zmdi-plus"></i>Add Course
+                                        </button>
+                                        <?php
+                                    }
+                                    ?>
                                 </div>
                             </div>
+
                             <!-- tabla -->
                             <div class="table-responsive table-responsive-data2">
                                 <?=
-                                ComponentsHelper::tableBuilder(
-                                    CourseController::COURSE_HEADERS,
-                                    $this->courses,
-                                    [
-                                        'getCourseId',
-                                        'getEducationCenter',
-                                        'getYearStart',
-                                        'getYearEnd',
-                                        'getDescription',
-                                    ],
-                                    [
+
+                                empty($this->courses) ?
+                                    ComponentsHelper::emptyViewBuilder('courses', 'warning') :
+                                    ComponentsHelper::tableBuilder(
+                                        CourseController::COURSE_HEADERS,
+                                        $this->courses,
                                         [
-                                            'title' => 'Delete',
-                                            'onclick' => 'delete',
-                                            'iconClass' => 'zmdi-delete'
-                                        ]
-                                    ]
-                                );
+                                            'getCourseId',
+                                            'getEducationCenter',
+                                            'getYearStart',
+                                            'getYearEnd',
+                                            'getDescription',
+                                        ],
+                                        $buttons
+                                    );
                                 ?>
                             </div>
                             <!-- END DATA TABLE -->
@@ -127,5 +160,4 @@ require __DIR__ . '/../Parts/Js.php';
 </script>
 
 </body>
-
 </html>
