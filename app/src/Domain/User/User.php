@@ -2,7 +2,7 @@
 
 namespace HLC\AP\Domain\User;
 
-final class User
+class User
 {
     private string $identificationDocument;
     private string $email;

@@ -19,6 +19,8 @@ interface UserRepositoryInterface
 
     public function delete(string $userDni): bool;
 
+    public function deleteStudent(string $identificationDocument):bool;
+
     public function getByDni(string $userDni): ?User;
 
     public function checkDni(string $dni): bool;
@@ -31,4 +33,6 @@ interface UserRepositoryInterface
     public function savePupil($id, $birthDate, $courseID): bool;
 
     public function saveTeacher($id): bool;
+
+    public function getStudents(string $teacherID, string $order): array;
 }
