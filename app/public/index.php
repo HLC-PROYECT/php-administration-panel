@@ -15,6 +15,13 @@ try {
     $container = $builder->build();
     $URI = $_SERVER['REQUEST_URI'] ?? null;
 
+    if ($URI === "/" && isset($_SESSION['uid'])) {
+        $URI = '/Course';
+    }
+    if ($URI === "/" && !isset($_SESSION['uid'])) {
+        $URI = '/Login';
+    }
+
     if (null !== $URI) {
         $explode = explode("/", $URI);
         $nameSpace = ucfirst($explode[1]);
@@ -25,7 +32,7 @@ try {
         if (false !== $container->has($class)) {
             $controller = $container->get($class);
             $controller->$method();
-           //TODO: Cada controlador implemente este método. set_url("$nameSpace");
+            //TODO: Cada controlador implemente este método. set_url("$nameSpace");
             return;
         }
         navigateTo404();
@@ -45,7 +52,7 @@ function navigate($container, string $class): void
 function set_url($url)
 {
     $_SERVER['REQUEST_URI'] = "/$url";
-   echo("<script>history.replaceState({},'','/$url');</script>");
+    echo("<script>history.replaceState({},'','/$url');</script>");
 }
 
 function navigateTo404()

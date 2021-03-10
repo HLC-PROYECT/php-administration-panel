@@ -51,7 +51,7 @@
                                     </div>
                                 </div>
                                 <div class="account-dropdown__footer">
-                                    <a href="/login">
+                                    <a href="/logout">
                                         <i class="zmdi zmdi-power"></i>Logout</a>
                                 </div>
                             </div>

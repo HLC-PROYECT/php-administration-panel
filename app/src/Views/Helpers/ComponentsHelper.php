@@ -123,7 +123,7 @@ class componentsHelper
         bool $isTeacher
     ): string
     {
-        $table = "<table class='table table-data2'>";
+        $table = "<table class='table table-data2' id='tabla'>";
         $table .= "<thead>";
         $table .= "<tr>";
 

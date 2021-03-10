@@ -29,4 +29,5 @@ interface TaskRepositoryInterface
     public function getById(int $taskId): Task;
 
     public function send(string $dni, string $taskId): bool;
+    public function updateTeacherCompleted(Task $task): void;
 }

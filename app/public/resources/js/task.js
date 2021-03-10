@@ -83,3 +83,49 @@ function onSelectorFilter(selector) {
         }
     });
 }
+
+
+
+function searchTable() {
+    let input, filter, table, tr, i;
+    let td0, td1, td2, td3;
+    let txtValue0, txtValue1, txtValue2, txtValue3;
+
+    input = document.getElementById("searchBar");
+    filter = input.value.toUpperCase();
+    table = document.getElementById("tabla");
+
+    if (table) {
+        tr = table.getElementsByTagName("tr");
+        let emptyView = document.getElementById("coursesNotFound");
+
+        for (i = 0; i < tr.length; i++) {
+            td0 = tr[i].getElementsByTagName("td")[0];
+            td1 = tr[i].getElementsByTagName("td")[1];
+            td2 = tr[i].getElementsByTagName("td")[2];
+            td3 = tr[i].getElementsByTagName("td")[6];
+            if (td0 || td1 || td2 || td3) {
+                txtValue0 = td0.textContent || td0.innerText;
+                txtValue1 = td1.textContent || td1.innerText;
+                txtValue2 = td2.textContent || td2.innerText;
+                txtValue3 = td3.textContent || td3.innerText;
+                if (
+                    txtValue0.toUpperCase().indexOf(filter) > -1 ||
+                    txtValue1.toUpperCase().indexOf(filter) > -1 ||
+                    txtValue2.toUpperCase().indexOf(filter) > -1 ||
+                    txtValue3.toUpperCase().indexOf(filter) > -1
+                ) {
+                    tr[i].style.display = "";
+                    document.getElementById("tabla").style.display = "";
+                    emptyView.style.display = "none"
+                } else {
+                    //Hidden table
+                    document.getElementById("tabla").style.display = "none";
+                    //Show empty view
+                    emptyView.style.display = ""
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
+}

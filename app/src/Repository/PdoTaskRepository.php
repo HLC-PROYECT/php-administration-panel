@@ -127,7 +127,7 @@ final class PdoTaskRepository implements TaskRepositoryInterface
 
     public function send(string $dni, string $taskId): bool
     {
-       $response =  $this->database->update("tarea_alumno",
+        $response = $this->database->update("tarea_alumno",
             ["completada" => true],
             [
                 "dni" => $dni,
@@ -135,5 +135,15 @@ final class PdoTaskRepository implements TaskRepositoryInterface
             ]
         );
         return $response->errorCode() === '00000';
+    }
+
+    public function updateTeacherCompleted(Task $task): void
+    {
+       $this->database->update("tarea",
+            ["estado" => "completada"],
+            [
+                "codtarea" => $task->getTaskId()
+            ]
+        );
     }
 }

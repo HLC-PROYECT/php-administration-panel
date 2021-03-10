@@ -41,6 +41,8 @@ if ($this->user->getType() === 'P') {
     $addTaskButton = '';
     $isTeacher = false;
 }
+
+$isTeacher = $this->user->getType() === 'P';
 ?>
 
 <!DOCTYPE html>
@@ -80,10 +82,6 @@ if ($this->user->getType() === 'P') {
                             <!-- DATA TABLE -->
                             <h3 class="title-5 m-b-35">Tasks</h3>
                             <div class="table-data__tool">
-                                <?php
-
-                                if (false === empty($this->subjectsTeacher)) {
-                                    ?>
                                     <div class="table-data__tool-left">
                                         <div class="rs-select2--light rs-select2--md">
                                             <select onchange="onSelectorFilter(this)"
@@ -99,14 +97,14 @@ if ($this->user->getType() === 'P') {
                                                 </option>
 
                                                 <option
-                                                    <?php echo $_SESSION['taskFilter'] === 'completed' ?
+                                                    <?php echo $_SESSION['taskFilter'] === 'completada' ?
                                                         'selected="selected"' : ''; ?>
                                                         value="completed">
                                                     Completed
                                                 </option>
 
                                                 <option
-                                                    <?php echo $_SESSION['taskFilter'] === 'pending' ?
+                                                    <?php echo $_SESSION['taskFilter'] === 'pendiente' ?
                                                         'selected="selected"' : ''; ?>
                                                         value="pending">
                                                     Pending
@@ -115,31 +113,31 @@ if ($this->user->getType() === 'P') {
                                             <div class="dropDownSelect2"></div>
                                         </div>
                                     </div>
-
-                                    <?php
-                                }
-                                ?>
-
                                 <?= $addTaskButton ?>
                             </div>
                             <!-- tabla -->
                             <div class="table-responsive table-responsive-data2">
+                                <div class='alert alert-info' id="coursesNotFound" style="display: none;" role='alert'>
+                                    No tasks to display.
+                                </div>
                                 <?=
-                                ComponentsHelper::tableBuilderForTasks(
-                                    TaskController::TASK_HEADERS,
-                                    $this->subjectsTeacher,
-                                    [
-                                        'getTaskId',
-                                        'getName',
-                                        'getDescription',
-                                        'getDateStart',
-                                        'getDateEnd',
-                                        $status,
-                                        'getName',
-                                    ],
-                                    $buttons,
-                                    $isTeacher
-                                );
+                                empty($this->subjectsTeacher) ?
+                                    ComponentsHelper::emptyViewBuilder('Tasks', 'warning') :
+                                    ComponentsHelper::tableBuilderForTasks(
+                                        TaskController::TASK_HEADERS,
+                                        $this->subjectsTeacher,
+                                        [
+                                            'getTaskId',
+                                            'getName',
+                                            'getDescription',
+                                            'getDateStart',
+                                            'getDateEnd',
+                                            $status,
+                                            'getName',
+                                        ],
+                                        $buttons,
+                                        $isTeacher
+                                    );
                                 ?>
                             </div>
                             <!-- END DATA TABLE -->

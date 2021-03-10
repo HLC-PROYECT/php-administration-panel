@@ -4,6 +4,7 @@ namespace HLC\AP\Controller\Task;
 
 use DateTime;
 use Exception;
+use HLC\AP\Domain\Course\CourseRepositoryInterface;
 use HLC\AP\Domain\Subject\Subject;
 use HLC\AP\Domain\Subject\SubjectRepositoryInterface;
 use HLC\AP\Domain\Task\Task;
@@ -36,26 +37,44 @@ class TaskController
     public function __construct(
         private UserRepositoryInterface $userRepository,
         private SubjectRepositoryInterface $subjectRepository,
-        private TaskRepositoryInterface $taskRepository
+        private TaskRepositoryInterface $taskRepository,
     )
     {
+        if (!isset($_SESSION['taskFilter'])) {
+            $_SESSION['taskFilter'] = $this->setFilter();
+        }
     }
 
     public function execute(): string
     {
+        if (!isset($_SESSION['uid'])) header("Location: /");
+
         $this->user = $this->userRepository->getByDni($_SESSION['uid']);
-        if ($this->user->getType() == "P") $this->subjectsTeacher = $this->subjectRepository->getByTeacherId($this->user->getIdentificationDocument());
-        //Alumno
-        else $this->subjectsTeacher = $this->subjectRepository->getByStudentId($this->user->getIdentificationDocument());
 
-        $this->subjects = $this->subjectRepository->get();
+        if ($this->user->getType() == "P") {
+            $this->subjectsTeacher = $this->subjectRepository->getByTeacherId(
+                $this->user->getIdentificationDocument(), $_SESSION['taskFilter']
+            );
+            foreach ($this->subjectsTeacher as $subject) {
+                foreach ($subject->getTasks() as $task) {
 
-        foreach ($this->subjects as $s) {
-            if ($s->getIdentificationDocumentTeacher() === $this->user->getIdentificationDocument()) {
-                array_push($this->subjectNames, $s);
+                        $date = new DateTime();
+                        $actualDate = $date->getTimestamp();
+                        $end = strtotime($task->getDateEnd());
+
+                        if ($end < $actualDate) {
+                            $this->taskRepository->updateTeacherCompleted($task);
+                            $task->setStatus("completada");
+                        }
+                }
             }
-        }
-
+        } else $this->subjectsTeacher = $this->subjectRepository->getByStudentId(
+            $this->user->getIdentificationDocument(), $_SESSION['taskFilter']
+        );
+        $this->subjects = $this->subjectRepository->get();
+        $this->subjectNames = $this->subjectRepository->getTeacherSubjects($this->user->getIdentificationDocument());
+        $_SERVER['REQUEST_URI'] = "/Task";
+        echo("<script>history.replaceState({},'','/Task');</script>");
         return require __DIR__ . '/../../Views/Task/Task.php';
     }
 
@@ -80,7 +99,7 @@ class TaskController
             else $taskId = 0;
             try {
                 $this->taskRepository->save(Task::build(
-                    $taskId,
+                    intval($taskId),
                     $_POST['name'],
                     $_POST['desc'],
                     date("Y-m-d", strtotime($_POST['startDate'])),
@@ -160,6 +179,7 @@ class TaskController
 
         }
     }
+
     public function filterBy()
     {
         if (
@@ -167,10 +187,17 @@ class TaskController
             && isset($_POST['filterBy'])
         ) {
 
-            if (!$this->taskRepository->send($_SESSION['uid'], $_POST['filterBy'])) {
-                array_push($this->errors, ErrorsMessages::getError("task:SendTask"));
-            }
-
+            $_SESSION['taskFilter'] = $this->setFilter($_POST['filterBy']);
+            $this->execute();
         }
+    }
+
+    private function setFilter(string $filterBy = "all")
+    {
+        return match ($filterBy) {
+            'pending' => 'pendiente',
+            'completed' => 'completada',
+            default => 'all'
+        };
     }
 }

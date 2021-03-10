@@ -53,11 +53,23 @@ class PdoSubjectRepository implements SubjectRepositoryInterface
         return $this->build($this->database->select("asignatura", "*", ["codasig" => $subjectId]));
     }
 
-    public function getByTeacherId(string $id): array
+    public function getByTeacherId(string $id, string $filter = "all"): array
     {
+        if ($filter === "all") {
+            $where = [
+                "curso_profesor.dniprofesor" => $id
+            ];
+        } else {
+            $where = [
+                "curso_profesor.dniprofesor" => $id,
+                "tarea.estado" => $filter
+            ];
+        }
         $result = $this->database->select("asignatura",
             [
-                "[><]tarea" => "codasig"
+                "[><]curso_profesor" => "codcurso",
+                "[><]tarea" => "codasig",
+
             ],
             [
                 "asignatura.codasig",
@@ -76,11 +88,8 @@ class PdoSubjectRepository implements SubjectRepositoryInterface
                     "codasig"
                 ]
             ],
-            [
-                "asignatura.dniprofesor" => $id
-            ]
+            $where
         );
-
         if (true === empty($result)) {
             return [];
         }
@@ -93,8 +102,19 @@ class PdoSubjectRepository implements SubjectRepositoryInterface
         return $subjects;
     }
 
-    public function getByStudentId(string $id): array
+    public function getByStudentId(string $id, string $filter = "all"): array
     {
+        if ($filter === "all") {
+            $where = [
+                "tarea_alumno.dni" => $id
+            ];
+        } else {
+            $filter = $filter == "completada" ? 1 : 0;
+            $where = [
+                "tarea_alumno.dni" => $id,
+                "tarea_alumno.completada" => $filter
+            ];
+        }
         $result = $this->database->select("asignatura",
             [
                 "[><]tarea" => "codasig",
@@ -117,11 +137,8 @@ class PdoSubjectRepository implements SubjectRepositoryInterface
                     "codasig"
                 ]
             ],
-            [
-                "tarea_alumno.dni" => $id
-            ]
+            $where
         );
-
         if (true === empty($result)) {
             return [];
         }
@@ -207,5 +224,34 @@ class PdoSubjectRepository implements SubjectRepositoryInterface
             );
         }
         return $tasks;
+    }
+
+    public function getTeacherSubjects(string $id): array
+    {
+        $result = $this->database->select("asignatura",
+            [
+                "[><]curso_profesor" => "codcurso",
+            ],
+            [
+                "asignatura.codasig",
+                "asignatura.nombreasignatura",
+                "asignatura.n_horas",
+                "asignatura.anyo_fin",
+                "asignatura.codcurso",
+                "asignatura.dniprofesor",
+            ],
+            [
+                "curso_profesor.dniprofesor" => $id
+            ]
+        );
+
+        if (true === empty($result)) {
+            return [];
+        }
+        $subjects = [];
+        foreach ($result as $rawSubject) {
+            $subjects[] = $this->build($rawSubject);
+        }
+        return $subjects;
     }
 }
