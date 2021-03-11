@@ -24,7 +24,7 @@ class CourseController
     /** @var Course[] $errors */
     protected array $courses;
     protected array $notJoinedCourses;
-    public const COURSE_HEADERS = [
+    public const STUDENT_HEADERS = [
         "Course ID",
         "Education Center",
         "Start year",

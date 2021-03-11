@@ -32,7 +32,7 @@ $isTeacher = $this->user->getType() === 'P';
                     ?>
                     <?php echo $currentUri === 'Students' ? '<li class="has-sub active">' : '<li class="has-sub">'; ?>
 
-                    <a class="js-arrow" href="/students">
+                    <a class="js-arrow" href="/student">
                         <i class="fas fa-users"></i>Students</a>
                     </li>
                     <?php

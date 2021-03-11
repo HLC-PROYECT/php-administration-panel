@@ -5,20 +5,18 @@ namespace HLC\AP\Infrastructure;
 use HLC\AP\Controller\Course\CourseController;
 use HLC\AP\Controller\Login\LoginController;
 use HLC\AP\Controller\Register\RegisterController;
+use HLC\AP\Controller\Student\StudentController;
 use HLC\AP\Controller\Task\TaskController;
 use HLC\AP\Controller\Subject\SubjectController;
-use HLC\AP\Controller\Task\TaskInsert\TaskInsertController;
 use HLC\AP\Domain\Course\CourseRepositoryInterface;
 use HLC\AP\Domain\CourseTeacher\CourseTeacherRepositoryInterface;
 use HLC\AP\Domain\Subject\subjectRepositoryInterface;
 use HLC\AP\Domain\Task\TaskRepositoryInterface;
-use HLC\AP\Domain\TaskSubject\TaskSubjectRepositoryInterface;
 use HLC\AP\Domain\User\UserRepositoryInterface;
 use HLC\AP\Repository\PdoCourseRepository;
 use HLC\AP\Repository\PdoCourseTeacherRepository;
 use HLC\AP\Repository\PdoSubjectRepository;
 use HLC\AP\Repository\PdoTaskRepository;
-use HLC\AP\Repository\PdoTaskSubjectRepository;
 use HLC\AP\Repository\PdoUserRepository;
 use HLC\AP\Utils\DatabaseConnection;
 use HLC\AP\Utils\ErrorsMessages;
@@ -40,7 +38,8 @@ final class DependencyInjection
             LoginController::class => fn(ContainerInterface $container) => self::initLoginController($container),
             RegisterController::class => fn(ContainerInterface $container) => self::initRegisterController($container),
             CourseController::class => fn(ContainerInterface $container) => self::initCourseController($container),
-            SubjectController::class => fn(ContainerInterface $container) => self::initSubjectController($container)
+            SubjectController::class => fn(ContainerInterface $container) => self::initSubjectController($container),
+            StudentController::class => fn(ContainerInterface $container) => self::initStudentController($container)
         ];
     }
 
@@ -120,6 +119,16 @@ final class DependencyInjection
         return new RegisterController(
             $container->get(UserRepositoryInterface::class),
             $container->get(CourseRepositoryInterface::class),
+            $container->get(CourseController::class)
+        );
+    }
+
+    private static function initStudentController(ContainerInterface $container): StudentController
+    {
+        return new StudentController(
+            $container->get(UserRepositoryInterface::class),
+            $container->get(CourseRepositoryInterface::class),
+            $container->get(LoginController::class),
             $container->get(CourseController::class)
         );
     }
