@@ -3,6 +3,7 @@
 namespace HLC\AP\Controller\Student;
 
 use DateTime;
+use HLC\AP\Controller\Course\CourseController;
 use HLC\AP\Controller\Login\LoginController;
 use HLC\AP\Domain\Course\Course;
 use HLC\AP\Domain\Course\CourseRepositoryInterface;
@@ -48,7 +49,8 @@ class StudentController
     public function __construct(
         private UserRepositoryInterface $userRepository,
         private CourseRepositoryInterface $courseRepository,
-        private LoginController $loginController
+        private LoginController $loginController,
+        private CourseController $courseController
     )
     {
         if (!isset($_SESSION['studentOrder'])) {
@@ -58,12 +60,16 @@ class StudentController
 
     public function execute(): string
     {
+
         if (!isset($_SESSION['uid'])) {
             return $this->loginController->execute();
         }
 
         $currentUserID = $_SESSION['uid'];
         $this->user = $this->userRepository->getByDni($currentUserID);
+
+        if ($this->user->getType() === 'A') return $this->courseController->execute();
+
         $orderBy = $_SESSION['studentOrder'];
 
         $this->students = $this->userRepository->getStudents($currentUserID, $orderBy);
@@ -97,13 +103,14 @@ class StudentController
             $_SERVER['REQUEST_METHOD'] === 'POST'
             && isset($_POST['studentId'])
         ) {
-            $student = $this->userRepository->getByDni( $_POST['studentId']);
+            $student = $this->userRepository->getStudent($_POST['studentId']);
             print(json_encode(
                 [
-                    "Name"=>$student->getName(),
-                    "Nick"=>$student->getNick(),
-                    "Email"=>$student->getEmail(),
-                    "Course ID"=>$student->getCourseId()
+                    "name" => $student->getName(),
+                    "nick" => $student->getNick(),
+                    "email" => $student->getEmail(),
+                    "courseId" => $student->getCourseId(),
+                    "dni" => $student->getIdentificationDocument()
                 ]
             ));
         }
@@ -118,7 +125,9 @@ class StudentController
 
     public function validateFields(): void
     {
-        //TODO
+        $this->validateName();
+        $this->validateCourse();
+        $this->validateNickName();
     }
 
     public function setUrl(): void
@@ -202,11 +211,7 @@ class StudentController
 
     private function validateCourse()
     {
-        if ($this->type === 'p') {
-            return;
-        }
-
-        if (
+        if(
             !isset($_POST["courseId"]) ||
             empty($_POST["courseId"])
         ) {
@@ -225,5 +230,23 @@ class StudentController
                 $this->errors,
                 ErrorsMessages::getError("courseID:notFound"));
         }
+    }
+
+    public function save(): void
+    {
+        $this->validateFields();
+        if (empty($this->errors)) {
+            $this->userRepository->updateStudent(
+                $_POST['dni'],
+                intval($_POST['courseId'])
+            );
+
+            $this->userRepository->updateUser(
+                $_POST['dni'],
+                $_POST['name'],
+                $_POST['nick'],
+            );
+        }
+        $this->execute();
     }
 }

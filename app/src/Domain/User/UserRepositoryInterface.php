@@ -2,6 +2,8 @@
 
 namespace HLC\AP\Domain\User;
 
+use HLC\AP\Domain\Student\Student;
+
 interface UserRepositoryInterface
 {
     public function save(
@@ -23,6 +25,8 @@ interface UserRepositoryInterface
 
     public function getByDni(string $userDni): ?User;
 
+    public function getStudent(string $userDni): ?Student;
+
     public function checkDni(string $dni): bool;
 
     public function checkEmail(string $email): bool;
@@ -35,4 +39,8 @@ interface UserRepositoryInterface
     public function saveTeacher($id): bool;
 
     public function getStudents(string $teacherID, string $order): array;
+
+    public function updateStudent(string $studentId, int $courseId): bool;
+
+    public function updateUser(string $studentId, string $name, string $nick): bool;
 }

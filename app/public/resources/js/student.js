@@ -13,6 +13,7 @@ function onSelectorOrder(selector) {
 
 
 function edit(studentId) {
+    console.log("entro")
     $.ajax({
         url: "/student/fetchUser",
         type: "post",
@@ -23,11 +24,10 @@ function edit(studentId) {
             response = response.substring(response.indexOf('{'), response.indexOf('}') + 1);
             response = JSON.parse(response);
             document.getElementById('addCourseLabel').innerHTML = 'Edit student';
-            document.getElementById('form_educationCenter').value = response.educationCenter;
-            document.getElementById('form_startYear').value = response.startYear;
-            document.getElementById('form_endYear').value = response.endYear;
-            document.getElementById('form_description').value = response.description;
+            document.getElementById('form_name').value = response.name;
+            document.getElementById('form_nick').value = response.nick;
             document.getElementById('form_courseId').value = response.courseId;
+            document.getElementById('form_dni').value = response.dni;
             //Open modal
             $('#addTask').modal('show');
         }
@@ -55,8 +55,8 @@ function remove(studentId) {
 
 function searchTable() {
     let input, filter, table, tr, i;
-    let td0, td1, td2, td3, td4;
-    let txtValue0, txtValue1, txtValue2, txtValue3, txtValue4;
+    let td0, td1, td2, td3, td4, td5;
+    let txtValue0, txtValue1, txtValue2, txtValue3, txtValue4, txtValue5;
 
     input = document.getElementById("searchBar");
     filter = input.value.toUpperCase();
@@ -72,18 +72,21 @@ function searchTable() {
             td2 = tr[i].getElementsByTagName("td")[2];
             td3 = tr[i].getElementsByTagName("td")[3];
             td4 = tr[i].getElementsByTagName("td")[4];
-            if (td0 || td1 || td2 || td3 || td4) {
+            td5 = tr[i].getElementsByTagName("td")[5];
+            if (td0 || td1 || td2 || td3 || td4 || td5 ) {
                 txtValue0 = td0.textContent || td0.innerText;
                 txtValue1 = td1.textContent || td1.innerText;
                 txtValue2 = td2.textContent || td2.innerText;
                 txtValue3 = td3.textContent || td3.innerText;
                 txtValue4 = td4.textContent || td4.innerText;
+                txtValue5 = td5.textContent || td5.innerText;
                 if (
                     txtValue0.toUpperCase().indexOf(filter) > -1 ||
                     txtValue1.toUpperCase().indexOf(filter) > -1 ||
                     txtValue2.toUpperCase().indexOf(filter) > -1 ||
                     txtValue3.toUpperCase().indexOf(filter) > -1 ||
-                    txtValue4.toUpperCase().indexOf(filter) > -1
+                    txtValue4.toUpperCase().indexOf(filter) > -1 ||
+                    txtValue5.toUpperCase().indexOf(filter) > -1
                 ) {
                     tr[i].style.display = "";
                     document.getElementById("tabla").style.display = "";

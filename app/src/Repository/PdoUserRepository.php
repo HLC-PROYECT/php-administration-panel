@@ -185,5 +185,58 @@ final class PdoUserRepository implements UserRepositoryInterface
 
         return $response->errorCode() != '00000';
     }
-}
 
+    public function getStudent(string $userDni): ?Student
+    {
+        $student = $this->database->select(
+            'alumno',
+            [
+                "[><]usuario" => 'dni'
+            ],
+            [
+                "usuario.dni",
+                "usuario.email",
+                "usuario.nombre",
+                "usuario.password",
+                "usuario.nomb_usuario",
+                "usuario.tipo",
+                "usuario.f_alta",
+                "alumno.codcurso",
+                "alumno.fnac"
+            ],
+            [
+                "alumno.dni" => $userDni
+            ]
+        );
+        return $this->buildStudent($student[0]);
+    }
+
+    public function updateStudent(string $studentId, int $courseId): bool
+    {
+        $r = $this->database->update(
+            "alumno",
+            [
+                "codcurso" => $courseId
+            ],
+            [
+                "dni" => $studentId
+            ]
+        );
+        return $r->errorCode() === '00000';
+    }
+
+    public function updateUser(string $studentId, string $name, string $nick): bool
+    {
+        $r = $this->database->update(
+            "usuario",
+            [
+                "nombre" => $name,
+                "nomb_usuario" => $nick
+            ],
+            [
+                "dni" => $studentId
+            ]
+        );
+        return $r->errorCode() === '00000';
+    }
+}

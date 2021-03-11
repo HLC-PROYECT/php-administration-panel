@@ -10,14 +10,6 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label>Email</label>
-                        <input required class="au-input au-input--full"
-                               id="form_email"
-                               type="email"
-                               name="email"
-                               placeholder="email">
-                    </div>
-                    <div class="form-group">
                         <label>Name</label>
                         <input required class="au-input au-input--full"
                                type="text"
@@ -30,7 +22,7 @@
                         <input required class="au-input au-input--full"
                                id="form_nick"
                                type="text"
-                               name="Nick"
+                               name="nick"
                                placeholder="Nick">
                     </div>
                     <div class="form-group">
@@ -39,16 +31,14 @@
                                id="form_courseId"
                                type="number"
                                name="courseId"
-                               minlength="3"
-                               placeholder="Description">
+                               placeholder="Course Id">
                     </div>
 
                     <input class="au-input au-input--full"
-                           id="form_courseId"
+                           id="form_dni"
                            type="hidden"
                            value="0"
-                           name="courseId"
-                           placeholder="Description">
+                           name="dni">
 
                     <div class="modal-footer">
                         <button type="submit" name="saveCourse" class="au-btn au-btn--green">Save
