@@ -17,7 +17,7 @@ use HLC\AP\Views\Helpers\ComponentsHelper;
     <meta name="keywords" content="home">
     <link rel="stylesheet" href="/resources/styles/style.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-    <title>Courses</title>
+    <title>Students</title>
 </head>
 
 <body class="animsition">
@@ -36,7 +36,7 @@ use HLC\AP\Views\Helpers\ComponentsHelper;
                     <div class="row">
                         <div class="col-md-12">
                             <!-- DATA TABLE -->
-                            <h3 class="title-5 m-b-35">Courses</h3>
+                            <h3 class="title-5 m-b-35">Students</h3>
                             <div class="table-data__tool">
                                 <div class="table-data__tool-left">
                                     <?php
@@ -46,14 +46,14 @@ use HLC\AP\Views\Helpers\ComponentsHelper;
                                             <label for="orderBy" class="dropdown-header">Order by</label>
                                             <select onchange="onSelectorOrder(this)" class="js-select2" id="orderBy"
                                                     name="property">
-                                                <option <?php echo $_SESSION['studentOrder'] === 'nombew' ? 'selected="selected"' : ''; ?>
+                                                <option <?php echo $_SESSION['studentOrder'] === 'codcurso' ? 'selected="selected"' : ''; ?>
+                                                        value="courseId">Course ID
+                                                </option>
+                                                <option <?php echo $_SESSION['studentOrder'] === 'nombre' ? 'selected="selected"' : ''; ?>
                                                         value="name">Name
                                                 </option>
                                                 <option <?php echo $_SESSION['studentOrder'] === 'f_alta' ? 'selected="selected"' : ''; ?>
                                                         value="StartDate">Start Date
-                                                </option>
-                                                <option <?php echo $_SESSION['studentOrder'] === 'codcurso' ? 'selected="selected"' : ''; ?>
-                                                        value="courseId">Course ID
                                                 </option>
                                             </select>
                                             <div class="dropDownSelect2"></div>
@@ -61,14 +61,6 @@ use HLC\AP\Views\Helpers\ComponentsHelper;
                                         <?php
                                     }
                                     ?>
-                                </div>
-
-                                <div class="table-data__tool-right">
-                                    <label for="orderBy" class="dropdown-header">&nbsp</label>
-                                    <button class="au-btn au-btn-icon au-btn--green au-btn--small"
-                                            data-toggle="modal" data-target="#addTask">
-                                        <i class="zmdi zmdi-plus"></i>Add Student
-                                    </button>
                                 </div>
                             </div>
 

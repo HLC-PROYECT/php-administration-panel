@@ -127,6 +127,7 @@ final class DependencyInjection
     {
         return new StudentController(
             $container->get(UserRepositoryInterface::class),
+            $container->get(CourseRepositoryInterface::class),
             $container->get(LoginController::class),
         );
     }

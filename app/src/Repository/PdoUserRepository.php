@@ -181,7 +181,9 @@ final class PdoUserRepository implements UserRepositoryInterface
 
     public function deleteStudent(string $identificationDocument): bool
     {
-        $this->database->delete('alumno', ["dni" => $identificationDocument,]);
+        $response = $this->database->delete('alumno', ["dni" => $identificationDocument]);
+
+        return $response->errorCode() != '00000';
     }
 }
 

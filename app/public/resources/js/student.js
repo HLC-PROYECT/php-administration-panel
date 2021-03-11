@@ -1,16 +1,3 @@
-onHiddenModal();
-
-function onHiddenModal() {
-    $("#addTask").on('hidden.bs.modal', function () {
-        document.getElementById('addCourseLabel').innerHTML = 'New Course';
-        document.getElementById('form_educationCenter').value = '';
-        document.getElementById('form_startYear').value = '';
-        document.getElementById('form_endYear').value = '';
-        document.getElementById('form_description').value = '';
-        document.getElementById('form_courseId').value = '';
-    })
-}
-
 function onSelectorOrder(selector) {
     $.ajax({
         url: "/student/orderBy",
@@ -25,17 +12,17 @@ function onSelectorOrder(selector) {
 }
 
 
-function edit(userId) {
+function edit(studentId) {
     $.ajax({
         url: "/student/fetchUser",
         type: "post",
         data: {
-            userId
+            studentId
         },
         success(response) {
             response = response.substring(response.indexOf('{'), response.indexOf('}') + 1);
             response = JSON.parse(response);
-            document.getElementById('addCourseLabel').innerHTML = 'Edit course';
+            document.getElementById('addCourseLabel').innerHTML = 'Edit student';
             document.getElementById('form_educationCenter').value = response.educationCenter;
             document.getElementById('form_startYear').value = response.startYear;
             document.getElementById('form_endYear').value = response.endYear;
@@ -47,12 +34,12 @@ function edit(userId) {
     });
 }
 
-function remove(userId) {
+function remove(studentId) {
     $.ajax({
         url: "/student/delete",
         type: "post",
         data: {
-            userId
+            studentId
         },
         beforeSend: function () {
             $('#loader').removeClass('hidden')
