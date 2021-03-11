@@ -22,8 +22,9 @@ final class LoginController
         $this->errors = [];
     }
 
-    public function execute()
+    public function execute(): string
     {
+
         if ($_SERVER['REQUEST_METHOD'] != 'POST' || !isset($_POST["submit"])) {
             return $this->errorsView();
         }
@@ -49,7 +50,8 @@ final class LoginController
 
         $_SESSION['uid'] = $user->getIdentificationDocument();
         session_write_close();
-        set_url( '/Task');
+
+
         return $this->taskController->execute();
     }
 
@@ -75,6 +77,8 @@ final class LoginController
     }
 
     private function errorsView(): string {
+        echo("<script>history.replaceState({},'','/Login');</script>");
+
         return require __DIR__ . '/../../Views/Auth/Login.php';
     }
 

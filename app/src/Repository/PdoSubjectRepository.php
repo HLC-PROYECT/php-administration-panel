@@ -103,11 +103,23 @@ class PdoSubjectRepository implements SubjectRepositoryInterface
         return $this->build($this->database->select("asignatura", "*", ["codasig" => $subjectId]));
     }
 
-    public function getByTeacherId(string $id): array
+    public function getByTeacherId(string $id, string $filter = "all"): array
     {
+        if ($filter === "all") {
+            $where = [
+                "curso_profesor.dniprofesor" => $id
+            ];
+        } else {
+            $where = [
+                "curso_profesor.dniprofesor" => $id,
+                "tarea.estado" => $filter
+            ];
+        }
         $result = $this->database->select("asignatura",
             [
-                "[><]tarea" => "codasig"
+                "[><]curso_profesor" => "codcurso",
+                "[><]tarea" => "codasig",
+
             ],
             [
                 "asignatura.codasig",
@@ -126,11 +138,57 @@ class PdoSubjectRepository implements SubjectRepositoryInterface
                     "codasig"
                 ]
             ],
-            [
-                "asignatura.dniprofesor" => $id
-            ]
+            $where
         );
+        if (true === empty($result)) {
+            return [];
+        }
 
+        $result = self::mergeSubjectTasks($result);
+        $subjects = [];
+        foreach ($result as $rawSubject) {
+            $subjects[] = $this->build($rawSubject);
+        }
+        return $subjects;
+    }
+
+    public function getByStudentId(string $id, string $filter = "all"): array
+    {
+        if ($filter === "all") {
+            $where = [
+                "tarea_alumno.dni" => $id
+            ];
+        } else {
+            $filter = $filter == "completada" ? 1 : 0;
+            $where = [
+                "tarea_alumno.dni" => $id,
+                "tarea_alumno.completada" => $filter
+            ];
+        }
+        $result = $this->database->select("asignatura",
+            [
+                "[><]tarea" => "codasig",
+                "[><]tarea_alumno" => "codtarea",
+            ],
+            [
+                "asignatura.codasig",
+                "asignatura.nombreasignatura",
+                "asignatura.n_horas",
+                "asignatura.anyo_fin",
+                "asignatura.codcurso",
+                "asignatura.dniprofesor",
+                "tarea" => [
+                    "codtarea",
+                    "nombretarea",
+                    "f_inicio",
+                    "f_fin",
+                    "tarea_alumno.completada",
+                    "descrip",
+                    "codasig"
+                ]
+            ],
+            $where
+        );
         if (true === empty($result)) {
             return [];
         }
@@ -220,16 +278,46 @@ class PdoSubjectRepository implements SubjectRepositoryInterface
     {
         $tasks = [];
         foreach ($rawTasks as $rawTask) {
+
             $tasks[] = Task::build(
                 intval($rawTask["codtarea"]),
                 $rawTask["nombretarea"],
                 $rawTask["descrip"],
                 $rawTask["f_inicio"],
                 $rawTask["f_fin"],
-                $rawTask["estado"],
+                isset($rawTask["estado"]) ? $rawTask["estado"] : $rawTask['completada'],
                 $rawTask["codasig"]
             );
         }
         return $tasks;
+    }
+
+    public function getTeacherSubjects(string $id): array
+    {
+        $result = $this->database->select("asignatura",
+            [
+                "[><]curso_profesor" => "codcurso",
+            ],
+            [
+                "asignatura.codasig",
+                "asignatura.nombreasignatura",
+                "asignatura.n_horas",
+                "asignatura.anyo_fin",
+                "asignatura.codcurso",
+                "asignatura.dniprofesor",
+            ],
+            [
+                "curso_profesor.dniprofesor" => $id
+            ]
+        );
+
+        if (true === empty($result)) {
+            return [];
+        }
+        $subjects = [];
+        foreach ($result as $rawSubject) {
+            $subjects[] = $this->build($rawSubject);
+        }
+        return $subjects;
     }
 }

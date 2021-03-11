@@ -89,21 +89,23 @@ final class Task
         return $this->subjectId;
     }
 
-    public function status(bool $isTeacher): string
+    public function getTeacherStatus(): string
     {
-        if (false === $isTeacher) {
-            return $this->status;
-        }
-
         $date = new DateTime();
         $actualDate = $date->getTimestamp();
         $end = strtotime($this->dateEnd);
         if ($end < $actualDate) {
-            return "finalizada";
+            return '<span class="status--process">finalizada</span>';
         }
-        //TODO(): Cambiar en base de datos forma del estado, quitar en profesor
-        //Cambiar de tarea alumno completada por complete
-        return "pendiente";
+
+        return '<span class="status--denied">pendiente</span>';
+    }
+
+    public function getStudentStatus(): string
+    {
+        return ($this->getStatus() === '1') ?
+            '<span class="status--process">entregada</span>' :
+            '<span class="status--denied">pendiente</span>';
     }
 
     public function setStatus(string $status): void

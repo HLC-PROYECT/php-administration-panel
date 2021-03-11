@@ -52,7 +52,7 @@
                             <div class="register-link">
                                 <p>
                                     Don't you have account?
-                                    <a href="register.html">Sign Up Here</a>
+                                    <a href="/register">Sign Up Here</a>
                                 </p>
                             </div>
                         </div>
@@ -64,17 +64,7 @@
     </div>
 </form>
 
-<?php
+<?php include __DIR__ . '/../Parts/Js.php'; ?>
 
-include __DIR__ . '/../Parts/Js.php';
-?>
-<?php
-foreach ($this->errors as $value) {
-    echo $value;
-    echo '<script type="text/javascript">',
-        'showError("' . $value . '");',
-    '</script>';
-}
-?>
 </body>
 </html>

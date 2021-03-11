@@ -1,3 +1,50 @@
+<?php
+
+use HLC\AP\Controller\Task\TaskController;
+use HLC\AP\Domain\Task\Task;
+use HLC\AP\Views\Helpers\componentsHelper;
+
+if ($this->user->getType() === 'P') {
+    $buttons = [
+        [
+            'title' => 'Edit',
+            'onclick' => 'edit',
+            'iconClass' => 'zmdi-edit',
+            'name' => 'edit'
+        ],
+        [
+            'title' => 'Delete',
+            'onclick' => 'remove',
+            'iconClass' => 'zmdi-delete',
+            'name' => 'delete'
+        ],
+    ];
+    $status = 'getTeacherStatus';
+    $addTaskButton =
+        '<div class="table-data__tool-right">
+            <button class="au-btn au-btn-icon au-btn--green au-btn--small" data-toggle="modal"
+                    data-target="#addTask">
+                <i class="zmdi zmdi-plus"></i>add task
+            </button>
+        </div>';
+    $isTeacher = true;
+} else {
+    $buttons = [
+        [
+            'title' => 'Send',
+            'onclick' => 'send',
+            'iconClass' => 'zmdi-mail-send',
+            'name' => 'send'
+        ],
+    ];
+    $status = 'getStudentStatus';
+    $addTaskButton = '';
+    $isTeacher = false;
+}
+
+$isTeacher = $this->user->getType() === 'P';
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -12,15 +59,13 @@
     <link rel="stylesheet" href="/resources/styles/style.css">
     <link href="/resources/toastr/toastr.css" rel="stylesheet"/>
     <!-- Title Page-->
-    <title>Home</title>
+    <title>Task</title>
 </head>
 
 <body class="animsition">
 
 <div class="page-wrapper">
     <?php
-
-    use HLC\AP\Domain\Task\Task;
 
     require __DIR__ . '/../Parts/HeaderMobile.php';
     require __DIR__ . '/../Parts/Aside.php';
@@ -35,138 +80,107 @@
                     <div class="row">
                         <div class="col-md-12">
                             <!-- DATA TABLE -->
-                            <h3 class="title-5 m-b-35">Tareas</h3>
+                            <h3 class="title-5 m-b-35">Tasks</h3>
                             <div class="table-data__tool">
-                                <?php
-
-                                if (false === empty($this->subjectsTeacher)) {
-                                    ?>
                                     <div class="table-data__tool-left">
                                         <div class="rs-select2--light rs-select2--md">
-                                            <select class="js-select2" name="property">
-                                                <option selected="selected">All Properties</option>
-                                                <option value="">Completed</option>
-                                                <option value="">Pending</option>
+                                            <select onchange="onSelectorFilter(this)"
+                                                    class="js-select2"
+                                                    name="property"
+                                                    id="orderBy">
+
+                                                <option
+                                                    <?php echo $_SESSION['taskFilter'] === 'all' ?
+                                                        'selected="selected"' : ''; ?>
+                                                        value="all">
+                                                    All Properties
+                                                </option>
+
+                                                <option
+                                                    <?php echo $_SESSION['taskFilter'] === 'completada' ?
+                                                        'selected="selected"' : ''; ?>
+                                                        value="completed">
+                                                    Completed
+                                                </option>
+
+                                                <option
+                                                    <?php echo $_SESSION['taskFilter'] === 'pendiente' ?
+                                                        'selected="selected"' : ''; ?>
+                                                        value="pending">
+                                                    Pending
+                                                </option>
                                             </select>
                                             <div class="dropDownSelect2"></div>
                                         </div>
-                                        <div class="rs-select2--light rs-select2--sm">
-                                            <select class="js-select2" name="time">
-                                                <option selected="selected">All Time</option>
-                                                <option value="">Today</option>
-                                                <option value="">1 Week</option>
-                                            </select>
-                                            <div class="dropDownSelect2"></div>
-                                        </div>
-                                        <button class="au-btn-filter">
-                                            <i class="zmdi zmdi-filter-list"></i>filters
-                                        </button>
                                     </div>
-
-                                    <?php
-                                }
-                                ?>
-
-
-                                <div class="table-data__tool-right">
-                                    <button class="au-btn au-btn-icon au-btn--green au-btn--small" data-toggle="modal"
-                                            data-target="#addTask">
-                                        <i class="zmdi zmdi-plus"></i>añadir tarea
-                                    </button>
-                                </div>
+                                <?= $addTaskButton ?>
                             </div>
                             <!-- tabla -->
-
-                            <?php
-                            if (false === empty($this->subjectsTeacher)) {
-                                ?>
-                                <div class="table-responsive table-responsive-data2">
-                                    <table class="table table-data2">
-                                        <thead>
-                                        <tr>
-                                            <th>Nombre</th>
-                                            <th>description</th>
-                                            <th>Inicio</th>
-                                            <th>Fin</th>
-                                            <th>Estado</th>
-                                            <th>Asignatura</th>
-                                            <th></th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <?php
-
-                                        foreach ($this->subjectsTeacher as $subject) {
-                                            /** @var Task $task */
-                                            foreach ($subject->getTasks() as $task) {
-                                                echo '<tr class="tr-shadow">';
-                                                echo '<td>' . $task->getName() . '</td>';
-                                                echo '<td>' . $task->getDescription() . '</td>';
-                                                echo '<td>' . $task->getDateStart() . '</td>';
-                                                echo '<td>' . $task->getDateEnd() . '</td>';
-                                                $es = $task->status($this->user->getType() === 'P');
-                                                echo '<td> <span class="status--'.
-                                                    ($es == "finalizada" ? "process" : "denied") .
-                                                    '">' . $es . '</span></td>';
-
-                                                echo '<td>' . $subject->getName() . '</td>';
-
-                                                $id = $task->getTaskId();
-                                                ?>
-                                                <td>
-                                                    <div class="table-data-feature">
-                                                        <?php
-                                                        if ($this->user->getType() == 'A') {
-                                                        //TODO: BOTONES
-                                                        ?>
-                                                        <button class="item" data-toggle="tooltip"
-                                                                data-placement="top"
-                                                                title="Send"
-                                                                name="po" onclick="send()"
-                                                                value="<?php echo $id ?>">
-                                                            <i class="zmdi zmdi-mail-send"></i>
-                                                            <p id="demo"></p>
-                                                            <?php
-                                                            }else {
-
-                                                            ?>
-                                                            <button class="item" data-toggle="tooltip"
-                                                                    data-placement="top"
-                                                                    title="Delete"
-                                                                    name="po" onclick="loadDoc()"
-                                                                    value="<?php echo $id ?>">
-                                                                <i class="zmdi zmdi-delete"></i>
-                                                                <p id="demo"></p>
-                                                                <?php
-                                                                }
-                                                                ?>
-                                                    </div>
-                                                </td>
-                                                </tr>
-                                                <tr class="spacer"></tr>
-                                                <?php
-
-                                            }
-                                        } ?>
-
-                                        </tbody>
-                                    </table>
+                            <div class="table-responsive table-responsive-data2">
+                                <div class='alert alert-info' id="coursesNotFound" style="display: none;" role='alert'>
+                                    No tasks to display.
                                 </div>
-                                <?php
-                            }
-                            ?>
-
+                                <?=
+                                empty($this->subjectsTeacher) ?
+                                    ComponentsHelper::emptyViewBuilder('Tasks', 'warning') :
+                                    ComponentsHelper::tableBuilderForTasks(
+                                        TaskController::TASK_HEADERS,
+                                        $this->subjectsTeacher,
+                                        [
+                                            'getTaskId',
+                                            'getName',
+                                            'getDescription',
+                                            'getDateStart',
+                                            'getDateEnd',
+                                            $status,
+                                            'getName',
+                                        ],
+                                        $buttons,
+                                        $isTeacher
+                                    );
+                                ?>
+                            </div>
                             <!-- END DATA TABLE -->
+
+                            <!--start Spinner-->
+                            <div id="richList"></div>
+
+                            <div id="loader" class="lds-dual-ring hidden overlay spinner-box">
+                                <div class="configure-border-1">
+                                    <div class="configure-core"></div>
+                                </div>
+                                <div class="configure-border-2">
+                                    <div class="configure-core"></div>
+                                </div>
+                            </div>
+                            <!--end spinner-->
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         <!--Modal-->
-        <?php require  __DIR__ . '/AddTaskModal.php' ?>
+        <?php require __DIR__ . '/AddTaskModal.php' ?>
     </div>
 </div>
-<?php include  __DIR__ . '/../Parts/Js.php' ?>
+<?php include __DIR__ . '/../Parts/Js.php' ?>
+<script src="/resources/js/task.js"></script>
+<script>
+    /*
+     function onSelectorFilter(selector) {
 
+         $.ajax({
+             url: "/task/orderBy",
+             type: "post",
+             data: {
+                 filterBy: selector.value
+             },
+             success() {
+                 window.location.reload();
+             }
+         });
+     }
+*/
+</script>
 </body>
 </html>

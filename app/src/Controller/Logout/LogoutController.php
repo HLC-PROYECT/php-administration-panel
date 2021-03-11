@@ -2,5 +2,5 @@
 namespace HLC\AP\Controller\Logout;
 
 setcookie("loggedId", null, -1, '/');
-header("Location: ../../index.php");
-
+unset($_SESSION['uid']);
+header("Location: /");
