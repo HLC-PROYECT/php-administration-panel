@@ -81,6 +81,12 @@ use HLC\AP\Views\Helpers\componentsHelper;
                                                 'onclick' => '',
                                                 'iconClass' => 'zmdi-delete',
                                                 'formAction' => 'subject/delete'
+                                            ],
+                                            [
+                                                'title' => 'edit',
+                                                'onclick' => '',
+                                                'iconClass' => 'zmdi-edit',
+                                                'formAction' => 'subject/update'
                                             ]
                                     ]
                                 );

@@ -80,6 +80,45 @@ class SubjectController
         return $this->execute();
     }
 
+    public function update(): string
+    {
+
+        $name = $_POST["name"];
+        $nHours = (int)$_POST["nHours"];
+        $endingYear = (int)$_POST["endingYear"];
+        $course = (int)$_POST["course"];
+        $teacher = $_POST["teacher"];
+
+        $subject = Subject::build(
+            0,
+            $name,
+            $nHours,
+            $endingYear,
+            Course::build(
+                $course,
+                "",
+                0,
+                0,
+                ""
+            ),
+            User::build(
+                $teacher,
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "P"
+            )
+        );
+
+        $this->subjectRepository->update($subject);
+        return $this->execute();
+    }
+
+
     public function delete(): string
     {
         $subjectId = $_POST["id"];

@@ -8,6 +8,8 @@ interface SubjectRepositoryInterface
 {
     public function save(Subject $subject): bool;
 
+    public function update(Subject $subject): bool;
+
     /** @return Subject[] */
     public function get(): array;
 

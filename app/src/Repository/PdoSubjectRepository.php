@@ -36,6 +36,25 @@ class PdoSubjectRepository implements SubjectRepositoryInterface
         return $responseQuery->errorCode() === '00000';
     }
 
+    public function update(Subject $subject): bool
+    {
+        $responseQuery = $this->database->update("asignatura",
+            [
+                "codasig" => $subject->getId(),
+                "nombreasignatura" => $subject->getName(),
+                "n_horas" => $subject->getNumHours(),
+                "anyo_fin" => $subject->getYearEnd(),
+                "codcurso" => $subject->getCourse()->getCourseId(),
+                "dniprofesor" => $subject->getTeacher()->getIdentificationDocument()
+            ],
+            [
+                "codasig" => $subject->getId()
+            ]
+        );
+
+        return $responseQuery->errorCode() === '00000';
+    }
+
     public function get(): array
     {
         $responseQuery = $this->database->select("asignatura",
