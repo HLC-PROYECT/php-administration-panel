@@ -98,7 +98,10 @@ class componentsHelper
                             onclick='$onclick($id, this);'>";
 
                 $table .= "<i class='zmdi $iconClass' ></i >";
-                $table .= '</button></form>';
+                $table .= '</button>';
+                $table .= null !== $formAction
+                    ? "</form>"
+                    : "";
             }
             $table .= '</div>';
             $table .= '</td >';
