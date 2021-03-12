@@ -13,6 +13,10 @@ use Medoo\Medoo;
 
 class PdoSubjectRepository implements SubjectRepositoryInterface
 {
+    private const ASIGNATURA_CODASIG = "asignatura.codasig";
+    private const ASIGNATURA_NOMBREASIGNATURA = "asignatura.nombreasignatura";
+    private const ASIGNATURA_N_HORAS = "asignatura.n_horas";
+    private const ASIGNATURA_CODCURSO = "asignatura.codcurso";
     private Medoo $database;
 
     public function __construct(private DatabaseConnection $databaseConnection)
@@ -63,9 +67,9 @@ class PdoSubjectRepository implements SubjectRepositoryInterface
                 "[><]usuario" => ["dniprofesor" => "dni"]
             ],
             [
-                "asignatura.codasig",
-                "asignatura.nombreasignatura",
-                "asignatura.n_horas",
+                self::ASIGNATURA_CODASIG,
+                self::ASIGNATURA_NOMBREASIGNATURA,
+                self::ASIGNATURA_N_HORAS,
                 "asignatura.anyo_fin",
                 "curso" => [
                     "curso.codcurso",
@@ -122,11 +126,11 @@ class PdoSubjectRepository implements SubjectRepositoryInterface
 
             ],
             [
-                "asignatura.codasig",
-                "asignatura.nombreasignatura",
-                "asignatura.n_horas",
+                self::ASIGNATURA_CODASIG,
+                self::ASIGNATURA_NOMBREASIGNATURA,
+                self::ASIGNATURA_N_HORAS,
                 "asignatura.anyo_fin",
-                "asignatura.codcurso",
+                self::ASIGNATURA_CODCURSO,
                 "asignatura.dniprofesor",
                 "tarea" => [
                     "codtarea",
@@ -171,11 +175,11 @@ class PdoSubjectRepository implements SubjectRepositoryInterface
                 "[><]tarea_alumno" => "codtarea",
             ],
             [
-                "asignatura.codasig",
-                "asignatura.nombreasignatura",
-                "asignatura.n_horas",
+                self::ASIGNATURA_CODASIG,
+                self::ASIGNATURA_NOMBREASIGNATURA,
+                self::ASIGNATURA_N_HORAS,
                 "asignatura.anyo_fin",
-                "asignatura.codcurso",
+                self::ASIGNATURA_CODCURSO,
                 "asignatura.dniprofesor",
                 "tarea" => [
                     "codtarea",
@@ -230,27 +234,6 @@ class PdoSubjectRepository implements SubjectRepositoryInterface
         );
     }
 
-    public function getName(int $subjectId): string
-    {
-        // TODO: Implement getName() method.
-    }
-
-    public function getCourse(int $subjectId): ?Course
-    {
-        // TODO: Implement getCourse() method.
-        return null;
-    }
-
-    public function getTotalHours(int $subjectId): int
-    {
-        // TODO: Implement getTotalHours() method.
-    }
-
-    public function getTeacherId(int $subjectId): int
-    {
-        // TODO: Implement getTeacherId() method.
-    }
-
     private static function mergeSubjectTasks(array $rows): array
     {
         $subjects = [];
@@ -301,9 +284,9 @@ class PdoSubjectRepository implements SubjectRepositoryInterface
                     "[><]curso_profesor" => "codcurso"
                 ],
                 [
-                    "asignatura.codasig",
-                    "asignatura.nombreasignatura",
-                    "asignatura.n_horas",
+                    self::ASIGNATURA_CODASIG,
+                    self::ASIGNATURA_NOMBREASIGNATURA,
+                    self::ASIGNATURA_N_HORAS,
                     "asignatura.anyo_fin",
                     "curso" => [
                         "curso.codcurso",
@@ -330,6 +313,67 @@ class PdoSubjectRepository implements SubjectRepositoryInterface
             $subjects[] = $this->build($rawSubject);
         }
 
+        return $subjects;
+    }
+
+    public function getTeacherSubjectOrderByID(string $teacherId): array
+    {
+        return $this->getTeacherFilter(self::ASIGNATURA_CODASIG, $teacherId);
+    }
+
+    public function getTeacherSubjectOrderByName(string $teacherId): array
+    {
+        return $this->getTeacherFilter(self::ASIGNATURA_NOMBREASIGNATURA, $teacherId);
+    }
+
+    public function getTeacherSubjectOrderByNumHours(string $teacherId): array
+    {
+        return $this->getTeacherFilter(self::ASIGNATURA_N_HORAS, $teacherId);
+    }
+
+    public function getTeacherSubjectOrderByCourseId(string $teacherId): array
+    {
+        return $this->getTeacherFilter(self::ASIGNATURA_CODCURSO, $teacherId);
+    }
+
+    private function getTeacherFilter(string $columnFilter, string $teacherId): array
+    {
+        $responseQuery = $this->database->select("asignatura",
+            [
+                "[><]curso" => "codcurso",
+                "[><]usuario" => ["dniprofesor" => "dni"],
+                "[><]curso_profesor" => "codcurso"
+            ],
+            [
+                self::ASIGNATURA_CODASIG,
+                self::ASIGNATURA_NOMBREASIGNATURA,
+                self::ASIGNATURA_N_HORAS,
+                "asignatura.anyo_fin",
+                "curso" => [
+                    "curso.codcurso",
+                    "curso.centroed",
+                    "curso.descrip"
+                ],
+                "profesor" => [
+                    "usuario.dni",
+                    "usuario.email",
+                    "usuario.nomb_usuario",
+                    "usuario.password",
+                    "usuario.nombre",
+                    "usuario.f_alta",
+                    "usuario.tipo"
+                ]
+            ],
+            [
+                "curso_profesor.dniprofesor" => $teacherId,
+                "ORDER" => $columnFilter
+            ]
+        );
+
+        $subjects = [];
+        foreach ($responseQuery as $row) {
+            array_push($subjects, $this->build($row));
+        }
         return $subjects;
     }
 }
