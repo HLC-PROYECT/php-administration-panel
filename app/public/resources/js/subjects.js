@@ -1,6 +1,9 @@
 function edit(subjectId, event) {
     const subject = $(event).data('domain');
-    const formSubject = document.querySelector('form[action="/subject/save"]');
+    let formSubject = document.querySelector('form[action="/subject/save"]');
+    if (null === formSubject) {
+        formSubject = document.querySelector('form[action="/subject/update"]');
+    }
     formSubject.querySelector('#addSubjectLabel').innerHTML = 'Edit subject';
     formSubject.querySelector('input[name="name"]').value = subject.name;
     formSubject.querySelector('input[name="nHours"]').value = subject.numHours;
@@ -15,7 +18,10 @@ function edit(subjectId, event) {
 
 function addTask(subjectId, event) {
     const subject = $(event).data('domain');
-    const formTask = document.querySelector('form[action="/task/save"]');
+    let formTask = document.querySelector('form[action="/task/save"]');
+    if (null === formTask) {
+        formTask = document.querySelector('form[action="/task/update"]');
+    }
     formTask.querySelector('#addTaskLabel').innerHTML = 'Add task to ' + subject.name;
 
     const subjectSelector = formTask.querySelector('select[name="subjectId"]');

@@ -44,8 +44,7 @@ class SubjectController
     public function execute(): void
     {
         $this->user = $this->userRepository->getByDni($_SESSION['uid']);
-        $this->querySubjectsByOrder($_SESSION['subjectOrder'], $this->user->getIdentificationDocument());
-        // $this->subjects = $this->subjectRepository->getSubjectByTeacherId();
+        $this->querySubjectsByOrder($this->user->getIdentificationDocument(), $_SESSION['subjectOrder']);
         $this->subjectNames = $this->subjects;
         $this->courses = $this->courseRepository->getCoursesById($this->user->getIdentificationDocument());
         $this->teachers = $this->userRepository->getTeachers();
@@ -144,7 +143,7 @@ class SubjectController
         $this->execute();
     }
 
-    private function querySubjectsByOrder(string $order = 'codasig', string $tearcherId): void
+    private function querySubjectsByOrder(string $tearcherId, string $order = 'codasig'): void
     {
         $this->subjects = match ($order) {
             'num_hours' => $this->subjectRepository->getTeacherSubjectOrderByNumHours($tearcherId),

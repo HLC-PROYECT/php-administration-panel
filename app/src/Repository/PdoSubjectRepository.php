@@ -316,32 +316,33 @@ class PdoSubjectRepository implements SubjectRepositoryInterface
         return $subjects;
     }
 
-    public function getTeacherSubjectOrderByID(): array
+    public function getTeacherSubjectOrderByID(string $teacherId): array
     {
-        return $this->getTeacherFilter(self::ASIGNATURA_CODASIG);
+        return $this->getTeacherFilter(self::ASIGNATURA_CODASIG, $teacherId);
     }
 
-    public function getTeacherSubjectOrderByName(): array
+    public function getTeacherSubjectOrderByName(string $teacherId): array
     {
-        return $this->getTeacherFilter(self::ASIGNATURA_NOMBREASIGNATURA);
+        return $this->getTeacherFilter(self::ASIGNATURA_NOMBREASIGNATURA, $teacherId);
     }
 
-    public function getTeacherSubjectOrderByNumHours(): array
+    public function getTeacherSubjectOrderByNumHours(string $teacherId): array
     {
-        return $this->getTeacherFilter(self::ASIGNATURA_N_HORAS);
+        return $this->getTeacherFilter(self::ASIGNATURA_N_HORAS, $teacherId);
     }
 
-    public function getTeacherSubjectOrderByCourseId(): array
+    public function getTeacherSubjectOrderByCourseId(string $teacherId): array
     {
-        return $this->getTeacherFilter(self::ASIGNATURA_CODCURSO);
+        return $this->getTeacherFilter(self::ASIGNATURA_CODCURSO, $teacherId);
     }
 
-    private function getTeacherFilter(string $columnFilter): array
+    private function getTeacherFilter(string $columnFilter, string $teacherId): array
     {
         $responseQuery = $this->database->select("asignatura",
             [
                 "[><]curso" => "codcurso",
-                "[><]usuario" => ["dniprofesor" => "dni"]
+                "[><]usuario" => ["dniprofesor" => "dni"],
+                "[><]curso_profesor" => "codcurso"
             ],
             [
                 self::ASIGNATURA_CODASIG,
@@ -364,6 +365,7 @@ class PdoSubjectRepository implements SubjectRepositoryInterface
                 ]
             ],
             [
+                "curso_profesor.dniprofesor" => $teacherId,
                 "ORDER" => $columnFilter
             ]
         );

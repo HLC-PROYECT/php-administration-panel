@@ -17,17 +17,29 @@ interface SubjectRepositoryInterface
 
     public function getById(int $subjectId): ?Subject;
 
-    /** @return Subject[] */
-    public function getTeacherSubjectOrderByID(): array;
+    /**
+     * @param string $teacherId
+     * @return Subject[]
+     */
+    public function getTeacherSubjectOrderByID(string $teacherId): array;
 
-    /** @return Subject[] */
-    public function getTeacherSubjectOrderByCourseId(): array;
+    /**
+     * @param string $teacherId
+     * @return Subject[]
+     */
+    public function getTeacherSubjectOrderByCourseId(string $teacherId): array;
 
-    /** @return Subject[] */
-    public function getTeacherSubjectOrderByNumHours(): array;
+    /**
+     * @param string $teacherId
+     * @return Subject[]
+     */
+    public function getTeacherSubjectOrderByNumHours(string $teacherId): array;
 
-    /** @return Subject[] */
-    public function getTeacherSubjectOrderByName(): array;
+    /**
+     * @param string $teacherId
+     * @return Subject[]
+     */
+    public function getTeacherSubjectOrderByName(string $teacherId): array;
 
     /**
      * @param string $id
