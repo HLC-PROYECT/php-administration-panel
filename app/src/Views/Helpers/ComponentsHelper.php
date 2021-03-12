@@ -82,8 +82,9 @@ class componentsHelper
                 $title = $button['title'];
                 $onclick = $button['onclick'];
                 $iconClass = $button['iconClass'];
-                $formAction = $button['formAction'];
-                $name = $button['name'];
+                $formAction = $button['formAction'] ?? null;
+                $name = $button['name'] ?? '';
+                $domainJson = json_encode($domain);
 
                 $table .= null !== $formAction
                     ? "<form action='$formAction' method='post'><input hidden type='text' name='id' value='$id'>"
@@ -91,9 +92,10 @@ class componentsHelper
                 $table .= "<button class='item' 
                             data-toggle='tooltip' 
                             data-placement='top' 
+                            data-domain='$domainJson'
                             title='$title' 
                             name='$name' 
-                            onclick=$onclick('$id')>";
+                            onclick=$onclick('$id', this)>";
 
                 $table .= "<i class='zmdi $iconClass' ></i >";
                 $table .= '</button></form>';

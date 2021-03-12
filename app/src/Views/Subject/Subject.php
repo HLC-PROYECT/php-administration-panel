@@ -57,7 +57,7 @@ use HLC\AP\Views\Helpers\componentsHelper;
                                 </div>
                                 <div class="table-data__tool-right">
                                     <button class="au-btn au-btn-icon au-btn--green au-btn--small"
-                                            data-toggle="modal" data-target="#addTask">
+                                            data-toggle="modal" data-target="#addSubject">
                                         <i class="zmdi zmdi-plus"></i>ADD SUBJECT
                                     </button>
                                 </div>
@@ -76,18 +76,18 @@ use HLC\AP\Views\Helpers\componentsHelper;
                                         'getTeacherName'
                                     ],
                                     [
-                                            [
-                                                'title' => 'delete',
-                                                'onclick' => '',
-                                                'iconClass' => 'zmdi-delete',
-                                                'formAction' => 'subject/delete'
-                                            ],
-                                            [
-                                                'title' => 'edit',
-                                                'onclick' => '',
-                                                'iconClass' => 'zmdi-edit',
-                                                'formAction' => 'subject/update'
-                                            ]
+                                        [
+                                            'title' => 'delete',
+                                            'onclick' => '',
+                                            'iconClass' => 'zmdi-delete',
+                                            'formAction' => 'subject/delete'
+                                        ],
+                                        [
+                                            'title' => 'Edit',
+                                            'onclick' => 'edit',
+                                            'iconClass' => 'zmdi-edit',
+                                            'name' => 'edit'
+                                        ]
                                     ]
                                 );
                                 ?>
@@ -102,6 +102,22 @@ use HLC\AP\Views\Helpers\componentsHelper;
     </div>
 </div>
 <?php include __DIR__ . '/../Parts/Js.php' ?>
+<script>
+    function edit(subjectId, event) {
+        const subject = $(event).data('domain');
+        const formSubject = document.querySelector('form[action="subject/save"]');
+        formSubject.querySelector('#addSubjectLabel').innerHTML = 'Edit subject';
+        formSubject.querySelector('input[name="name"]').value = subject.name;
+        formSubject.querySelector('input[name="nHours"]').value = subject.numHours;
+        formSubject.querySelector('input[name="endingYear"]').value = subject.yearEnd;
+        formSubject.querySelector('select[name="course"]').value = subject.course.courseId;
+        formSubject.querySelector('select[name="teacher"]').value = subject.teacher.identificationDocument;
+        formSubject.querySelector('button[name="submit"]').innerHTML = 'Update';
+        formSubject.querySelector('input[name="id"]').value = subject.subjectId;
+        $(formSubject).attr('action', 'subject/update');
+        $('#addSubject').modal('show');
+    }
+</script>
 </body>
 
 </html>

@@ -3,7 +3,7 @@
 use HLC\AP\Views\Helpers\componentsHelper;
 
 ?>
-<div class="modal fade" id="addTask" tabindex="-1" role="dialog" aria-labelledby="addTaskLabel"
+<div class="modal fade" id="addSubject" tabindex="-1" role="dialog" aria-labelledby="addSubjectLabel"
      aria-hidden="true">
     <div class="modal-dialog modal-sm" role="document">
         <div class="modal-content">
@@ -65,6 +65,7 @@ use HLC\AP\Views\Helpers\componentsHelper;
                     </div>
                 </div>
                 <div class="modal-footer">
+                    <input hidden type="text" name="id">
                     <button type="submit" name="submit" class="au-btn au-btn--green">Add</button>
                 </div>
             </form>

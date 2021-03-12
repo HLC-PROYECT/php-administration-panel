@@ -32,19 +32,19 @@ class SubjectController
     ) {
     }
 
-    public function execute(): string
+    public function execute(): void
     {
-        $user = $this->userRepository->getByDni($_SESSION['uid']);
+        $this->user = $this->userRepository->getByDni($_SESSION['uid']);
         $this->subjects = $this->subjectRepository->get();
-        $this->courses = $this->courseRepository->get();
+        $this->courses = $this->courseRepository->getCoursesById($this->user->getIdentificationDocument());
         $this->teachers = $this->userRepository->getTeachers();
-        return require __DIR__ . '/../../Views/Subject/Subject.php';
+
+        require __DIR__ . '/../../Views/Subject/Subject.php';
+        set_url("subject");
     }
 
-    public function save(): string
+    public function save(): void
     {
-
-        //TODO(): Validar datos de entrada
         $name = $_POST["name"];
         $nHours = (int)$_POST["nHours"];
         $endingYear = (int)$_POST["endingYear"];
@@ -77,12 +77,12 @@ class SubjectController
         );
 
         $this->subjectRepository->save($subject);
-        return $this->execute();
+        $this->execute();
     }
 
-    public function update(): string
+    public function update(): void
     {
-
+        $subjectId = $_POST["id"];
         $name = $_POST["name"];
         $nHours = (int)$_POST["nHours"];
         $endingYear = (int)$_POST["endingYear"];
@@ -90,7 +90,7 @@ class SubjectController
         $teacher = $_POST["teacher"];
 
         $subject = Subject::build(
-            0,
+            $subjectId,
             $name,
             $nHours,
             $endingYear,
@@ -115,16 +115,15 @@ class SubjectController
         );
 
         $this->subjectRepository->update($subject);
-        return $this->execute();
+        $this->execute();
     }
 
-
-    public function delete(): string
+    public function delete(): void
     {
         $subjectId = $_POST["id"];
 
         $this->subjectRepository->deleteById($subjectId);
 
-        return $this->execute();
+        $this->execute();
     }
 }

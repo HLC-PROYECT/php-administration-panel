@@ -4,11 +4,11 @@ namespace HLC\AP\Domain\Course;
 
 class Course
 {
-    private int $courseId;
+    public int $courseId;
+    public string $description;
     private string $educationCenter;
     private int $yearStart;
     private int $yearEnd;
-    private string $description;
 
     public function __construct(int $courseId, string $educationCenter, int $yearStart, int $yearEnd, string $description)
     {

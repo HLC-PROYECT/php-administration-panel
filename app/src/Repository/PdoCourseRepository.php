@@ -43,7 +43,7 @@ class PdoCourseRepository implements CourseRepositoryInterface
         return $this->instantiate($this->database->select("curso", "*", ["codCurso" => $courseId])[0]);
     }
 
-    public function getCoursesById($identificationDocument, $order): array
+    public function getCoursesById($identificationDocument, $order = ["curso.codcurso" => "ASC"]): array
     {
         $result = $this->database->select("curso",
             [

@@ -10,12 +10,12 @@ use HLC\AP\Domain\User\User;
 
 final class Subject
 {
-    private int $subjectId;
-    private string $name;
-    private int $numHours;
-    private int $yearEnd;
-    private Course $course;
-    private User $teacher;
+    public int $subjectId;
+    public string $name;
+    public int $numHours;
+    public int $yearEnd;
+    public Course $course;
+    public User $teacher;
     /** @var Task[] */
     private array $tasks;
     private ?DateTime $dateStart;
@@ -112,6 +112,11 @@ final class Subject
     public function getTeacherName(): string
     {
         return $this->teacher->getName();
+    }
+
+    public function getIdentificationDocumentTeacher(): string
+    {
+        return $this->identificationDocumentTeacher;
     }
 
     /** @return Task[] */
