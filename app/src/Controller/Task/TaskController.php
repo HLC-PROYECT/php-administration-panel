@@ -72,7 +72,7 @@ class TaskController
             $this->user->getIdentificationDocument(), $_SESSION['taskFilter']
         );
         $this->subjects = $this->subjectRepository->get();
-        $this->subjectNames = $this->subjectRepository->getTeacherSubjects($this->user->getIdentificationDocument());
+        $this->subjectNames = $this->subjectRepository->getSubjectByTeacherId($this->user->getIdentificationDocument());
         $_SERVER['REQUEST_URI'] = "/Task";
         echo("<script>history.replaceState({},'','/Task');</script>");
         return require __DIR__ . '/../../Views/Task/Task.php';

@@ -59,6 +59,7 @@ use HLC\AP\Views\Helpers\ComponentsHelper;
                             <label for="subjectId" class=" form-control-label">Subject</label>
                         </div>
                         <div>
+                            <input readonly type="text" id="subjectName" style="display: none;"/>
                             <?=
                             ComponentsHelper::selectorBuilder(
                                 "subjectId",

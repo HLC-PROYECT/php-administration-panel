@@ -11,6 +11,13 @@ use HLC\AP\Domain\User\UserRepositoryInterface;
 
 class SubjectController
 {
+    public const SUBJECT_HEADERS = [
+        "Id",
+        "Name",
+        "Course",
+        "Number of hours",
+        "Teacher"
+    ];
     protected ?User $user;
     /** @var string[] */
     protected array $errors = [];
@@ -20,13 +27,8 @@ class SubjectController
     protected array $courses;
     /** @var User[] $teachers */
     protected array $teachers;
-    public const SUBJECT_HEADERS = [
-        "Id",
-        "Name",
-        "Course",
-        "Number of hours",
-        "Teacher"
-    ];
+    /** @var Subject[] */
+    protected array $subjectNames;
 
     public function __construct(
         private UserRepositoryInterface $userRepository,
@@ -38,7 +40,8 @@ class SubjectController
     public function execute(): void
     {
         $this->user = $this->userRepository->getByDni($_SESSION['uid']);
-        $this->subjects = $this->subjectRepository->get();
+        $this->subjects = $this->subjectRepository->getSubjectByTeacherId($this->user->getIdentificationDocument());
+        $this->subjectNames = $this->subjects;
         $this->courses = $this->courseRepository->getCoursesById($this->user->getIdentificationDocument());
         $this->teachers = $this->userRepository->getTeachers();
 

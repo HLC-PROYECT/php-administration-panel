@@ -201,7 +201,7 @@ class PdoSubjectRepository implements SubjectRepositoryInterface
         return $subjects;
     }
 
-    private function build(array $subject): subject
+    private function build(array $subject): Subject
     {
         return Subject::build(
             intval($subject['codasig']),
@@ -292,32 +292,44 @@ class PdoSubjectRepository implements SubjectRepositoryInterface
         return $tasks;
     }
 
-    public function getTeacherSubjects(string $id): array
+    public function getSubjectByTeacherId(string $id): array
     {
         $result = $this->database->select("asignatura",
-            [
-                "[><]curso_profesor" => "codcurso",
-            ],
-            [
-                "asignatura.codasig",
-                "asignatura.nombreasignatura",
-                "asignatura.n_horas",
-                "asignatura.anyo_fin",
-                "asignatura.codcurso",
-                "asignatura.dniprofesor",
-            ],
-            [
-                "curso_profesor.dniprofesor" => $id
-            ]
+                [
+                    "[><]curso" => "codcurso",
+                    "[><]usuario" => ["dniprofesor" => "dni"],
+                    "[><]curso_profesor" => "codcurso"
+                ],
+                [
+                    "asignatura.codasig",
+                    "asignatura.nombreasignatura",
+                    "asignatura.n_horas",
+                    "asignatura.anyo_fin",
+                    "curso" => [
+                        "curso.codcurso",
+                        "curso.centroed",
+                        "curso.descrip"
+                    ],
+                    "profesor" => [
+                        "usuario.dni",
+                        "usuario.email",
+                        "usuario.nomb_usuario",
+                        "usuario.password",
+                        "usuario.nombre",
+                        "usuario.f_alta",
+                        "usuario.tipo"
+                    ]
+                ],
+                [
+                    "curso_profesor.dniprofesor" => $id
+                ]
         );
 
-        if (true === empty($result)) {
-            return [];
-        }
         $subjects = [];
         foreach ($result as $rawSubject) {
             $subjects[] = $this->build($rawSubject);
         }
+
         return $subjects;
     }
 }
