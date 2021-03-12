@@ -36,24 +36,33 @@ use HLC\AP\Views\Helpers\componentsHelper;
                             <div class="table-data__tool">
                                 <div class="table-data__tool-left">
                                     <div class="rs-select2--light rs-select2--md">
-                                        <span class="dropdown-header">Filter</span>
-                                        <select class="js-select2" name="property">
-                                            <!-- TODO: Selector por cursos existentes y activos -->
-                                            <option selected="selected" value="">Subject</option>
-                                            <option value="">Año inicio</option>
-                                            <option value="">Año fin</option>
-                                        </select>
-                                        <div class="dropDownSelect2"></div>
+                                        <?php
+                                        if (!empty($this->subjects)) {
+                                            ?>
+                                            <div class="rs-select2--light rs-select2--md">
+                                                <label for="orderBy" class="dropdown-header">Order by</label>
+                                                <select onchange="onSelectorOrder(this)" class="js-select2" id="orderBy"
+                                                        name="property">
+                                                    <option <?php echo $_SESSION['subjectOrder'] === 'subjectId' ? 'selected="selected"' : ''; ?>
+                                                            value="subjectId">Subject ID
+                                                    </option>
+                                                    <option <?php echo $_SESSION['subjectOrder'] === 'name' ? 'selected="selected"' : ''; ?>
+                                                            value="name">Name
+                                                    </option>
+                                                    <option <?php echo $_SESSION['subjectOrder'] === 'num_hours' ? 'selected="selected"' : ''; ?>
+                                                            value="num_hours">Num Hours
+                                                    </option>
+                                                    <option <?php echo $_SESSION['subjectOrder'] === 'courseId' ? 'selected="selected"' : ''; ?>
+                                                            value="courseId">Course ID
+                                                    </option>
+                                                </select>
+                                                <div class="dropDownSelect2"></div>
+                                            </div>
+                                            <?php
+                                        }
+                                        ?>
                                     </div>
-                                    <div class="rs-select2--light rs-select2--sm">
-                                        <!-- TODO: Filtrar por profesor -->
-                                        <select class="js-select2" name="time">
-                                            <option selected="selected">Today</option>
-                                            <option value="">3 Days</option>
-                                            <option value="">1 Week</option>
-                                        </select>
-                                        <div class="dropDownSelect2"></div>
-                                    </div>
+
                                 </div>
                                 <div class="table-data__tool-right">
                                     <button class="au-btn au-btn-icon au-btn--green au-btn--small"
@@ -64,38 +73,43 @@ use HLC\AP\Views\Helpers\componentsHelper;
                             </div>
                             <!-- tabla -->
                             <div class="table-responsive table-responsive-data2">
+                                <div class='alert alert-info' id="coursesNotFound" style="display: none;" role='alert'>
+                                    No subjects to display.
+                                </div>
                                 <?=
-                                ComponentsHelper::tableBuilder(
-                                    SubjectController::SUBJECT_HEADERS,
-                                    $this->subjects,
-                                    [
-                                        'getId',
-                                        'getName',
-                                        'getCourseDescription',
-                                        'getNumHours',
-                                        'getTeacherName'
-                                    ],
-                                    [
+                                empty($this->subjects) ?
+                                    ComponentsHelper::emptyViewBuilder('subjects', 'warning') :
+                                    ComponentsHelper::tableBuilder(
+                                        SubjectController::SUBJECT_HEADERS,
+                                        $this->subjects,
                                         [
-                                            'title' => 'delete',
-                                            'onclick' => '',
-                                            'iconClass' => 'zmdi-delete',
-                                            'formAction' => 'subject/delete'
+                                            'getId',
+                                            'getName',
+                                            'getCourseDescription',
+                                            'getNumHours',
+                                            'getTeacherName'
                                         ],
                                         [
-                                            'title' => 'Edit',
-                                            'onclick' => 'edit',
-                                            'iconClass' => 'zmdi-edit',
-                                            'name' => 'edit'
-                                        ],
-                                        [
-                                            'title' => 'Add task',
-                                            'onclick' => 'addTask',
-                                            'iconClass' => 'zmdi-plus',
-                                            'name' => 'addTask'
+                                            [
+                                                'title' => 'delete',
+                                                'onclick' => '',
+                                                'iconClass' => 'zmdi-delete',
+                                                'formAction' => 'subject/delete'
+                                            ],
+                                            [
+                                                'title' => 'Edit',
+                                                'onclick' => 'edit',
+                                                'iconClass' => 'zmdi-edit',
+                                                'name' => 'edit'
+                                            ],
+                                            [
+                                                'title' => 'Add task',
+                                                'onclick' => 'addTask',
+                                                'iconClass' => 'zmdi-plus',
+                                                'name' => 'addTask'
+                                            ]
                                         ]
-                                    ]
-                                );
+                                    );
                                 ?>
                             </div>
                             <!-- END DATA TABLE -->
@@ -109,39 +123,7 @@ use HLC\AP\Views\Helpers\componentsHelper;
     </div>
 </div>
 <?php include __DIR__ . '/../Parts/Js.php' ?>
-<script>
-    function edit(subjectId, event) {
-        const subject = $(event).data('domain');
-        const formSubject = document.querySelector('form[action="/subject/save"]');
-        formSubject.querySelector('#addSubjectLabel').innerHTML = 'Edit subject';
-        formSubject.querySelector('input[name="name"]').value = subject.name;
-        formSubject.querySelector('input[name="nHours"]').value = subject.numHours;
-        formSubject.querySelector('input[name="endingYear"]').value = subject.yearEnd;
-        formSubject.querySelector('select[name="course"]').value = subject.course.courseId;
-        formSubject.querySelector('select[name="teacher"]').value = subject.teacher.identificationDocument;
-        formSubject.querySelector('button[name="submit"]').innerHTML = 'Update';
-        formSubject.querySelector('input[name="id"]').value = subject.subjectId;
-        $(formSubject).attr('action', '/subject/update');
-        $('#addSubject').modal('show');
-    }
-
-    function addTask(subjectId, event) {
-        const subject = $(event).data('domain');
-        const formTask = document.querySelector('form[action="/task/save"]');
-        formTask.querySelector('#addTaskLabel').innerHTML = 'Add task to ' + subject.name;
-
-        const subjectSelector = formTask.querySelector('select[name="subjectId"]');
-        subjectSelector.value = subjectId;
-        subjectSelector.style.display = 'none';
-
-        const subjectInput = formTask.querySelector('#subjectName');
-        subjectInput.value = subject.name;
-        subjectInput.style.display = 'block';
-
-        $('#addTask').modal('show');
-    }
-
-</script>
+<script src="/resources/js/subjects.js"></script>
 </body>
 
 </html>

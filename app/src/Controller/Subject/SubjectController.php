@@ -34,19 +34,30 @@ class SubjectController
         private UserRepositoryInterface $userRepository,
         private SubjectRepositoryInterface $subjectRepository,
         private CourseRepositoryInterface $courseRepository,
-    ) {
+    )
+    {
+        if (!isset($_SESSION['subjectOrder'])) {
+            $_SESSION['subjectOrder'] = 'subjectId';
+        }
     }
 
     public function execute(): void
     {
         $this->user = $this->userRepository->getByDni($_SESSION['uid']);
-        $this->subjects = $this->subjectRepository->getSubjectByTeacherId($this->user->getIdentificationDocument());
+        $this->querySubjectsByOrder($_SESSION['subjectOrder'], $this->user->getIdentificationDocument());
+        // $this->subjects = $this->subjectRepository->getSubjectByTeacherId();
         $this->subjectNames = $this->subjects;
         $this->courses = $this->courseRepository->getCoursesById($this->user->getIdentificationDocument());
         $this->teachers = $this->userRepository->getTeachers();
 
         require __DIR__ . '/../../Views/Subject/SubjectView.php';
-        set_url("subject");
+        set_url('Subject');
+    }
+
+    public function orderBy(): void
+    {
+        $_SESSION['subjectOrder'] = $_POST['orderBy'];
+        $this->execute();
     }
 
     public function save(): void
@@ -131,5 +142,15 @@ class SubjectController
         $this->subjectRepository->deleteById($subjectId);
 
         $this->execute();
+    }
+
+    private function querySubjectsByOrder(string $order = 'codasig', string $tearcherId): void
+    {
+        $this->subjects = match ($order) {
+            'num_hours' => $this->subjectRepository->getTeacherSubjectOrderByNumHours($tearcherId),
+            'name' => $this->subjectRepository->getTeacherSubjectOrderByName($tearcherId),
+            'courseId' => $this->subjectRepository->getTeacherSubjectOrderByCourseId($tearcherId),
+            default => $this->subjectRepository->getTeacherSubjectOrderByID($tearcherId),
+        };
     }
 }

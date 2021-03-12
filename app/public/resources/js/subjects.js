@@ -1,6 +1,37 @@
+function edit(subjectId, event) {
+    const subject = $(event).data('domain');
+    const formSubject = document.querySelector('form[action="/subject/save"]');
+    formSubject.querySelector('#addSubjectLabel').innerHTML = 'Edit subject';
+    formSubject.querySelector('input[name="name"]').value = subject.name;
+    formSubject.querySelector('input[name="nHours"]').value = subject.numHours;
+    formSubject.querySelector('input[name="endingYear"]').value = subject.yearEnd;
+    formSubject.querySelector('select[name="course"]').value = subject.course.courseId;
+    formSubject.querySelector('select[name="teacher"]').value = subject.teacher.identificationDocument;
+    formSubject.querySelector('button[name="submit"]').innerHTML = 'Update';
+    formSubject.querySelector('input[name="id"]').value = subject.subjectId;
+    $(formSubject).attr('action', '/subject/update');
+    $('#addSubject').modal('show');
+}
+
+function addTask(subjectId, event) {
+    const subject = $(event).data('domain');
+    const formTask = document.querySelector('form[action="/task/save"]');
+    formTask.querySelector('#addTaskLabel').innerHTML = 'Add task to ' + subject.name;
+
+    const subjectSelector = formTask.querySelector('select[name="subjectId"]');
+    subjectSelector.value = subjectId;
+    subjectSelector.style.display = 'none';
+
+    const subjectInput = formTask.querySelector('#subjectName');
+    subjectInput.value = subject.name;
+    subjectInput.style.display = 'block';
+
+    $('#addTask').modal('show');
+}
+
 function onSelectorOrder(selector) {
     $.ajax({
-        url: "/student/orderBy",
+        url: "/subject/orderBy",
         type: "post",
         data: {
             orderBy: selector.value
@@ -11,49 +42,7 @@ function onSelectorOrder(selector) {
     });
 }
 
-
-function edit(studentId) {
-    console.log("entro")
-    $.ajax({
-        url: "/student/fetchUser",
-        type: "post",
-        data: {
-            studentId
-        },
-        success(response) {
-            response = response.substring(response.indexOf('{'), response.indexOf('}') + 1);
-            response = JSON.parse(response);
-            document.getElementById('addCourseLabel').innerHTML = 'Edit student';
-            document.getElementById('form_name').value = response.name;
-            document.getElementById('form_nick').value = response.nick;
-            document.getElementById('form_courseId').value = response.courseId;
-            document.getElementById('form_dni').value = response.dni;
-            //Open modal
-            $('#addTask').modal('show');
-        }
-    });
-}
-
-function remove(studentId) {
-    $.ajax({
-        url: "/student/delete",
-        type: "post",
-        data: {
-            studentId
-        },
-        beforeSend: function () {
-            $('#loader').removeClass('hidden')
-        },
-        success() {
-            window.location.reload();
-        },
-        complete: function () {
-            $('#loader').addClass('hidden')
-        },
-    });
-}
-
-function searchTable() {
+function searchTable(){
     let input, filter, table, tr, i;
     let td0, td1, td2, td3, td4;
     let txtValue0, txtValue1, txtValue2, txtValue3, txtValue4;
@@ -72,8 +61,7 @@ function searchTable() {
             td2 = tr[i].getElementsByTagName("td")[2];
             td3 = tr[i].getElementsByTagName("td")[3];
             td4 = tr[i].getElementsByTagName("td")[4];
-
-            if (td0 || td1 || td2 || td3 || td4  ) {
+            if (td0 || td1 || td2 || td3 || td4 ) {
                 txtValue0 = td0.textContent || td0.innerText;
                 txtValue1 = td1.textContent || td1.innerText;
                 txtValue2 = td2.textContent || td2.innerText;
