@@ -95,7 +95,7 @@ class componentsHelper
                             data-domain='$domainJson'
                             title='$title' 
                             name='$name' 
-                            onclick=$onclick('$id', this)>";
+                            onclick='$onclick($id, this);'>";
 
                 $table .= "<i class='zmdi $iconClass' ></i >";
                 $table .= '</button></form>';

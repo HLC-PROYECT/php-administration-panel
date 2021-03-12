@@ -11,6 +11,9 @@ use HLC\AP\Domain\User\UserRepositoryInterface;
 
 class SubjectController
 {
+    protected ?User $user;
+    /** @var string[] */
+    protected array $errors = [];
     /** @var Subject[] $subjects */
     protected array $subjects;
     /** @var Course[] $courses */
@@ -39,7 +42,7 @@ class SubjectController
         $this->courses = $this->courseRepository->getCoursesById($this->user->getIdentificationDocument());
         $this->teachers = $this->userRepository->getTeachers();
 
-        require __DIR__ . '/../../Views/Subject/Subject.php';
+        require __DIR__ . '/../../Views/Subject/SubjectView.php';
         set_url("subject");
     }
 
