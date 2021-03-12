@@ -3,16 +3,19 @@
 namespace HLC\AP\Domain\Subject;
 
 use DateTime;
+use HLC\AP\Domain\Course\Course;
 use HLC\AP\Domain\Task\Task;
+use HLC\AP\Domain\Teacher\Teacher;
+use HLC\AP\Domain\User\User;
 
 final class Subject
 {
-    private int $subjectId;
-    private string $name;
-    private int $numHours;
-    private int $yearEnd;
-    private int $courseId;
-    private string $identificationDocumentTeacher;
+    public int $subjectId;
+    public string $name;
+    public int $numHours;
+    public int $yearEnd;
+    public Course $course;
+    public User $teacher;
     /** @var Task[] */
     private array $tasks;
     private ?DateTime $dateStart;
@@ -24,8 +27,8 @@ final class Subject
         string $name,
         int $numHours,
         int $yearEnd,
-        int $courseId,
-        string $identificationDocumentTeacher,
+        Course $course,
+        User $teacher,
         array $tasks = [],
         DateTime $dateStart = null,
         DateTime $dateEnd = null,
@@ -36,8 +39,8 @@ final class Subject
         $this->name = $name;
         $this->numHours = $numHours;
         $this->yearEnd = $yearEnd;
-        $this->courseId = $courseId;
-        $this->identificationDocumentTeacher = $identificationDocumentTeacher;
+        $this->course = $course;
+        $this->teacher = $teacher;
         $this->tasks = $tasks;
         $this->dateStart = $dateStart;
         $this->dateEnd = $dateEnd;
@@ -49,9 +52,9 @@ final class Subject
         string $name,
         int $numHours,
         int $yearEnd,
-        int $courseId,
-        string $identificationDocumentTeacher,
-        array $tasks,
+        Course $course,
+        User $teacher,
+        array $tasks = [],
         DateTime $dateStart = null,
         DateTime $dateEnd = null,
         DateTime $dateUpdate = null
@@ -62,8 +65,8 @@ final class Subject
             $name,
             $numHours,
             $yearEnd,
-            $courseId,
-            $identificationDocumentTeacher,
+            $course,
+            $teacher,
             $tasks,
             $dateStart,
             $dateEnd,
@@ -91,9 +94,24 @@ final class Subject
         return $this->yearEnd;
     }
 
-    public function getCourseId(): int
+    public function getCourse(): Course
     {
-        return $this->courseId;
+        return $this->course;
+    }
+
+    public function getCourseDescription(): string
+    {
+        return $this->course->getDescription();
+    }
+
+    public function getTeacher(): User
+    {
+        return $this->teacher;
+    }
+
+    public function getTeacherName(): string
+    {
+        return $this->teacher->getName();
     }
 
     public function getIdentificationDocumentTeacher(): string

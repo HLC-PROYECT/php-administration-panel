@@ -3,11 +3,11 @@
 use HLC\AP\Views\Helpers\componentsHelper;
 
 ?>
-<div class="modal fade" id="addTask" tabindex="-1" role="dialog" aria-labelledby="addTaskLabel"
+<div class="modal fade" id="addSubject" tabindex="-1" role="dialog" aria-labelledby="addSubjectLabel"
      aria-hidden="true">
     <div class="modal-dialog modal-sm" role="document">
         <div class="modal-content">
-            <form action="Subject/SubjectInsert" method="post">
+            <form action="subject/save" method="post">
                 <div class="modal-header">
                     <h5 class="modal-title" id="addSubjectLabel">New subject</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -27,7 +27,9 @@ use HLC\AP\Views\Helpers\componentsHelper;
                     </div>
                     <div class="form-group">
                         <label>Ending year</label>
-                        <input class="au-input au-input--full" id="finicio" type="date"
+                        <input class="au-input au-input--full" id="finicio" type="number"
+                               min="2000"
+                               max="3000"
                                name="endingYear"
                                placeholder="yyyy">
                     </div>
@@ -38,8 +40,8 @@ use HLC\AP\Views\Helpers\componentsHelper;
                         <div>
                             <?=
                                 componentsHelper::selectorBuilder(
-                                        "Course",
-                                    "Course",
+                                        "course",
+                                    "course",
                                     $this->courses,
                                     ["getCourseId", "getDescription"]
                                 )
@@ -56,13 +58,14 @@ use HLC\AP\Views\Helpers\componentsHelper;
                                 "teacher",
                                 "teacher",
                                 $this->teachers,
-                                ["getEmail", "getName"]
+                                ["getIdentificationDocument", "getName"]
                             )
                             ?>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
+                    <input hidden type="text" name="id">
                     <button type="submit" name="submit" class="au-btn au-btn--green">Add</button>
                 </div>
             </form>

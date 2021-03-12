@@ -7,8 +7,7 @@ use HLC\AP\Domain\User\User;
 
 class Student extends User
 {
-
-    private string $identificationDocument;
+    public string $identificationDocument;
     private string $birthDate;
     private string $courseId;
 

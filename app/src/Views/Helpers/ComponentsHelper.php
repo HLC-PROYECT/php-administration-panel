@@ -20,8 +20,7 @@ class componentsHelper
         array $keys,
         ?string $selected = null,
         bool $readOnly = false
-    ): string
-    {
+    ): string {
 
         $selector = "<select name=\"{$name}\" id=\"{$id}\" class=\"form-control\"";
         if ($readOnly) {
@@ -57,20 +56,18 @@ class componentsHelper
         array $headers,
         array $list,
         array $keys,
-        array $buttons,
+        array $buttons = [],
     ): string {
         $table = "<table class='table table-data2' id='tabla'>";
         $table .= "<thead>";
         $table .= "<tr>";
 
-        //Print headers
         foreach ($headers as $value) {
             $table .= "<th>" . $value . "</th>";
         }
         $table .= "</tr>";
         $table .= "</thead>";
 
-        //Print rows
         foreach ($list as $domain) {
             $table .= '<tr class="tr-shadow">';
             $id = $keys[0];
@@ -78,24 +75,33 @@ class componentsHelper
             foreach ($keys as $propertyMethod) {
                 $table .= '<td>' . $domain->$propertyMethod() . '</td>';
             }
-            //Print actions buttons.
+
             $table .= '<td>';
             $table .= '<div class="table-data-feature">';
             foreach ($buttons as $button) {
                 $title = $button['title'];
                 $onclick = $button['onclick'];
                 $iconClass = $button['iconClass'];
-                $name = $button['name'];
+                $formAction = $button['formAction'] ?? null;
+                $name = $button['name'] ?? '';
+                $domainJson = json_encode($domain);
 
+                $table .= null !== $formAction
+                    ? "<form action='$formAction' method='post'><input hidden type='text' name='id' value='$id'>"
+                    : "";
                 $table .= "<button class='item' 
                             data-toggle='tooltip' 
                             data-placement='top' 
+                            data-domain='$domainJson'
                             title='$title' 
                             name='$name' 
-                            onclick=$onclick('$id')>";
+                            onclick='$onclick($id, this);'>";
 
                 $table .= "<i class='zmdi $iconClass' ></i >";
                 $table .= '</button>';
+                $table .= null !== $formAction
+                    ? "</form>"
+                    : "";
             }
             $table .= '</div>';
             $table .= '</td >';

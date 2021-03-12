@@ -43,7 +43,7 @@ class PdoCourseRepository implements CourseRepositoryInterface
         return $this->instantiate($this->database->select("curso", "*", ["codCurso" => $courseId])[0]);
     }
 
-    public function getCoursesById($identificationDocument, $order): array
+    public function getCoursesById($identificationDocument, $order = ["curso.codcurso" => "ASC"]): array
     {
         $result = $this->database->select("curso",
             [
@@ -64,13 +64,25 @@ class PdoCourseRepository implements CourseRepositoryInterface
         return $courses;
     }
 
+    public function get(): array
+    {
+        $result = $this->database->select("curso", "*");
+
+        $courses = [];
+        foreach ($result as $value) {
+            array_push($courses, $this->instantiate($value));
+        }
+
+        return $courses;
+    }
+
     private function instantiate(array $course): Course
     {
         return Course::build(
             $course["codcurso"],
             $course["centroed"],
-            $course["a_inicio"],
-            $course["a_fin"],
+            $course["a_inicio"] ?? 0,
+            $course["a_fin"] ?? 0,
             $course["descrip"]
         );
     }
@@ -90,7 +102,7 @@ class PdoCourseRepository implements CourseRepositoryInterface
     {
         return $this->database->has("curso", ["codcurso" => $courseId]);
     }
-    
+
     public function save(int $courseId, string $educationCenter, int $yearStart, int $yearEnd, string $description): string
     {
         if ($courseId === 0) {

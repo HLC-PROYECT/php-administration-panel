@@ -4,11 +4,11 @@ namespace HLC\AP\Domain\User;
 
 class User
 {
-    private string $identificationDocument;
+    public string $identificationDocument;
+    public string $name;
     private string $email;
     private string $password;
     private string $nick;
-    private string $name;
     private string $dateStart;
     private string $dateEnd;
     private string $dateUpdate;
