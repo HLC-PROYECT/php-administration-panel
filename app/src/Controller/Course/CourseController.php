@@ -57,8 +57,7 @@ class CourseController
     public function __construct(
         private UserRepositoryInterface $userRepository,
         private CourseRepositoryInterface $courseRepository,
-        private CourseTeacherRepositoryInterface $courseTeacherRepository,
-        private LoginController $loginController
+        private CourseTeacherRepositoryInterface $courseTeacherRepository
     )
     {
 
@@ -69,9 +68,7 @@ class CourseController
 
     public function execute(): string
     {
-        if (!isset($_SESSION['uid'])) {
-            return $this->loginController->execute();
-        }
+        if (!isset($_SESSION['uid'])) header("Location: /");
 
         $currentUserID = $_SESSION['uid'];
         $this->user = $this->userRepository->getByDni($currentUserID);

@@ -2,6 +2,7 @@
 
 namespace HLC\AP\Controller\Subject;
 
+use HLC\AP\Controller\Login\LoginController;
 use HLC\AP\Domain\Course\Course;
 use HLC\AP\Domain\Course\CourseRepositoryInterface;
 use HLC\AP\Domain\Subject\Subject;
@@ -65,6 +66,8 @@ class SubjectController
 
     public function execute(): void
     {
+        if (!isset($_SESSION['uid'])) header("Location: /");
+
         $this->user = $this->userRepository->getByDni($_SESSION['uid']);
         if ($this->user->getType() === 'P') {
             $this->querySubjectsByOrder($this->user->getIdentificationDocument(), $_SESSION['subjectOrder']);
