@@ -74,7 +74,7 @@ class StudentController
 
         $this->students = $this->userRepository->getStudents($currentUserID, $orderBy);
 
-        $this->setUrl();
+        set_url('student');
         return require __DIR__ . '/../../Views/Student/Student.php';
     }
 
@@ -128,12 +128,6 @@ class StudentController
         $this->validateName();
         $this->validateCourse();
         $this->validateNickName();
-    }
-
-    public function setUrl(): void
-    {
-        $_SERVER['REQUEST_URI'] = "/Students";
-        echo("<script>history.replaceState({},'','/Student');</script>");
     }
 
     public function setOrder($order = 'name'): string

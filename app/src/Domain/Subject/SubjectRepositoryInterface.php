@@ -49,6 +49,30 @@ interface SubjectRepositoryInterface
     public function getByTeacherId(string $id, string $filter): array;
 
     /**
+     * @param string $studentId
+     * @return Subject[]
+     */
+    public function getStudentSubjectOrderByName(string $studentId): array;
+
+    /**
+     * @param string $studentId
+     * @return Subject[]
+     */
+    public function getStudentSubjectOrderByNumHours(string $studentId): array;
+
+    /**
+     * @param string $studentId
+     * @return Subject[]
+     */
+    public function getStudentSubjectOrderByCourseId(string $studentId): array;
+
+    /**
+     * @param string $studentId
+     * @return Subject[]
+     */
+    public function getStudentSubjectOrderByID(string $studentId): array;
+
+    /**
      * @param string $id
      * @param string $filter
      * @return Subject[]

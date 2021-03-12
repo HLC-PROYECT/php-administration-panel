@@ -84,8 +84,8 @@ class CourseController
         } else {
             $this->courses = $this->courseRepository->getPupilCourse($this->user->getIdentificationDocument());
         }
-        $_SERVER['REQUEST_URI'] = "/Course";
-        echo("<script>history.replaceState({},'','/Course');</script>");
+
+        set_url('course');
         return require __DIR__ . '/../../Views/Course/Course.php';
     }
 

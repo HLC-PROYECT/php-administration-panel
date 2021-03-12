@@ -18,6 +18,28 @@ class SubjectController
         "Number of hours",
         "Teacher"
     ];
+
+    public const SUBJECT_BUTTONS = [
+        [
+            'title' => 'delete',
+            'onclick' => '',
+            'iconClass' => 'zmdi-delete',
+            'formAction' => 'subject/delete'
+        ],
+        [
+            'title' => 'Edit',
+            'onclick' => 'edit',
+            'iconClass' => 'zmdi-edit',
+            'name' => 'edit'
+        ],
+        [
+            'title' => 'Add task',
+            'onclick' => 'addTask',
+            'iconClass' => 'zmdi-plus',
+            'name' => 'addTask'
+        ]
+    ];
+
     protected ?User $user;
     /** @var string[] */
     protected array $errors = [];
@@ -44,7 +66,11 @@ class SubjectController
     public function execute(): void
     {
         $this->user = $this->userRepository->getByDni($_SESSION['uid']);
-        $this->querySubjectsByOrder($this->user->getIdentificationDocument(), $_SESSION['subjectOrder']);
+        if ($this->user->getType() === 'P') {
+            $this->querySubjectsByOrder($this->user->getIdentificationDocument(), $_SESSION['subjectOrder']);
+        } else {
+            $this->queryStudentSubjectsByOrder($this->user->getIdentificationDocument(), $_SESSION['subjectOrder']);
+        }
         $this->subjectNames = $this->subjects;
         $this->courses = $this->courseRepository->getCoursesById($this->user->getIdentificationDocument());
         $this->teachers = $this->userRepository->getTeachers();
@@ -150,6 +176,16 @@ class SubjectController
             'name' => $this->subjectRepository->getTeacherSubjectOrderByName($tearcherId),
             'courseId' => $this->subjectRepository->getTeacherSubjectOrderByCourseId($tearcherId),
             default => $this->subjectRepository->getTeacherSubjectOrderByID($tearcherId),
+        };
+    }
+
+    private function queryStudentSubjectsByOrder(string $studentId, string $order = 'codasig')
+    {
+        $this->subjects = match ($order) {
+            'num_hours' => $this->subjectRepository->getStudentSubjectOrderByNumHours($studentId),
+            'name' => $this->subjectRepository->getStudentSubjectOrderByName($studentId),
+            'courseId' => $this->subjectRepository->getStudentSubjectOrderByCourseId($studentId),
+            default => $this->subjectRepository->getstu($studentId),
         };
     }
 }

@@ -2,7 +2,11 @@
 
 use HLC\AP\Controller\Subject\SubjectController;
 use HLC\AP\Views\Helpers\componentsHelper;
-
+$buttons = [];
+$isTeacher = $this->user->getType() === 'P';
+if ($isTeacher) {
+    $buttons = SubjectController::SUBJECT_BUTTONS;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -64,12 +68,18 @@ use HLC\AP\Views\Helpers\componentsHelper;
                                     </div>
 
                                 </div>
-                                <div class="table-data__tool-right">
-                                    <button class="au-btn au-btn-icon au-btn--green au-btn--small"
-                                            data-toggle="modal" data-target="#addSubject">
-                                        <i class="zmdi zmdi-plus"></i>ADD SUBJECT
-                                    </button>
-                                </div>
+                                <?php
+                                if ($isTeacher) {
+                                    ?>
+                                    <div class="table-data__tool-right">
+                                        <button class="au-btn au-btn-icon au-btn--green au-btn--small"
+                                                data-toggle="modal" data-target="#addSubject">
+                                            <i class="zmdi zmdi-plus"></i>ADD SUBJECT
+                                        </button>
+                                    </div>
+                                    <?php
+                                }
+                                ?>
                             </div>
                             <!-- tabla -->
                             <div class="table-responsive table-responsive-data2">
@@ -89,26 +99,7 @@ use HLC\AP\Views\Helpers\componentsHelper;
                                             'getNumHours',
                                             'getTeacherName'
                                         ],
-                                        [
-                                            [
-                                                'title' => 'delete',
-                                                'onclick' => '',
-                                                'iconClass' => 'zmdi-delete',
-                                                'formAction' => 'subject/delete'
-                                            ],
-                                            [
-                                                'title' => 'Edit',
-                                                'onclick' => 'edit',
-                                                'iconClass' => 'zmdi-edit',
-                                                'name' => 'edit'
-                                            ],
-                                            [
-                                                'title' => 'Add task',
-                                                'onclick' => 'addTask',
-                                                'iconClass' => 'zmdi-plus',
-                                                'name' => 'addTask'
-                                            ]
-                                        ]
+                                        $buttons
                                     );
                                 ?>
                             </div>

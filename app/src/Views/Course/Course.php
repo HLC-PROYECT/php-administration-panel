@@ -6,7 +6,7 @@ use HLC\AP\Views\Helpers\ComponentsHelper;
 $buttons = [];
 $isTeacher = $this->user->getType() === 'P';
 if ($isTeacher) {
-    $buttons = CourseCOntroller::COURSE_BUTTONS;
+    $buttons = CourseController::COURSE_BUTTONS;
 }
 ?>
 <!DOCTYPE html>
