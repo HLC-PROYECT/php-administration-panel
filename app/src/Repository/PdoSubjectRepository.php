@@ -336,6 +336,68 @@ class PdoSubjectRepository implements SubjectRepositoryInterface
         return $this->getTeacherFilter(self::ASIGNATURA_CODCURSO, $teacherId);
     }
 
+
+    public function getStudentSubjectOrderByID(string $studentId): array
+    {
+        return $this->getStudentFilter(self::ASIGNATURA_CODASIG, $studentId);
+    }
+
+    public function getStudentSubjectOrderByName(string $studentId): array
+    {
+        return $this->getStudentFilter(self::ASIGNATURA_NOMBREASIGNATURA, $studentId);
+    }
+
+    public function getStudentSubjectOrderByNumHours(string $studentId): array
+    {
+        return $this->getStudentFilter(self::ASIGNATURA_N_HORAS, $studentId);
+    }
+
+    public function getStudentSubjectOrderByCourseId(string $studentId): array
+    {
+        return $this->getStudentFilter(self::ASIGNATURA_CODCURSO, $studentId);
+    }
+
+    private function getStudentFilter(string $columnFilter, string $studentId): array
+    {
+        $responseQuery = $this->database->select("asignatura",
+            [
+                "[><]alumno" => "codcurso",
+                "[><]curso" => "codcurso",
+                "[><]usuario" => ["dni"],
+            ],
+            [
+                self::ASIGNATURA_CODASIG,
+                self::ASIGNATURA_NOMBREASIGNATURA,
+                self::ASIGNATURA_N_HORAS,
+                "asignatura.anyo_fin",
+                "curso" => [
+                    "curso.codcurso",
+                    "curso.centroed",
+                    "curso.descrip"
+                ],
+                "profesor" => [
+                    "usuario.dni",
+                    "usuario.email",
+                    "usuario.nomb_usuario",
+                    "usuario.password",
+                    "usuario.nombre",
+                    "usuario.f_alta",
+                    "usuario.tipo"
+                ]
+            ],
+            [
+                "alumno.dni" => $studentId,
+                "ORDER" => $columnFilter
+            ]
+        );
+
+        $subjects = [];
+        foreach ($responseQuery as $row) {
+            array_push($subjects, $this->build($row));
+        }
+        return $subjects;
+    }
+
     private function getTeacherFilter(string $columnFilter, string $teacherId): array
     {
         $responseQuery = $this->database->select("asignatura",

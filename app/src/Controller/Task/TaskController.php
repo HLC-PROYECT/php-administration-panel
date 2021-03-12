@@ -58,14 +58,14 @@ class TaskController
             foreach ($this->subjectsTeacher as $subject) {
                 foreach ($subject->getTasks() as $task) {
 
-                        $date = new DateTime();
-                        $actualDate = $date->getTimestamp();
-                        $end = strtotime($task->getDateEnd());
+                    $date = new DateTime();
+                    $actualDate = $date->getTimestamp();
+                    $end = strtotime($task->getDateEnd());
 
-                        if ($end < $actualDate) {
-                            $this->taskRepository->updateTeacherCompleted($task);
-                            $task->setStatus("completada");
-                        }
+                    if ($end < $actualDate) {
+                        $this->taskRepository->updateTeacherCompleted($task);
+                        $task->setStatus("completada");
+                    }
                 }
             }
         } else $this->subjectsTeacher = $this->subjectRepository->getByStudentId(
@@ -73,8 +73,8 @@ class TaskController
         );
         $this->subjects = $this->subjectRepository->get();
         $this->subjectNames = $this->subjectRepository->getSubjectByTeacherId($this->user->getIdentificationDocument());
-        $_SERVER['REQUEST_URI'] = "/Task";
-        echo("<script>history.replaceState({},'','/Task');</script>");
+
+        set_url('task');
         return require __DIR__ . '/../../Views/Task/Task.php';
     }
 
