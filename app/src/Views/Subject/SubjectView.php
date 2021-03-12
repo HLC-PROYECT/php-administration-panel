@@ -87,6 +87,12 @@ use HLC\AP\Views\Helpers\componentsHelper;
                                             'onclick' => 'edit',
                                             'iconClass' => 'zmdi-edit',
                                             'name' => 'edit'
+                                        ],
+                                        [
+                                            'title' => 'Add task',
+                                            'onclick' => 'addTask',
+                                            'iconClass' => 'zmdi-plus',
+                                            'name' => 'addTask'
                                         ]
                                     ]
                                 );
@@ -99,13 +105,14 @@ use HLC\AP\Views\Helpers\componentsHelper;
             </div>
         </div>
         <?php require __DIR__ . '/AddSubjectModal.php' ?>
+        <?php require __DIR__ . '/../Task/AddTaskModal.php' ?>
     </div>
 </div>
 <?php include __DIR__ . '/../Parts/Js.php' ?>
 <script>
     function edit(subjectId, event) {
         const subject = $(event).data('domain');
-        const formSubject = document.querySelector('form[action="subject/save"]');
+        const formSubject = document.querySelector('form[action="/subject/save"]');
         formSubject.querySelector('#addSubjectLabel').innerHTML = 'Edit subject';
         formSubject.querySelector('input[name="name"]').value = subject.name;
         formSubject.querySelector('input[name="nHours"]').value = subject.numHours;
@@ -114,9 +121,26 @@ use HLC\AP\Views\Helpers\componentsHelper;
         formSubject.querySelector('select[name="teacher"]').value = subject.teacher.identificationDocument;
         formSubject.querySelector('button[name="submit"]').innerHTML = 'Update';
         formSubject.querySelector('input[name="id"]').value = subject.subjectId;
-        $(formSubject).attr('action', 'subject/update');
+        $(formSubject).attr('action', '/subject/update');
         $('#addSubject').modal('show');
     }
+
+    function addTask(subjectId, event) {
+        const subject = $(event).data('domain');
+        const formTask = document.querySelector('form[action="/task/save"]');
+        formTask.querySelector('#addTaskLabel').innerHTML = 'Add task to ' + subject.name;
+
+        const subjectSelector = formTask.querySelector('select[name="subjectId"]');
+        subjectSelector.value = subjectId;
+        subjectSelector.style.display = 'none';
+
+        const subjectInput = formTask.querySelector('#subjectName');
+        subjectInput.value = subject.name;
+        subjectInput.style.display = 'block';
+
+        $('#addTask').modal('show');
+    }
+
 </script>
 </body>
 

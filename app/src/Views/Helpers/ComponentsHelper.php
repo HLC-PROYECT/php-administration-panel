@@ -87,7 +87,7 @@ class componentsHelper
                 $domainJson = json_encode($domain);
 
                 $table .= null !== $formAction
-                    ? "<form action='$formAction' method='post'><input hidden type='text' name='id' value='$id'>"
+                    ? "<form action='$formAction' method='post' style='margin-right: 5px;'><input hidden type='text' name='id' value='$id'>"
                     : "";
                 $table .= "<button class='item' 
                             data-toggle='tooltip' 
