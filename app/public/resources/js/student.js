@@ -13,7 +13,6 @@ function onSelectorOrder(selector) {
 
 
 function edit(studentId) {
-    console.log("entro")
     $.ajax({
         url: "/student/fetchUser",
         type: "post",
